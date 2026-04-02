@@ -1,9 +1,10 @@
-# Backend Implementation Contract
+# Backend Implementation Contract (Demo Variant)
 
-This document provides all API endpoints and integration steps required by frontend members.
+This document provides all updated API endpoints and integration steps required by frontend members.
 
 ## General Requirements
-- Base URL: `http://localhost:5000` (or whatever `PORT` is configured)
+- Base URL: Replit deployment URL (e.g., `https://your-repl-name.your-username.repl.co`) or `http://localhost:5000`
+- The server allows CORS broadly to support Vercel deployments.
 - All protected routes require a JWT token in the header:
   `Authorization: Bearer <token>`
 - Success Response format: `{ "success": true, "data": ... }`
@@ -21,7 +22,6 @@ This document provides all API endpoints and integration steps required by front
     "password": "securepassword"
   }
   ```
-- **Description**: Creates a new user account. Returns user info and JWT token.
 
 ### Login
 - **Endpoint**: `POST /api/auth/login`
@@ -32,19 +32,26 @@ This document provides all API endpoints and integration steps required by front
     "password": "securepassword"
   }
   ```
-- **Description**: Authenticates existing user. Returns user info and JWT token.
 
 ## 2. App Endpoints
 
-### Upload App
+### Upload App (UPDATED FOR DEMO)
 - **Endpoint**: `POST /api/apps/upload`
 - **Headers**: `Authorization: Bearer <token>`
-- **Request Body**: `multipart/form-data`
-  - `name`: string
-  - `description`: string
-  - `category`: string
-  - `apk`: file
-- **Description**: Uploads app metadata and APK. Status is set to "Pending" automatically.
+- **Request Body** (JSON):
+  ```json
+  {
+    "name": "Demo Game",
+    "description": "Fun game",
+    "category": "Games",
+    "apkUrl": "https://google.drive.link/apk",
+    "screenshots": [
+      "https://imgur.com/link1.png",
+      "https://imgur.com/link2.png"
+    ]
+  }
+  ```
+- **Description**: Stores app data using provided URLs instead of processing direct file uploads.
 
 ### Search Apps
 - **Endpoint**: `GET /api/apps/search?q=keyword`
@@ -52,7 +59,7 @@ This document provides all API endpoints and integration steps required by front
 
 ### Get App Details
 - **Endpoint**: `GET /api/apps/:id`
-- **Description**: Returns full details for a single app including screenshots, URL, and ratings.
+- **Description**: Returns full details for a single app including `apkUrl` and ratings.
 
 ## 3. Review Endpoints
 
@@ -67,14 +74,13 @@ This document provides all API endpoints and integration steps required by front
     "comment": "Excellent application!"
   }
   ```
-- **Description**: Posts a review for an app and updates the app's average rating.
 
 ## 4. Admin Endpoints
 
 ### Approve App
 - **Endpoint**: `PUT /api/admin/approve/:id`
 - **Headers**: `Authorization: Bearer <admin_token>`
-- **Description**: Updates a pending app's status to "Live", making it visible in search.
+- **Description**: Updates a pending app's status to "Live".
 
 ### Remove Malicious App
 - **Endpoint**: `DELETE /api/admin/remove/:id`

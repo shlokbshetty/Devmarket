@@ -3,38 +3,27 @@
  * Required Functions: uploadApp(), searchApps(), getAppDetails()
  */
 const App = require('../models/App');
-const cloudinary = require('../config/cloudinary');
-const fs = require('fs');
 
 exports.uploadApp = async (req, res) => {
   try {
-    const { name, description, category } = req.body;
+    const { name, description, category, apkUrl, screenshots } = req.body;
     
-    if (!name || !description || !category || !req.file) {
-      if (req.file) fs.unlinkSync(req.file.path);
-      return res.status(400).json({ success: false, message: 'Please provide all fields and the APK file' });
+    if (!name || !description || !category || !apkUrl) {
+      return res.status(400).json({ success: false, message: 'Please provide all fields including apkUrl' });
     }
-
-    const result = await cloudinary.uploader.upload(req.file.path, {
-      resource_type: "raw",
-      folder: "devmarket/apks"
-    });
-    
-    // Clean up temporary file
-    fs.unlinkSync(req.file.path);
 
     const app = await App.create({
       name,
       description,
       category,
       developerId: req.user._id,
-      apkUrl: result.secure_url,
+      apkUrl,
+      screenshots: Array.isArray(screenshots) ? screenshots : [],
       status: 'Pending'
     });
 
     res.status(201).json({ success: true, data: app });
   } catch (error) {
-    if (req.file && fs.existsSync(req.file.path)) fs.unlinkSync(req.file.path);
     res.status(500).json({ success: false, message: error.message });
   }
 };

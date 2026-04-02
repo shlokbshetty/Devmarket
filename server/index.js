@@ -16,7 +16,7 @@ connectDB();
 
 const app = express();
 
-app.use(cors({ origin: 'http://localhost:3000' }));
+app.use(cors()); // Allow all for demo including Vercel and Replit
 app.use(express.json());
 
 // Routes
