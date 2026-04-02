@@ -5,14 +5,17 @@
 const mongoose = require('mongoose');
 
 const appSchema = new mongoose.Schema({
-  title: String,
-  description: String,
-  developerId: String, // Reference to User model
-  apkUrl: String, // Needs the storage bucket URL from the DevOps setup
-  screenshots: [String],
-  status: { type: String, default: 'Pending' }, // "Pending", "Live", "Rejected"
-  ratings: [Number],
+  name: { type: String, required: true },
+  description: { type: String, required: true },
+  category: { type: String, required: true },
+  developerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  apkUrl: { type: String, required: true }, 
+  screenshots: [{ type: String }],
+  status: { type: String, enum: ['Pending', 'Live', 'Rejected'], default: 'Pending' }, 
+  averageRating: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now }
 });
+
+appSchema.index({ name: 'text', category: 'text' });
 
 module.exports = mongoose.model('App', appSchema);

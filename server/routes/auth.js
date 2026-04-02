@@ -1,12 +1,12 @@
 /*
- * Assigned Member: Backend Member 1 (Auth & Admin Logic)
- * Required Functions: Routing for register() and login()
+ * Assigned Member: Backend Member 1
+ * Required Functions: Auth Routes
  */
 const express = require('express');
 const router = express.Router();
-// const authController = require('../controllers/authController');
+const { register, login } = require('../controllers/authController');
 
-// router.post('/register', authController.register);
-// router.post('/login', authController.login);
+router.post('/register', register);
+router.post('/login', login);
 
 module.exports = router;
