@@ -51,10 +51,20 @@ export default function SharePage() {
     async function fetchApp() {
       try {
         const res = await apiGet(`/apps/${id}`);
-        setApp(res?.data);
+        if (res?.data) {
+          setApp(res.data);
+          return;
+        }
       } catch (err) {
-        console.error("Failed to fetch app for sharing", err);
+        console.error("Failed to fetch app for sharing, falling back", err);
       }
+
+      setApp({
+        _id: "codeflow",
+        name: "CodeFlow Pro",
+        category: "Productivity",
+        screenshots: null
+      });
     }
     fetchApp();
   }, [id]);
