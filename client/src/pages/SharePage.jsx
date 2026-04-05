@@ -1,5 +1,6 @@
 import { useNavigate, useParams } from "react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { apiGet } from "../api/client.js";
 
 const IMG = {
   appIcon: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=128&h=128&fit=crop",
@@ -44,6 +45,19 @@ export default function SharePage() {
   const { id } = useParams();
   const [copied, setCopied] = useState(false);
   const [selectedFriends, setSelectedFriends] = useState([]);
+  const [app, setApp] = useState(null);
+
+  useEffect(() => {
+    async function fetchApp() {
+      try {
+        const res = await apiGet(`/apps/${id}`);
+        setApp(res?.data);
+      } catch (err) {
+        console.error("Failed to fetch app for sharing", err);
+      }
+    }
+    fetchApp();
+  }, [id]);
 
   const toggleFriend = (name) => {
     setSelectedFriends(prev =>
@@ -72,11 +86,11 @@ export default function SharePage() {
         {/* App Info Header */}
         <div className="flex items-center gap-[20px] px-[32px] pb-[24px]">
           <div className="bg-gray-100 dark:bg-[#20201f] transition-colors rounded-[16px] shrink-0 size-[64px] overflow-hidden p-[4px]">
-            <img alt="App Icon" className="size-full rounded-[14px] object-cover" src={IMG.appIcon} />
+            <img alt="App Icon" className="size-full rounded-[14px] object-cover" src={app?.screenshots?.[0] || IMG.appIcon} />
           </div>
           <div className="flex-1">
-            <div className="font-['Plus_Jakarta_Sans',sans-serif] font-bold text-[20px] text-gray-900 dark:text-white leading-[28px]">CodeFlow Pro</div>
-            <div className="font-['Plus_Jakarta_Sans',sans-serif] text-gray-500 dark:text-[#adaaaa] text-[14px] leading-[20px]">v2.4.0 • Productivity</div>
+            <div className="font-['Plus_Jakarta_Sans',sans-serif] font-bold text-[20px] text-gray-900 dark:text-white leading-[28px]">{app?.name || "Loading..."}</div>
+            <div className="font-['Plus_Jakarta_Sans',sans-serif] text-gray-500 dark:text-[#adaaaa] text-[14px] leading-[20px]">{app?.category || "App"}</div>
           </div>
           <button onClick={() => navigate(-1)} className="bg-gray-100 hover:bg-gray-200 dark:bg-[#20201f] dark:hover:bg-[#2c2c2c] flex items-center justify-center rounded-full shrink-0 size-[40px] transition-colors">
             <svg width="16" height="16" fill="none" viewBox="0 0 20 20">

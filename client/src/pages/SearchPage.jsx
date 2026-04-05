@@ -1,4 +1,6 @@
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
+import { useState, useEffect } from "react";
+import { apiGet } from "../api/client.js";
 
 const IMG = {
   instagram: "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=250&fit=crop",
@@ -23,6 +25,32 @@ const collections = [
 
 export default function SearchPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const initialSearch = queryParams.get("q") || "";
+  
+  const [searchQuery, setSearchQuery] = useState(initialSearch);
+  const [liveApps, setLiveApps] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchApps = async () => {
+      setLoading(true);
+      try {
+        const res = await apiGet(searchQuery ? `/apps/search?q=${searchQuery}` : "/apps/search");
+        setLiveApps(res?.data || []);
+      } catch (err) {
+        console.error("Failed to fetch search results", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    const timeoutId = setTimeout(() => {
+      fetchApps();
+    }, 300);
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery]);
 
   return (
     <div className="bg-gray-50 dark:bg-[#0e0e0e] relative w-full min-h-full overflow-y-auto pb-[24px] transition-colors">
@@ -32,6 +60,8 @@ export default function SearchPage() {
         <div className="relative w-full">
           <div className="bg-white dark:bg-[#1a1a1a] shadow-sm dark:shadow-none h-[64px] rounded-[16px] w-full transition-colors border border-gray-200 dark:border-transparent">
             <input type="text" placeholder="Search Apps & Games"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="bg-transparent pl-[56px] pr-[24px] py-[20px] size-full rounded-[inherit] font-['Plus_Jakarta_Sans',sans-serif] font-medium text-[16px] text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-[rgba(173,170,170,0.5)] outline-none" />
           </div>
           <div className="absolute bottom-[23px] left-[23px] top-[23px] w-[18px] pointer-events-none text-gray-400 dark:text-[#ADAAAA]">
@@ -82,25 +112,49 @@ export default function SearchPage() {
           <div className="px-[8px]">
             <div className="font-['Plus_Jakarta_Sans',sans-serif] font-bold text-gray-500 dark:text-[#adaaaa] text-[12px] tracking-[2.4px] uppercase leading-[16px]">Curated Collections</div>
           </div>
-          <div className="font-['Plus_Jakarta_Sans',sans-serif] font-extrabold text-[30px] text-gray-900 dark:text-white leading-[36px] px-[8px]">New & Notable</div>
+          <div className="font-['Plus_Jakarta_Sans',sans-serif] font-extrabold text-[30px] text-gray-900 dark:text-white leading-[36px] px-[8px]">
+            {searchQuery ? "Search Results" : "New & Notable"}
+          </div>
           <div className="flex flex-col gap-[24px]">
-            {collections.map((item) => (
-              <button key={item.id} onClick={() => navigate(`/app/${item.name.toLowerCase().replace(/\s+/g, '-')}`)} className="flex flex-col gap-[16px] w-full group">
-                <div className="h-[180px] relative rounded-[24px] w-full overflow-hidden shadow-sm dark:shadow-none transition-shadow group-hover:shadow-md">
-                  <img alt={item.name} className="size-full object-cover transition-transform group-hover:scale-105" src={item.image} />
-                  <div className="absolute bg-gradient-to-t from-black/80 inset-0 to-transparent" />
-                </div>
-                <div className="flex items-center justify-between w-full px-[8px]">
-                  <div className="flex flex-col gap-[4px] items-start">
-                    <div className="font-['Plus_Jakarta_Sans',sans-serif] font-bold text-[18px] text-gray-900 dark:text-white leading-[24px]">{item.name}</div>
-                    <div className="font-['Inter',sans-serif] text-gray-500 dark:text-[#adaaaa] text-[12px] leading-[16px]">{item.desc}</div>
+            {loading ? (
+              <div className="text-center py-6 text-gray-500 dark:text-[#adaaaa]">Searching...</div>
+            ) : liveApps.length > 0 ? (
+              liveApps.map((app) => (
+                <button key={app._id} onClick={() => navigate(`/app/${app._id}`)} className="flex flex-col gap-[16px] w-full group">
+                  <div className="h-[180px] relative rounded-[24px] w-full overflow-hidden shadow-sm dark:shadow-none transition-shadow group-hover:shadow-md">
+                    <img alt={app.name} className="size-full object-cover transition-transform group-hover:scale-105" src={app.screenshots?.[0] || IMG.snapshot} />
+                    <div className="absolute bg-gradient-to-t from-black/80 inset-0 to-transparent" />
                   </div>
-                  <div className="bg-gray-200 dark:bg-[#262626] flex items-center px-[12px] py-[6px] rounded-full transition-colors">
-                    <div className="font-['Inter',sans-serif] text-emerald-600 dark:text-[#72fe8f] text-[12px] leading-[16px] font-bold">{item.price}</div>
+                  <div className="flex items-center justify-between w-full px-[8px]">
+                    <div className="flex flex-col gap-[4px] items-start">
+                      <div className="font-['Plus_Jakarta_Sans',sans-serif] font-bold text-[18px] text-gray-900 dark:text-white leading-[24px]">{app.name}</div>
+                      <div className="font-['Inter',sans-serif] text-gray-500 dark:text-[#adaaaa] text-[12px] leading-[16px]">{app.category || "Utility"}</div>
+                    </div>
+                    <div className="bg-gray-200 dark:bg-[#262626] flex items-center px-[12px] py-[6px] rounded-full transition-colors">
+                      <div className="font-['Inter',sans-serif] text-emerald-600 dark:text-[#72fe8f] text-[12px] leading-[16px] font-bold">Free</div>
+                    </div>
                   </div>
-                </div>
-              </button>
-            ))}
+                </button>
+              ))
+            ) : (
+              collections.map((item) => (
+                <button key={item.id} onClick={() => navigate(`/app/${item.name.toLowerCase().replace(/\s+/g, '-')}`)} className="flex flex-col gap-[16px] w-full group">
+                  <div className="h-[180px] relative rounded-[24px] w-full overflow-hidden shadow-sm dark:shadow-none transition-shadow group-hover:shadow-md">
+                    <img alt={item.name} className="size-full object-cover transition-transform group-hover:scale-105" src={item.image} />
+                    <div className="absolute bg-gradient-to-t from-black/80 inset-0 to-transparent" />
+                  </div>
+                  <div className="flex items-center justify-between w-full px-[8px]">
+                    <div className="flex flex-col gap-[4px] items-start">
+                      <div className="font-['Plus_Jakarta_Sans',sans-serif] font-bold text-[18px] text-gray-900 dark:text-white leading-[24px]">{item.name}</div>
+                      <div className="font-['Inter',sans-serif] text-gray-500 dark:text-[#adaaaa] text-[12px] leading-[16px]">{item.desc}</div>
+                    </div>
+                    <div className="bg-gray-200 dark:bg-[#262626] flex items-center px-[12px] py-[6px] rounded-full transition-colors">
+                      <div className="font-['Inter',sans-serif] text-emerald-600 dark:text-[#72fe8f] text-[12px] leading-[16px] font-bold">{item.price}</div>
+                    </div>
+                  </div>
+                </button>
+              ))
+            )}
           </div>
         </div>
       </div>
