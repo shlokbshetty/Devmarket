@@ -25,7 +25,7 @@ export function DevDashboard() {
       <div className="w-full p-4 text-gray-900 dark:text-white min-h-[calc(100vh-65px)] bg-gray-50 dark:bg-[#0a0a0a] flex flex-col items-center justify-center">
         <h2 className="text-xl font-bold mb-2">Sign in Required</h2>
         <p className="text-gray-500 dark:text-zinc-400 text-sm mb-4">You need to be logged in to upload apps.</p>
-        <button onClick={() => navigate('/login')} className="bg-emerald-400 dark:bg-[#34d399] text-black font-bold py-2.5 px-6 rounded-xl hover:bg-emerald-500 dark:hover:bg-[#2ebc87] transition-colors">
+        <button onClick={() => navigate('/login')} className="bg-[#1ed760] dark:bg-[#1ed760] text-black font-bold py-2.5 px-6 rounded-xl hover:bg-[#1ed760] dark:hover:bg-[#1ed760] transition-colors">
           Sign In
         </button>
       </div>
@@ -66,7 +66,7 @@ export function DevDashboard() {
         {submitted ? (
           <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
             className="flex flex-col items-center justify-center py-10 text-center">
-            <CheckCircle2 size={56} className="text-emerald-500 dark:text-[#34d399] mb-4" />
+            <CheckCircle2 size={56} className="text-[#1ed760] dark:text-[#1ed760] mb-4" />
             <h2 className="text-xl font-bold mb-2">Submitted!</h2>
             <p className="text-gray-500 dark:text-zinc-400 text-sm">Your app is now under review.</p>
           </motion.div>
@@ -79,19 +79,19 @@ export function DevDashboard() {
             <div className="space-y-1.5">
               <label className="text-[10px] font-bold text-gray-500 dark:text-zinc-400 uppercase tracking-wider ml-1">App Name</label>
               <input type="text" value={appName} onChange={(e) => setAppName(e.target.value)} placeholder="e.g. CodeFlow Pro"
-                className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-emerald-400 dark:focus:border-[#34d399] transition-colors" required />
+                className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-[#1ed760] dark:focus:border-[#1ed760] transition-colors" required />
             </div>
 
             <div className="space-y-1.5">
               <label className="text-[10px] font-bold text-gray-500 dark:text-zinc-400 uppercase tracking-wider ml-1">Description</label>
               <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Describe your app's main features..." rows={4}
-                className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-emerald-400 dark:focus:border-[#34d399] transition-colors resize-none" required />
+                className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-[#1ed760] dark:focus:border-[#1ed760] transition-colors resize-none" required />
             </div>
 
             <div className="space-y-1.5">
               <label className="text-[10px] font-bold text-gray-500 dark:text-zinc-400 uppercase tracking-wider ml-1">Category</label>
               <select value={category} onChange={(e) => setCategory(e.target.value)}
-                className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-emerald-400 dark:focus:border-[#34d399] transition-colors" required>
+                className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-[#1ed760] dark:focus:border-[#1ed760] transition-colors" required>
                 <option value="">Select a category</option>
                 {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
               </select>
@@ -102,7 +102,7 @@ export function DevDashboard() {
               <div className="relative">
                 <Link2 className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-zinc-500" size={16} />
                 <input type="url" value={apkUrl} onChange={(e) => setApkUrl(e.target.value)} placeholder="https://drive.google.com/file/your-apk"
-                  className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-xl pl-10 pr-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-emerald-400 dark:focus:border-[#34d399] transition-colors" required />
+                  className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-xl pl-10 pr-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-[#1ed760] dark:focus:border-[#1ed760] transition-colors" required />
               </div>
             </div>
 
@@ -117,7 +117,7 @@ export function DevDashboard() {
                     <div className="relative flex-1">
                       <ImageIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-zinc-500" size={14} />
                       <input type="url" value={url} onChange={(e) => updateScreenshot(i, e.target.value)} placeholder={`Screenshot ${i + 1} URL`}
-                        className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-xl pl-9 pr-4 py-2.5 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-emerald-400 dark:focus:border-[#34d399] transition-colors" />
+                        className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-xl pl-9 pr-4 py-2.5 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#1ed760] dark:focus:border-[#1ed760] transition-colors" />
                     </div>
                     {screenshots.length > 1 && (
                       <button type="button" onClick={() => removeScreenshot(i)} className="p-2 text-gray-400 dark:text-zinc-500 hover:text-red-500 transition-colors">
@@ -127,7 +127,7 @@ export function DevDashboard() {
                   </div>
                 ))}
                 {screenshots.length < 5 && (
-                  <button type="button" onClick={addScreenshot} className="flex items-center gap-2 text-xs font-bold text-emerald-600 dark:text-[#34d399] hover:text-emerald-500 dark:hover:text-[#2ebc87] transition-colors py-1">
+                  <button type="button" onClick={addScreenshot} className="flex items-center gap-2 text-xs font-bold text-[#1ed760] dark:text-[#1ed760] hover:text-[#1ed760] dark:hover:text-[#1ed760] transition-colors py-1">
                     <Plus size={14} /> Add Screenshot URL
                   </button>
                 )}
@@ -136,7 +136,7 @@ export function DevDashboard() {
 
             <div className="pt-2">
               <button type="submit" disabled={loading || !appName || !description || !category || !apkUrl}
-                className="w-full bg-emerald-400 dark:bg-[#34d399] text-black font-bold py-3.5 rounded-xl hover:bg-emerald-500 dark:hover:bg-[#2ebc87] disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-[0.98] shadow-md">
+                className="w-full bg-[#1ed760] dark:bg-[#1ed760] text-black font-bold py-3.5 rounded-xl hover:bg-[#1ed760] dark:hover:bg-[#1ed760] disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-[0.98] shadow-md">
                 {loading ? "Submitting..." : "Submit for Review"}
               </button>
             </div>

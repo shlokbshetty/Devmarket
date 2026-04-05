@@ -73,7 +73,7 @@ export default function AppDetailsPage() {
             </div>
             <div className="flex flex-1 flex-col gap-[4px]">
               <div className="font-['Plus_Jakarta_Sans',sans-serif] font-extrabold text-[36px] text-gray-900 dark:text-white tracking-[-1.8px] leading-[40px]">{app.name}</div>
-              <div className="font-['Inter',sans-serif] text-emerald-600 dark:text-[#72fe8f] text-[14px] tracking-[0.35px] leading-[20px] font-bold">{app.developerId?.name?.toUpperCase() || "UNKNOWN DEVELOPER"}</div>
+              <div className="font-['Inter',sans-serif] text-[#1ed760] dark:text-[#1ed760] text-[14px] tracking-[0.35px] leading-[20px] font-bold">{app.developerId?.name?.toUpperCase() || "UNKNOWN DEVELOPER"}</div>
             </div>
           </div>
         </div>
@@ -86,15 +86,15 @@ export default function AppDetailsPage() {
           <div className="flex gap-[16px]">
             <button onClick={() => setShowDownloadSheet(true)}
               className="flex flex-1 h-[56px] items-center justify-center rounded-[16px] shadow-sm dark:shadow-[0px_8px_30px_0px_rgba(114,254,143,0.3)] hover:opacity-90 transition-opacity"
-              style={{ backgroundImage: "linear-gradient(135deg, #72FE8F 0%, #1CB853 100%)" }}>
+              style={{ backgroundImage: "linear-gradient(135deg, #1ed760 0%, #1ed760 100%)" }}>
               <div className="font-['Plus_Jakarta_Sans',sans-serif] font-bold text-[#002a0c] text-[18px] leading-[28px]">Install</div>
             </button>
             <button className="bg-white hover:bg-gray-100 dark:hover:bg-[#2c2c2c] dark:bg-[#20201f] shadow-sm dark:shadow-none transition-colors flex h-[56px] items-center justify-center rounded-[16px] shrink-0 w-[56px]">
-              <svg width="20" height="19" fill="none" viewBox="0 0 20 18.35"><path d={svgPaths.p279a9400} className="fill-emerald-500 dark:fill-[#72FE8F]" /></svg>
+              <svg width="20" height="19" fill="none" viewBox="0 0 20 18.35"><path d={svgPaths.p279a9400} className="fill-[#1ed760] dark:fill-[#1ed760]" /></svg>
             </button>
           </div>
           <div className="flex gap-[32px] items-start">
-            {[{val: `${app.averageRating || "0"} ⭐`, lbl: "Rating"}, {val: "128 MB", lbl: "Size"}, {val: app.category || "App", lbl: "Category"}].map(s=>(
+            {[{val: `${app.averageRating || "0"} â­`, lbl: "Rating"}, {val: "128 MB", lbl: "Size"}, {val: app.category || "App", lbl: "Category"}].map(s=>(
               <div key={s.lbl} className="flex flex-1 flex-col gap-[8px] items-center">
                 <div className="font-['Inter',sans-serif] font-bold text-gray-700 dark:text-[#adaaaa] text-[14px] leading-[20px]">{s.val}</div>
                 <div className="font-['Inter',sans-serif] text-gray-400 dark:text-[#adaaaa] text-[10px] tracking-[1px] uppercase leading-[15px]">{s.lbl}</div>
@@ -132,7 +132,7 @@ export default function AppDetailsPage() {
         </div>
       </div>
 
-      {/* Download Sheet Overlay — z-[60] */}
+      {/* Download Sheet Overlay â€” z-[60] */}
       {showDownloadSheet && (
         <div className="fixed inset-0 z-[60] flex items-end justify-center" onClick={() => setShowDownloadSheet(false)}>
           <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
@@ -144,13 +144,13 @@ export default function AppDetailsPage() {
                 <img alt={app.name} className="size-full rounded-[14px] object-cover" src={iconImage} />
               </div>
               <div className="font-['Plus_Jakarta_Sans',sans-serif] font-extrabold text-[24px] text-center text-gray-900 dark:text-white leading-[32px]">Downloading {app.name}</div>
-              <div className="font-['Inter',sans-serif] text-gray-500 dark:text-[#adaaaa] text-[14px] text-center leading-[20px]">42.5 MB of 128.0 MB • 2 mins remaining</div>
+              <div className="font-['Inter',sans-serif] text-gray-500 dark:text-[#adaaaa] text-[14px] text-center leading-[20px]">42.5 MB of 128.0 MB â€¢ 2 mins remaining</div>
               <div className="flex flex-col gap-[12px] w-full">
                 <div className="bg-gray-200 dark:bg-[#262626] h-[16px] overflow-clip relative rounded-full w-full transition-colors">
-                  <div className="absolute inset-y-0 left-0 w-[35%] rounded-full shadow-[0px_0px_15px_0px_rgba(16,185,129,0.4)] dark:shadow-[0px_0px_15px_0px_rgba(114,254,143,0.4)]" style={{ backgroundImage: "linear-gradient(135deg, #72FE8F 0%, #1CB853 100%)" }} />
+                  <div className="absolute inset-y-0 left-0 w-[35%] rounded-full shadow-[0px_0px_15px_0px_rgba(16,185,129,0.4)] dark:shadow-[0px_0px_15px_0px_rgba(114,254,143,0.4)]" style={{ backgroundImage: "linear-gradient(135deg, #1ed760 0%, #1ed760 100%)" }} />
                 </div>
                 <div className="flex items-start justify-between px-[4px] w-full">
-                  <div className="font-['Inter',sans-serif] text-emerald-600 dark:text-[#72fe8f] font-bold text-[10px] tracking-[1px] uppercase leading-[15px]">35% Complete</div>
+                  <div className="font-['Inter',sans-serif] text-[#1ed760] dark:text-[#1ed760] font-bold text-[10px] tracking-[1px] uppercase leading-[15px]">35% Complete</div>
                   <div className="font-['Inter',sans-serif] text-gray-500 dark:text-[#adaaaa] text-[10px] tracking-[1px] uppercase leading-[15px]">1.2 MB/s</div>
                 </div>
               </div>

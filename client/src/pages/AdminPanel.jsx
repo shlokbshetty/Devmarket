@@ -59,7 +59,7 @@ export function AdminPanel() {
         <h2 className="text-xl font-bold mb-2">Admin Access Only</h2>
         <p className="text-gray-500 dark:text-zinc-400 text-sm mb-4 text-center">You need admin privileges to access this page.</p>
         {!isAuthenticated && (
-          <button onClick={() => navigate('/login')} className="bg-emerald-400 dark:bg-[#34d399] text-black font-bold py-2.5 px-6 rounded-xl hover:bg-emerald-500 dark:hover:bg-[#2ebc87] transition-colors">Sign In</button>
+          <button onClick={() => navigate('/login')} className="bg-[#1ed760] dark:bg-[#1ed760] text-black font-bold py-2.5 px-6 rounded-xl hover:bg-[#1ed760] dark:hover:bg-[#1ed760] transition-colors">Sign In</button>
         )}
       </div>
     );
@@ -85,7 +85,7 @@ export function AdminPanel() {
           <div><h3 className="text-2xl font-black leading-none mb-1">{apps.length}</h3><p className="text-gray-500 dark:text-zinc-500 text-[10px] font-bold uppercase tracking-wider">Pending</p></div>
         </div>
         <div className="min-w-[140px] bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] p-4 rounded-3xl flex-1 flex flex-col justify-between shadow-sm">
-          <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-[#34d399]/10 flex items-center justify-center text-emerald-600 dark:text-[#34d399] mb-3"><Check size={16} /></div>
+          <div className="w-8 h-8 rounded-full bg-[#1ed760]/20 dark:bg-[#1ed760]/10 flex items-center justify-center text-[#1ed760] dark:text-[#1ed760] mb-3"><Check size={16} /></div>
           <div><h3 className="text-2xl font-black leading-none mb-1">{approvedCount}</h3><p className="text-gray-500 dark:text-zinc-500 text-[10px] font-bold uppercase tracking-wider">Approved</p></div>
         </div>
       </div>
@@ -96,14 +96,14 @@ export function AdminPanel() {
       <div className="relative mb-4">
         <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-zinc-500" size={16} />
         <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search pending apps..."
-          className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] rounded-2xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-emerald-400 dark:focus:border-[#34d399] transition-colors text-gray-900 dark:text-white shadow-sm" />
+          className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] rounded-2xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-[#1ed760] dark:focus:border-[#1ed760] transition-colors text-gray-900 dark:text-white shadow-sm" />
       </div>
 
       <h2 className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-zinc-400 mb-3 ml-1">Requires Review</h2>
 
       {loading ? (
         <div className="text-center py-10">
-          <div className="w-8 h-8 border-2 border-emerald-400 dark:border-[#34d399] border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
+          <div className="w-8 h-8 border-2 border-[#1ed760] dark:border-[#1ed760] border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
           <p className="text-gray-500 dark:text-zinc-500 text-sm">Loading...</p>
         </div>
       ) : (
@@ -114,7 +114,7 @@ export function AdminPanel() {
                 className="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] rounded-3xl overflow-hidden shadow-md">
                 <div className="p-4 flex items-center gap-3 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#222] transition-colors"
                   onClick={() => setSelectedApp(selectedApp === app._id ? null : app._id)}>
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 dark:from-[#34d399] dark:to-emerald-600 flex items-center justify-center text-white font-bold text-lg shrink-0">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#1ed760] to-[#1ed760] dark:from-[#1ed760] dark:to-[#1ed760] flex items-center justify-center text-white font-bold text-lg shrink-0">
                     {app.name?.[0]?.toUpperCase() || "?"}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -135,7 +135,7 @@ export function AdminPanel() {
                       <div className="p-4 space-y-3">
                         <p className="text-xs text-gray-600 dark:text-zinc-300 leading-relaxed">{app.description}</p>
                         <div className="flex items-center justify-between text-xs text-gray-500 dark:text-zinc-400 font-medium">
-                          <span>APK: <a href={app.apkUrl} target="_blank" rel="noreferrer" className="text-emerald-600 dark:text-[#34d399] underline">Download</a></span>
+                          <span>APK: <a href={app.apkUrl} target="_blank" rel="noreferrer" className="text-[#1ed760] dark:text-[#1ed760] underline">Download</a></span>
                           <span>{app.screenshots?.length || 0} screenshots</span>
                         </div>
                         <div className="flex gap-2 pt-2">
@@ -144,7 +144,7 @@ export function AdminPanel() {
                             <X size={16} /> Reject
                           </button>
                           <button onClick={(e) => handleAction(e, app._id, 'Approve')} disabled={actionLoading === app._id}
-                            className="flex-1 flex items-center justify-center gap-2 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-500 hover:bg-emerald-500 hover:text-black py-2.5 rounded-xl transition-all text-sm font-bold border border-emerald-100 dark:border-transparent disabled:opacity-50">
+                            className="flex-1 flex items-center justify-center gap-2 bg-[#1ed760]/10 dark:bg-[#1ed760]/10 text-[#1ed760] dark:text-[#1ed760] hover:bg-[#1ed760] hover:text-black py-2.5 rounded-xl transition-all text-sm font-bold border border-[#1ed760]/20 dark:border-transparent disabled:opacity-50">
                             <Check size={16} /> Approve
                           </button>
                         </div>
@@ -157,7 +157,7 @@ export function AdminPanel() {
           </AnimatePresence>
           {!loading && filteredApps.length === 0 && (
             <div className="text-center py-10 bg-white dark:bg-[#1a1a1a] rounded-3xl border border-gray-200 dark:border-[#222]">
-              <Check size={40} className="text-emerald-400 dark:text-[#34d399] mx-auto mb-3 opacity-50" />
+              <Check size={40} className="text-[#1ed760] dark:text-[#1ed760] mx-auto mb-3 opacity-50" />
               <p className="text-gray-500 dark:text-zinc-500 text-sm font-bold">No pending apps!</p>
             </div>
           )}

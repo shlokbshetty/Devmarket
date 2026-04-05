@@ -19,7 +19,7 @@ export function Settings() {
         <div className="flex gap-[12px] items-center">
           <button onClick={() => navigate(-1)} className="size-[16px]">
             <svg className="block size-full" fill="none" viewBox="0 0 16 16">
-              <path d="M10 12L6 8L10 4" stroke={theme === 'dark' ? '#72FE8F' : '#10b981'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M10 12L6 8L10 4" stroke={theme === 'dark' ? '#1ed760' : '#10b981'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </button>
           <div className="font-bold text-[24px] tracking-[-0.5px]">Settings</div>
@@ -45,7 +45,7 @@ export function Settings() {
             </div>
             {/* Toggle */}
             <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              className={`relative inline-flex h-[32px] w-[56px] items-center rounded-full transition-colors focus:outline-none ${theme === 'dark' ? 'bg-[#72FE8F]' : 'bg-gray-300'}`}>
+              className={`relative inline-flex h-[32px] w-[56px] items-center rounded-full transition-colors focus:outline-none ${theme === 'dark' ? 'bg-[#1ed760]' : 'bg-gray-300'}`}>
               <span className={`${theme === 'dark' ? 'translate-x-[26px]' : 'translate-x-[2px]'} inline-block h-[28px] w-[28px] transform rounded-full bg-white transition-transform shadow-sm`} />
             </button>
           </div>
@@ -65,7 +65,7 @@ export function Settings() {
                 onClick={() => navigate(item.route)}
                 className="bg-gray-100 dark:bg-[#1a1a1a] rounded-[16px] p-[16px] flex items-center justify-between cursor-pointer hover:bg-gray-200 dark:hover:bg-[#20201f] transition-colors group">
                 <div className="flex items-center gap-[16px]">
-                  <div className="p-[12px] bg-white dark:bg-[#20201f] rounded-[12px] text-gray-600 dark:text-[#adaaaa] group-hover:text-emerald-500 dark:group-hover:text-[#72FE8F] transition-colors">
+                  <div className="p-[12px] bg-white dark:bg-[#20201f] rounded-[12px] text-gray-600 dark:text-[#adaaaa] group-hover:text-[#1ed760] dark:group-hover:text-[#1ed760] transition-colors">
                     {item.icon}
                   </div>
                   <span className="font-bold text-[16px]">{item.label}</span>

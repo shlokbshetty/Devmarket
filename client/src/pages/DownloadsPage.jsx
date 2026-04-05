@@ -37,16 +37,16 @@ export default function DownloadsPage() {
             <div className="flex flex-col gap-[8px]">
               <div className="flex items-center justify-between">
                 <div className="font-['Plus_Jakarta_Sans',sans-serif] font-medium text-gray-500 dark:text-[#adaaaa] text-[16px] leading-[24px]">Disk Space</div>
-                <div className="font-['Plus_Jakarta_Sans',sans-serif] font-bold text-emerald-600 dark:text-[#72fe8f] text-[16px] leading-[24px]">12.4 GB / 50 GB</div>
+                <div className="font-['Plus_Jakarta_Sans',sans-serif] font-bold text-[#1ed760] dark:text-[#1ed760] text-[16px] leading-[24px]">12.4 GB / 50 GB</div>
               </div>
               <div className="bg-gray-200 dark:bg-[#262626] h-[8px] overflow-clip relative rounded-[12px] w-full transition-colors">
-                <div className="absolute inset-y-0 left-0 w-[24.8%] bg-gradient-to-r from-emerald-400 to-emerald-600 dark:from-[#72fe8f] dark:to-[#1cb853]" />
+                <div className="absolute inset-y-0 left-0 w-[24.8%] bg-gradient-to-r from-[#1ed760] to-[#1ed760] dark:from-[#1ed760] dark:to-[#1ed760]" />
               </div>
             </div>
             <div className="flex gap-[16px] pt-[8px]">
-              <button className="flex gap-[8px] items-center px-[24px] py-[12px] rounded-[12px]" style={{ backgroundImage: "linear-gradient(150deg, #72FE8F 0%, #1CB853 100%)" }}>
-                <svg width="15" height="22" fill="none" viewBox="0 0 15 22"><path d="M7.5 0V15M7.5 15L13 9.5M7.5 15L2 9.5M0 19H15V22H0V19Z" fill="#005F26" /></svg>
-                <div className="font-['Plus_Jakarta_Sans',sans-serif] font-bold text-[#005f26] text-[16px] leading-[24px]">Update All</div>
+              <button className="flex gap-[8px] items-center px-[24px] py-[12px] rounded-[12px]" style={{ backgroundImage: "linear-gradient(150deg, #1ed760 0%, #1ed760 100%)" }}>
+                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#000000" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <div className="font-['Plus_Jakarta_Sans',sans-serif] font-bold text-[#000000] text-[16px] leading-[24px]">Update All</div>
               </button>
               <button className="bg-gray-100 dark:bg-[#262626] flex gap-[8px] items-center px-[24px] py-[12px] rounded-[12px] border border-gray-200 dark:border-[rgba(72,72,71,0.15)] hover:bg-gray-200 dark:hover:bg-[#2c2c2c] transition-colors">
                 <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><rect x="5" y="4" width="4" height="12" rx="1" className="fill-gray-600 dark:fill-white" /><rect x="11" y="4" width="4" height="12" rx="1" className="fill-gray-600 dark:fill-white" /></svg>
@@ -68,7 +68,7 @@ export default function DownloadsPage() {
                 <div className="bg-gray-100 dark:bg-[#262626] rounded-[12px] shrink-0 size-[56px] overflow-hidden"><img alt={dl.name} className="size-full object-cover" src={IMG.reactIcon} /></div>
                 <div className="flex flex-1 flex-col gap-[4px]">
                   <div className="font-['Plus_Jakarta_Sans',sans-serif] font-bold text-[16px] text-gray-900 dark:text-white leading-[24px]">{dl.name}</div>
-                  <div className="font-['Inter',sans-serif] text-gray-500 dark:text-[#adaaaa] text-[12px] leading-[16px]">{dl.version} • {dl.size} x {dl.total}</div>
+                  <div className="font-['Inter',sans-serif] text-gray-500 dark:text-[#adaaaa] text-[12px] leading-[16px]">{dl.version} â€¢ {dl.size} x {dl.total}</div>
                 </div>
                 <div className="flex gap-[12px] items-center">
                   <button onClick={() => togglePause(dl.id)} className="size-[20px] text-gray-500 dark:text-white hover:text-gray-900 dark:hover:text-[#adaaaa]">
@@ -81,9 +81,9 @@ export default function DownloadsPage() {
               </div>
               <div className="flex flex-col gap-[8px]">
                 <div className="bg-gray-200 dark:bg-[#262626] h-[6px] overflow-clip relative rounded-full w-full transition-colors">
-                  <div className="absolute h-full left-0 rounded-full shadow-[0px_0px_15px_0px_rgba(16,185,129,0.4)] dark:shadow-[0px_0px_15px_0px_rgba(114,254,143,0.4)]" style={{ width: `${dl.progress}%`, backgroundImage: "linear-gradient(135deg, #72FE8F 0%, #1CB853 100%)" }} />
+                  <div className="absolute h-full left-0 rounded-full shadow-[0px_0px_15px_0px_rgba(16,185,129,0.4)] dark:shadow-[0px_0px_15px_0px_rgba(114,254,143,0.4)]" style={{ width: `${dl.progress}%`, backgroundImage: "linear-gradient(135deg, #1ed760 0%, #1ed760 100%)" }} />
                 </div>
-                <div className="font-['Inter',sans-serif] text-gray-500 dark:text-[#adaaaa] text-[10px] tracking-[1px] uppercase leading-[15px]">{dl.progress}% • {dl.speed}</div>
+                <div className="font-['Inter',sans-serif] text-gray-500 dark:text-[#adaaaa] text-[10px] tracking-[1px] uppercase leading-[15px]">{dl.progress}% â€¢ {dl.speed}</div>
               </div>
             </div>
           ))}
@@ -97,7 +97,7 @@ export default function DownloadsPage() {
                 </div>
               </div>
               <div className="flex gap-[12px] items-center">
-                <button className="size-[20px]"><svg className="block size-full" fill="none" viewBox="0 0 20 20"><path d="M6 4L14 10L6 16V4Z" className="fill-emerald-500 dark:fill-[#72FE8F]" /></svg></button>
+                <button className="size-[20px]"><svg className="block size-full" fill="none" viewBox="0 0 20 20"><path d="M6 4L14 10L6 16V4Z" className="fill-[#1ed760] dark:fill-[#1ed760]" /></svg></button>
                 <button className="size-[20px]"><svg className="block size-full" fill="none" viewBox="0 0 20 20"><path d="M15 5L5 15M5 5L15 15" stroke="#FF7351" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg></button>
               </div>
             </div>
@@ -108,7 +108,7 @@ export default function DownloadsPage() {
         <div className="flex flex-col gap-[16px] pt-[16px]">
           <div className="flex items-center justify-between">
             <div className="font-['Plus_Jakarta_Sans',sans-serif] font-bold text-[20px] text-gray-900 dark:text-white leading-[28px]">Recent Archives</div>
-            <button className="font-['Inter',sans-serif] text-emerald-600 dark:text-[#72fe8f] text-[14px] leading-[20px]">Clear History</button>
+            <button className="font-['Inter',sans-serif] text-[#1ed760] dark:text-[#1ed760] text-[14px] leading-[20px]">Clear History</button>
           </div>
           <div className="flex items-center justify-between py-[12px] border-b border-gray-200 dark:border-[#262626]">
             <div className="font-['Inter',sans-serif] text-gray-500 dark:text-[#adaaaa] text-[12px] uppercase tracking-[1.2px]">Asset Name</div>

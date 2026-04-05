@@ -51,12 +51,12 @@ export function Login() {
       <div className="w-full max-w-[430px] bg-white dark:bg-[#0a0a0a] min-h-screen relative overflow-hidden flex flex-col justify-center p-6 text-gray-900 dark:text-white border-x border-gray-200 dark:border-[#222] transition-colors">
 
         {/* Decorative blurs */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-400 dark:bg-[#34d399] opacity-[0.1] dark:opacity-[0.05] blur-[80px] rounded-full" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-teal-500 dark:bg-emerald-500 opacity-[0.1] dark:opacity-[0.05] blur-[80px] rounded-full" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-[#1ed760] dark:bg-[#1ed760] opacity-[0.1] dark:opacity-[0.05] blur-[80px] rounded-full" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#1ed760] dark:bg-[#1ed760] opacity-[0.1] dark:opacity-[0.05] blur-[80px] rounded-full" />
 
         <div className="relative z-10 w-full max-w-sm mx-auto">
           <div className="flex flex-col items-center mb-10">
-            <div className="w-16 h-16 bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-3xl flex items-center justify-center mb-5 text-emerald-500 dark:text-[#34d399] shadow-xl">
+            <div className="w-16 h-16 bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-3xl flex items-center justify-center mb-5 text-[#1ed760] dark:text-[#1ed760] shadow-xl">
               <Briefcase size={32} />
             </div>
             <h1 className="text-3xl font-black tracking-tight mb-2 text-center">DevMarket</h1>
@@ -78,7 +78,7 @@ export function Login() {
                 <input
                   type="text" value={name} onChange={(e) => setName(e.target.value)}
                   placeholder="Jane Doe"
-                  className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-2xl px-5 py-4 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-emerald-400 dark:focus:border-[#34d399] transition-colors shadow-inner"
+                  className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-2xl px-5 py-4 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-[#1ed760] dark:focus:border-[#1ed760] transition-colors shadow-inner"
                   required
                 />
               </div>
@@ -89,7 +89,7 @@ export function Login() {
               <input
                 type="text" value={contact} onChange={(e) => setContact(e.target.value)}
                 placeholder="developer@example.com"
-                className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-2xl px-5 py-4 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-emerald-400 dark:focus:border-[#34d399] transition-colors shadow-inner"
+                className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-2xl px-5 py-4 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-[#1ed760] dark:focus:border-[#1ed760] transition-colors shadow-inner"
                 required
               />
             </div>
@@ -98,15 +98,15 @@ export function Login() {
               <label className="text-[10px] font-bold text-gray-500 dark:text-zinc-400 uppercase tracking-wider ml-1">Password</label>
               <input
                 type="password" value={password} onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-2xl px-5 py-4 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-emerald-400 dark:focus:border-[#34d399] transition-colors shadow-inner"
+                placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-2xl px-5 py-4 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-[#1ed760] dark:focus:border-[#1ed760] transition-colors shadow-inner"
                 required
               />
             </div>
 
             <button
               type="submit" disabled={loading}
-              className="w-full bg-emerald-400 dark:bg-[#34d399] text-black font-black text-sm uppercase tracking-wider py-4 rounded-2xl hover:bg-emerald-500 dark:hover:bg-[#2ebc87] transition-all flex items-center justify-center gap-2 mt-2 active:scale-[0.98] shadow-lg shadow-emerald-400/20 dark:shadow-[#34d399]/20 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-[#1ed760] dark:bg-[#1ed760] text-black font-black text-sm uppercase tracking-wider py-4 rounded-2xl hover:bg-[#1ed760] dark:hover:bg-[#1ed760] transition-all flex items-center justify-center gap-2 mt-2 active:scale-[0.98] shadow-lg shadow-[#1ed760]/20 dark:shadow-[#1ed760]/20 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? "Please wait..." : (isRegister ? "Create Account" : "Sign In")}
               {!loading && <ArrowRight size={18} />}
@@ -127,13 +127,13 @@ export function Login() {
           <div className="flex gap-3 mb-6">
             <button
               onClick={() => handleDemoLogin("admin")}
-              className="flex-1 py-3 rounded-2xl text-xs font-bold uppercase tracking-wider border border-gray-200 dark:border-[#333] bg-gray-50 dark:bg-[#111] text-gray-700 dark:text-zinc-300 hover:border-emerald-400 dark:hover:border-[#34d399] hover:text-emerald-600 dark:hover:text-[#34d399] transition-colors"
+              className="flex-1 py-3 rounded-2xl text-xs font-bold uppercase tracking-wider border border-gray-200 dark:border-[#333] bg-gray-50 dark:bg-[#111] text-gray-700 dark:text-zinc-300 hover:border-[#1ed760] dark:hover:border-[#1ed760] hover:text-[#1ed760] dark:hover:text-[#1ed760] transition-colors"
             >
               Admin Demo
             </button>
             <button
               onClick={() => handleDemoLogin("user")}
-              className="flex-1 py-3 rounded-2xl text-xs font-bold uppercase tracking-wider border border-gray-200 dark:border-[#333] bg-gray-50 dark:bg-[#111] text-gray-700 dark:text-zinc-300 hover:border-emerald-400 dark:hover:border-[#34d399] hover:text-emerald-600 dark:hover:text-[#34d399] transition-colors"
+              className="flex-1 py-3 rounded-2xl text-xs font-bold uppercase tracking-wider border border-gray-200 dark:border-[#333] bg-gray-50 dark:bg-[#111] text-gray-700 dark:text-zinc-300 hover:border-[#1ed760] dark:hover:border-[#1ed760] hover:text-[#1ed760] dark:hover:text-[#1ed760] transition-colors"
             >
               Dev Demo
             </button>
@@ -143,7 +143,7 @@ export function Login() {
             {isRegister ? "Already have an account?" : "Don't have an account?"}{" "}
             <button
               onClick={() => { setIsRegister(!isRegister); setError(""); }}
-              className="text-emerald-600 dark:text-[#34d399] hover:underline font-bold"
+              className="text-[#1ed760] dark:text-[#1ed760] hover:underline font-bold"
             >
               {isRegister ? "Sign in" : "Sign up"}
             </button>

@@ -10,7 +10,7 @@ const IMG = {
 };
 
 const categories = [
-  { id: 1, name: "Popular apps", color: "#72FE8F" },
+  { id: 1, name: "Popular apps", color: "#1ed760" },
   { id: 2, name: "Business tools", color: "#88EBFF" },
   { id: 3, name: "Social Media", color: "#7CFBB5" },
   { id: 4, name: "Games", color: "#FF7351" },
@@ -97,9 +97,9 @@ export default function SearchPage() {
         {/* No results state */}
         <div className="flex flex-col gap-[24px] items-center py-[32px]">
           <svg width="80" height="80" fill="none" viewBox="0 0 80 80">
-            <circle cx="40" cy="40" r="38" stroke="#10b981" strokeWidth="2" strokeDasharray="8 8" className="dark:stroke-[#72FE8F]" />
-            <circle cx="32" cy="32" r="20" stroke="#10b981" strokeWidth="2" className="dark:stroke-[#72FE8F]" />
-            <path d="M48 48L60 60" stroke="#10b981" strokeWidth="2" strokeLinecap="round" className="dark:stroke-[#72FE8F]" />
+            <circle cx="40" cy="40" r="38" stroke="#10b981" strokeWidth="2" strokeDasharray="8 8" className="dark:stroke-[#1ed760]" />
+            <circle cx="32" cy="32" r="20" stroke="#10b981" strokeWidth="2" className="dark:stroke-[#1ed760]" />
+            <path d="M48 48L60 60" stroke="#10b981" strokeWidth="2" strokeLinecap="round" className="dark:stroke-[#1ed760]" />
           </svg>
           <div className="flex flex-col gap-[12px] items-center">
             <div className="font-['Plus_Jakarta_Sans',sans-serif] font-bold text-[24px] text-center text-gray-900 dark:text-white leading-[32px]">No results yet</div>
@@ -131,7 +131,7 @@ export default function SearchPage() {
                       <div className="font-['Inter',sans-serif] text-gray-500 dark:text-[#adaaaa] text-[12px] leading-[16px]">{app.category || "Utility"}</div>
                     </div>
                     <div className="bg-gray-200 dark:bg-[#262626] flex items-center px-[12px] py-[6px] rounded-full transition-colors">
-                      <div className="font-['Inter',sans-serif] text-emerald-600 dark:text-[#72fe8f] text-[12px] leading-[16px] font-bold">Free</div>
+                      <div className="font-['Inter',sans-serif] text-[#1ed760] dark:text-[#1ed760] text-[12px] leading-[16px] font-bold">Free</div>
                     </div>
                   </div>
                 </button>
@@ -149,7 +149,7 @@ export default function SearchPage() {
                       <div className="font-['Inter',sans-serif] text-gray-500 dark:text-[#adaaaa] text-[12px] leading-[16px]">{item.desc}</div>
                     </div>
                     <div className="bg-gray-200 dark:bg-[#262626] flex items-center px-[12px] py-[6px] rounded-full transition-colors">
-                      <div className="font-['Inter',sans-serif] text-emerald-600 dark:text-[#72fe8f] text-[12px] leading-[16px] font-bold">{item.price}</div>
+                      <div className="font-['Inter',sans-serif] text-[#1ed760] dark:text-[#1ed760] text-[12px] leading-[16px] font-bold">{item.price}</div>
                     </div>
                   </div>
                 </button>

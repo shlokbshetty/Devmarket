@@ -48,10 +48,10 @@ export function Layout() {
 
   return (
     <div className="bg-gray-100 dark:bg-black min-h-screen flex justify-center w-full transition-colors">
-      {/* Mobile App Container — Editorial Discovery: surface (#0e0e0e) */}
+      {/* Mobile App Container â€” Editorial Discovery: surface (#0e0e0e) */}
       <div className={`w-full max-w-[430px] bg-white dark:bg-[#0e0e0e] h-screen shadow-[0_20px_40px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_40px_rgba(0,0,0,0.4)] relative text-gray-900 dark:text-white font-['Plus_Jakarta_Sans',sans-serif] flex flex-col overflow-hidden transition-colors`}>
 
-        {/* Top Navigation Bar — Glass blur on marketplace, solid surface otherwise */}
+        {/* Top Navigation Bar â€” Glass blur on marketplace, solid surface otherwise */}
         <header className={`flex items-center justify-between px-5 py-4 ${isMarketplacePage ? 'bg-white/85 dark:bg-[rgba(14,14,14,0.85)] backdrop-blur-[20px]' : 'bg-gray-50 dark:bg-[#131313]'} shrink-0 z-30 transition-colors`}>
           <div className="flex items-center gap-3">
             <button
@@ -62,13 +62,13 @@ export function Layout() {
               <Menu size={24} />
             </button>
             <div className="text-lg font-bold flex items-center gap-2 text-gray-900 dark:text-white">
-              <Briefcase size={20} className="text-emerald-500 dark:text-[#72FE8F]" />
+              <Briefcase size={20} className="text-[#1ed760] dark:text-[#1ed760]" />
               DevMarket
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-            {/* Share button — only on App Detail pages */}
+            {/* Share button â€” only on App Detail pages */}
             {isAppDetailPage && (
               <button
                 onClick={() => navigate(location.pathname + "/share")}
@@ -80,18 +80,18 @@ export function Layout() {
             )}
 
             {isAuthenticated ? (
-              <button onClick={() => navigate("/profile")} className="w-8 h-8 rounded-full overflow-hidden hover:ring-2 hover:ring-emerald-500/40 dark:hover:ring-[#72FE8F]/40 transition-all">
+              <button onClick={() => navigate("/profile")} className="w-8 h-8 rounded-full overflow-hidden hover:ring-2 hover:ring-[#1ed760]/40 dark:hover:ring-[#1ed760]/40 transition-all">
                 <img src={profilePic} alt="User" className="w-full h-full object-cover" />
               </button>
             ) : (
-              <Link to="/login" className="text-sm font-bold hover:underline text-emerald-600 dark:text-[#72FE8F]">
+              <Link to="/login" className="text-sm font-bold hover:underline text-[#1ed760] dark:text-[#1ed760]">
                 Sign In
               </Link>
             )}
           </div>
         </header>
 
-        {/* Slide-in Sidebar — Editorial Discovery: surface_container #1a1a1a */}
+        {/* Slide-in Sidebar â€” Editorial Discovery: surface_container #1a1a1a */}
         {/* Adjusted z-index from z-40/z-50 to z-[60]/z-[70] so it overlays BottomNav */}
         <AnimatePresence>
           {isSidebarOpen && (
@@ -106,10 +106,10 @@ export function Layout() {
                 transition={{ type: "spring", bounce: 0, duration: 0.4 }}
                 className="absolute top-0 left-0 h-full w-[280px] bg-white dark:bg-[#1a1a1a] z-[70] flex flex-col shadow-[20px_0_40px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_40px_rgba(0,0,0,0.4)] transition-colors"
               >
-                {/* Sidebar Header — bg shift to #131313, no borders */}
+                {/* Sidebar Header â€” bg shift to #131313, no borders */}
                 <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-[#131313] transition-colors">
                   <div className="text-lg font-bold flex items-center gap-2 text-gray-900 dark:text-white">
-                    <Briefcase size={20} className="text-emerald-500 dark:text-[#72FE8F]" />
+                    <Briefcase size={20} className="text-[#1ed760] dark:text-[#1ed760]" />
                     DevMarket
                   </div>
                   <button onClick={closeSidebar} className="p-2 hover:bg-gray-200 dark:hover:bg-[#2c2c2c] rounded-full transition-colors bg-gray-100 dark:bg-[#20201f] text-gray-500 dark:text-[#adaaaa]">
@@ -135,7 +135,7 @@ export function Layout() {
                       return (
                         <Link key={link.path} to={link.path} onClick={closeSidebar}
                           className={`flex items-center justify-between px-3 py-3.5 rounded-xl transition-all ${isActive
-                            ? "bg-emerald-50 text-emerald-600 dark:bg-[#72FE8F]/10 dark:text-[#72FE8F] font-bold"
+                            ? "bg-[#1ed760]/10 text-[#1ed760] dark:bg-[#1ed760]/10 dark:text-[#1ed760] font-bold"
                             : "text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:text-[#adaaaa] dark:hover:text-white dark:hover:bg-[#20201f] font-medium"
                             }`}
                         >
@@ -147,12 +147,12 @@ export function Layout() {
                   </nav>
                 </div>
 
-                {/* Sidebar Footer — bg shift to #131313 */}
+                {/* Sidebar Footer â€” bg shift to #131313 */}
                 <div className="p-4 bg-gray-50 dark:bg-[#131313] flex flex-col gap-2 transition-colors">
                   {isAuthenticated && (
                     <Link to="/settings" onClick={closeSidebar}
                       className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-colors font-medium ${location.pathname === "/settings"
-                        ? "bg-emerald-50 text-emerald-600 dark:bg-[#72FE8F]/10 dark:text-[#72FE8F] font-bold"
+                        ? "bg-[#1ed760]/10 text-[#1ed760] dark:bg-[#1ed760]/10 dark:text-[#1ed760] font-bold"
                         : "text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:text-[#adaaaa] dark:hover:text-white dark:hover:bg-[#20201f]"
                         }`}
                     >
@@ -167,7 +167,7 @@ export function Layout() {
                     </button>
                   ) : (
                     <Link to="/login" onClick={closeSidebar}
-                      className="flex items-center gap-3 px-3 py-3 rounded-xl text-emerald-600 hover:bg-emerald-50 dark:text-[#72FE8F] dark:hover:bg-[#72FE8F]/10 transition-colors font-medium"
+                      className="flex items-center gap-3 px-3 py-3 rounded-xl text-[#1ed760] hover:bg-[#1ed760]/10 dark:text-[#1ed760] dark:hover:bg-[#1ed760]/10 transition-colors font-medium"
                     >
                       <User size={20} /><span>Sign In</span>
                     </Link>
@@ -178,12 +178,12 @@ export function Layout() {
           )}
         </AnimatePresence>
 
-        {/* Main Content — fills remaining space, scrollable independently */}
+        {/* Main Content â€” fills remaining space, scrollable independently */}
         <main className="flex-1 overflow-y-auto overflow-x-hidden relative scrollbar-hide min-h-0">
           <Outlet context={{ profilePic, setProfilePic }} />
         </main>
 
-        {/* Bottom Navigation — outside scroll area, always at bottom */}
+        {/* Bottom Navigation â€” outside scroll area, always at bottom */}
         {isMarketplacePage && <BottomNav />}
       </div>
     </div>

@@ -113,12 +113,12 @@ export default function SharePage() {
         <div className="px-[32px] pb-[32px]">
           <button onClick={handleCopyLink}
             className="flex items-center justify-center gap-[12px] h-[56px] w-full rounded-[16px] shadow-sm dark:shadow-[0px_8px_30px_0px_rgba(114,254,143,0.3)] transition-transform hover:scale-[1.02] active:scale-[0.98]"
-            style={{ backgroundImage: "linear-gradient(135deg, #72FE8F 0%, #1CB853 100%)" }}>
+            style={{ backgroundImage: "linear-gradient(135deg, #1ed760 0%, #1ed760 100%)" }}>
             <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
-              <rect x="9" y="9" width="13" height="13" rx="2" stroke="#005F26" strokeWidth="2" />
-              <path d="M5 15H4C2.89543 15 2 14.1046 2 13V4C2 2.89543 2.89543 2 4 2H13C14.1046 2 15 2.89543 15 4V5" stroke="#005F26" strokeWidth="2" />
+              <rect x="9" y="9" width="13" height="13" rx="2" stroke="#000000" strokeWidth="2" />
+              <path d="M5 15H4C2.89543 15 2 14.1046 2 13V4C2 2.89543 2.89543 2 4 2H13C14.1046 2 15 2.89543 15 4V5" stroke="#000000" strokeWidth="2" />
             </svg>
-            <div className="font-['Plus_Jakarta_Sans',sans-serif] font-bold text-[#005f26] text-[16px] leading-[24px]">
+            <div className="font-['Plus_Jakarta_Sans',sans-serif] font-bold text-[#000000] text-[16px] leading-[24px]">
               {copied ? "Link Copied!" : "Copy App Link"}
             </div>
           </button>
@@ -130,10 +130,10 @@ export default function SharePage() {
           <div className="flex gap-[20px] overflow-x-auto scrollbar-hide pb-[4px]">
             {friends.map((friend) => (
               <button key={friend.name} onClick={() => toggleFriend(friend.name)} className="flex flex-col items-center gap-[8px] shrink-0">
-                <div className={`relative rounded-full size-[64px] overflow-hidden ${selectedFriends.includes(friend.name) ? 'ring-2 ring-emerald-500 ring-offset-2 ring-offset-white dark:ring-[#72FE8F] dark:ring-offset-[#131313]' : 'opacity-80 hover:opacity-100'} transition-all`}>
+                <div className={`relative rounded-full size-[64px] overflow-hidden ${selectedFriends.includes(friend.name) ? 'ring-2 ring-[#1ed760] ring-offset-2 ring-offset-white dark:ring-[#1ed760] dark:ring-offset-[#131313]' : 'opacity-80 hover:opacity-100'} transition-all`}>
                   <img alt={friend.name} className="size-full object-cover" src={friend.img} />
                   {friend.online && (
-                    <div className="absolute bottom-[2px] right-[2px] size-[12px] rounded-full bg-emerald-500 dark:bg-[#72FE8F] shadow-[0_0_10px_rgba(16,185,129,0.4)] dark:shadow-[0_0_10px_#72fe8f44] border-2 border-white dark:border-[#131313]" />
+                    <div className="absolute bottom-[2px] right-[2px] size-[12px] rounded-full bg-[#1ed760] dark:bg-[#1ed760] shadow-[0_0_10px_rgba(16,185,129,0.4)] dark:shadow-[0_0_10px_#1ed76044] border-2 border-white dark:border-[#131313]" />
                   )}
                 </div>
                 <div className="font-['Plus_Jakarta_Sans',sans-serif] font-bold text-[12px] text-gray-700 dark:text-[#adaaaa] leading-[16px]">{friend.name}</div>
