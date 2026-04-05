@@ -4,6 +4,15 @@
  */
 const App = require('../models/App');
 
+exports.getPendingApps = async (req, res) => {
+  try {
+    const apps = await App.find({ status: 'Pending' }).populate('developerId', 'name contact').sort({ createdAt: -1 });
+    res.json({ success: true, data: apps });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 exports.approveApp = async (req, res) => {
   try {
     const app = await App.findById(req.params.id);
