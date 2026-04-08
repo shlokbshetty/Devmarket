@@ -25,8 +25,14 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/apps', appRoutes);
 app.use('/api/reviews', reviewRoutes);
 
-app.get('/', (req, res) => {
-  res.json({ success: true, message: 'DevMarket API server is running' });
+const path = require('path');
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+app.use(express.static(path.join(__dirname, '../client/dist')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
 });
 
 const PORT = process.env.PORT || 5000;

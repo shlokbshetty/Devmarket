@@ -30,3 +30,11 @@ exports.isAdmin = (req, res, next) => {
     res.status(403).json({ success: false, message: 'Not authorized as an admin' });
   }
 };
+
+exports.isDeveloper = (req, res, next) => {
+  if (req.user && req.user.role === 'developer') {
+    next();
+  } else {
+    res.status(403).json({ success: false, message: 'Not authorized as a developer' });
+  }
+};

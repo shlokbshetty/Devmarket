@@ -6,10 +6,15 @@ const App = require('../models/App');
 
 exports.uploadApp = async (req, res) => {
   try {
-    const { name, description, category, apkUrl, screenshots } = req.body;
+    const { name, description, category, screenshots } = req.body;
+    let apkUrl = req.body.apkUrl;
+
+    if (req.file) {
+      apkUrl = `/uploads/${req.file.filename}`;
+    }
     
     if (!name || !description || !category || !apkUrl) {
-      return res.status(400).json({ success: false, message: 'Please provide all fields including apkUrl' });
+      return res.status(400).json({ success: false, message: 'Please provide all fields including apk' });
     }
 
     const app = await App.create({
@@ -18,7 +23,7 @@ exports.uploadApp = async (req, res) => {
       category,
       developerId: req.user._id,
       apkUrl,
-      screenshots: Array.isArray(screenshots) ? screenshots : [],
+      screenshots: Array.isArray(screenshots) ? screenshots : (screenshots ? [screenshots] : []),
       status: 'Pending'
     });
 

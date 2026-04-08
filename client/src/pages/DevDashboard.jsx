@@ -1,20 +1,20 @@
 import { useState } from "react";
-import { Link2, Image as ImageIcon, Plus, Trash2, CheckCircle2 } from "lucide-react";
+import { UploadCloud, Image as ImageIcon, Plus, Trash2, CheckCircle2 } from "lucide-react";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router";
 import { useAuth } from "../context/AuthContext.jsx";
-import { apiPost } from "../api/client.js";
+import { apiPost, apiUpload } from "../api/client.js";
 
 const CATEGORIES = ["Games", "Productivity", "Utilities", "Creative Tools", "Security", "DevOps", "Education", "Other"];
 
 export function DevDashboard() {
-  const { isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
   const [appName, setAppName] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
-  const [apkUrl, setApkUrl] = useState("");
+  const [apkFile, setApkFile] = useState(null);
   const [screenshots, setScreenshots] = useState([""]);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
@@ -24,10 +24,19 @@ export function DevDashboard() {
     return (
       <div className="w-full p-4 text-gray-900 dark:text-white min-h-[calc(100vh-65px)] bg-gray-50 dark:bg-[#0a0a0a] flex flex-col items-center justify-center">
         <h2 className="text-xl font-bold mb-2">Sign in Required</h2>
-        <p className="text-gray-500 dark:text-zinc-400 text-sm mb-4">You need to be logged in to upload apps.</p>
+        <p className="text-gray-500 dark:text-zinc-400 text-sm mb-4">You need to be logged in to access this page.</p>
         <button onClick={() => navigate('/login')} className="bg-emerald-400 dark:bg-[#34d399] text-black font-bold py-2.5 px-6 rounded-xl hover:bg-emerald-500 dark:hover:bg-[#2ebc87] transition-colors">
           Sign In
         </button>
+      </div>
+    );
+  }
+
+  if (user?.role !== 'developer') {
+    return (
+      <div className="w-full p-4 text-gray-900 dark:text-white min-h-[calc(100vh-65px)] bg-gray-50 dark:bg-[#0a0a0a] flex flex-col items-center justify-center">
+        <h2 className="text-xl font-bold mb-2">Developer Access Required</h2>
+        <p className="text-gray-500 dark:text-zinc-400 text-sm mb-4 text-center max-w-sm">Only Developer accounts can upload and publish apps to DevMarket. You are currently logged in as a {user?.role || 'user'}.</p>
       </div>
     );
   }
@@ -38,11 +47,20 @@ export function DevDashboard() {
     setLoading(true);
     try {
       const validScreenshots = screenshots.filter(s => s.trim() !== "");
-      await apiPost("/apps/upload", { name: appName, description, category, apkUrl, screenshots: validScreenshots });
+      
+      const formData = new FormData();
+      formData.append('name', appName);
+      formData.append('description', description);
+      formData.append('category', category);
+      formData.append('apk', apkFile); // The file itself
+      validScreenshots.forEach(s => formData.append('screenshots', s));
+
+      await apiUpload("/apps/upload-apk", formData); // using dedicated form data endpoint
+      
       setSubmitted(true);
       setTimeout(() => {
         setSubmitted(false);
-        setAppName(""); setDescription(""); setCategory(""); setApkUrl(""); setScreenshots([""]);
+        setAppName(""); setDescription(""); setCategory(""); setApkFile(null); setScreenshots([""]);
       }, 3000);
     } catch (err) {
       setError(err.message);
@@ -98,11 +116,16 @@ export function DevDashboard() {
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-[10px] font-bold text-gray-500 dark:text-zinc-400 uppercase tracking-wider ml-1">APK Download URL</label>
+              <label className="text-[10px] font-bold text-gray-500 dark:text-zinc-400 uppercase tracking-wider ml-1">Upload APK</label>
               <div className="relative">
-                <Link2 className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-zinc-500" size={16} />
-                <input type="url" value={apkUrl} onChange={(e) => setApkUrl(e.target.value)} placeholder="https://drive.google.com/file/your-apk"
-                  className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-xl pl-10 pr-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-emerald-400 dark:focus:border-[#34d399] transition-colors" required />
+                <UploadCloud className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-zinc-500" size={16} />
+                <input 
+                  type="file" 
+                  accept=".apk"
+                  onChange={(e) => setApkFile(e.target.files[0])} 
+                  className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-xl pl-10 pr-4 py-3 text-sm text-gray-900 dark:text-white file:mr-4 file:py-1 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-500 file:text-black hover:file:bg-emerald-400 transition-colors" 
+                  required 
+                />
               </div>
             </div>
 
@@ -135,7 +158,7 @@ export function DevDashboard() {
             </div>
 
             <div className="pt-2">
-              <button type="submit" disabled={loading || !appName || !description || !category || !apkUrl}
+              <button type="submit" disabled={loading || !appName || !description || !category || !apkFile}
                 className="w-full bg-emerald-400 dark:bg-[#34d399] text-black font-bold py-3.5 rounded-xl hover:bg-emerald-500 dark:hover:bg-[#2ebc87] disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-[0.98] shadow-md">
                 {loading ? "Submitting..." : "Submit for Review"}
               </button>

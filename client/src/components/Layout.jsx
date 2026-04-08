@@ -34,7 +34,7 @@ export function Layout() {
     { name: "Library", path: "/library", icon: <FolderOpen size={20} /> },
     ...(isAuthenticated ? [
       { name: "Profile", path: "/profile", icon: <User size={20} /> },
-      { name: "Upload APK", path: "/dev", icon: <UploadCloud size={20} /> },
+      ...(user?.role === 'developer' ? [{ name: "Upload APK", path: "/dev", icon: <UploadCloud size={20} /> }] : []),
     ] : []),
     ...(isAdmin ? [
       { name: "Admin Dashboard", path: "/admin", icon: <Shield size={20} /> },

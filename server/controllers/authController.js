@@ -80,3 +80,40 @@ exports.login = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+exports.mockFirebaseLogin = async (req, res) => {
+  try {
+    const { name, email, role } = req.body;
+    
+    if (!name || !email || !role) {
+      return res.status(400).json({ success: false, message: 'Missing fields for mock login' });
+    }
+
+    let user = await User.findOne({ contact: email });
+    
+    if (!user) {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash('mockpassword123!', salt);
+      user = await User.create({
+        name,
+        contact: email,
+        password: hashedPassword,
+        role: role
+      });
+    }
+
+    res.json({
+      success: true,
+      data: {
+        _id: user._id,
+        name: user.name,
+        contact: user.contact,
+        role: user.role,
+        token: generateToken(user._id)
+      }
+    });
+
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
