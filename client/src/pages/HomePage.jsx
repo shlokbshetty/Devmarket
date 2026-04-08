@@ -1,4 +1,6 @@
 import { useNavigate } from "react-router";
+import { useState, useEffect } from "react";
+import { apiGet } from "../api/client.js";
 import svgPaths from "../imports/svg-1vynxnf5kv.js";
 
 const IMG = {
@@ -23,6 +25,22 @@ const trendingApps = [
 
 export default function HomePage() {
   const navigate = useNavigate();
+  const [liveApps, setLiveApps] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchApps() {
+      try {
+        const res = await apiGet("/apps/search");
+        setLiveApps(res?.data || []);
+      } catch (err) {
+        console.error("Failed to fetch apps:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchApps();
+  }, []);
 
   return (
     <div className="bg-gray-50 dark:bg-[#0e0e0e] relative w-full min-h-full overflow-y-auto pb-[24px] transition-colors">
@@ -31,7 +49,7 @@ export default function HomePage() {
         {/* Featured Header */}
         <div className="flex items-end justify-between mb-[24px]">
           <div className="font-['Plus_Jakarta_Sans',sans-serif] font-extrabold text-[36px] text-gray-900 dark:text-white tracking-[-0.9px] leading-[36px]">Featured</div>
-          <button onClick={() => navigate("/search")} className="font-['Inter',sans-serif] text-emerald-600 dark:text-[#72fe8f] text-[12px] tracking-[1.2px] leading-[16px]">VIEW ALL</button>
+          <button onClick={() => navigate("/search")} className="font-['Inter',sans-serif] text-[#1ed760] dark:text-[#1ed760] text-[12px] tracking-[1.2px] leading-[16px]">VIEW ALL</button>
         </div>
 
         {/* Featured Large Card */}
@@ -43,7 +61,7 @@ export default function HomePage() {
           <div className="absolute bottom-0 left-0 right-0 flex flex-col gap-[7px] pb-[18px] pt-[32px] px-[32px]">
             <div className="font-['Plus_Jakarta_Sans',sans-serif] font-extrabold text-[36px] text-white leading-[45px]">SynthCode Pro</div>
             <div className="font-['Inter',sans-serif] text-gray-300 dark:text-[#adaaaa] text-[14px] leading-[23px] max-w-[448px]">The ultimate visual IDE for creative developers. Build immersive experiences with zero friction.</div>
-            <div className="flex h-[42px] items-center justify-center px-[32px] py-[12px] rounded-full mt-2" style={{ backgroundImage: "linear-gradient(136deg, #72FE8F 0%, #1CB853 100%)" }}>
+            <div className="flex h-[42px] items-center justify-center px-[32px] py-[12px] rounded-full mt-2" style={{ backgroundImage: "linear-gradient(136deg, #1ed760 0%, #1ed760 100%)" }}>
               <div className="font-['Inter',sans-serif] text-[#002a0c] text-[14px] leading-[20px] font-bold">Download Now</div>
             </div>
           </div>
@@ -54,7 +72,7 @@ export default function HomePage() {
           <button onClick={() => navigate("/search")} className="bg-white dark:bg-[#20201f] shadow-sm dark:shadow-none rounded-[32px] w-full p-[32px] hover:bg-gray-100 dark:hover:bg-[#2c2c2c] transition-colors">
             <div className="flex flex-col gap-[8px]">
               <div className="h-[30px] w-[30px]">
-                <svg className="block size-full" fill="none" viewBox="0 0 30.07 30.11"><path d={svgPaths.p277ab000} fill="#72FE8F" /></svg>
+                <svg className="block size-full" fill="none" viewBox="0 0 30.07 30.11"><path d={svgPaths.p277ab000} fill="#1ed760" /></svg>
               </div>
               <div className="font-['Plus_Jakarta_Sans',sans-serif] font-bold text-[20px] text-gray-900 dark:text-white leading-[28px] text-left">New Arrivals</div>
               <div className="font-['Inter',sans-serif] text-gray-500 dark:text-[#adaaaa] text-[12px] leading-[20px] text-left">Be amongst the first ones to try the new arrivals!</div>
@@ -64,21 +82,21 @@ export default function HomePage() {
             </div>
           </button>
           
-          <button onClick={() => navigate("/search")} className="bg-emerald-400 dark:bg-[#72fe8f] shadow-sm dark:shadow-none rounded-[32px] w-full p-[32px] hover:bg-emerald-500 dark:hover:bg-[#5bde79] transition-colors">
+          <button onClick={() => navigate("/search")} className="bg-[#1ed760] dark:bg-[#1ed760] shadow-sm dark:shadow-none rounded-[32px] w-full p-[32px] hover:bg-[#1ed760] dark:hover:bg-[#5bde79] transition-colors">
             <div className="flex flex-col gap-[8px] text-left">
-              <div className="font-['Plus_Jakarta_Sans',sans-serif] font-bold text-[#005f26] text-[20px] leading-[28px]">Pro Bundle</div>
+              <div className="font-['Plus_Jakarta_Sans',sans-serif] font-bold text-[#000000] text-[20px] leading-[28px]">Pro Bundle</div>
               <div className="font-['Inter',sans-serif] text-[12px] text-[rgba(0,95,38,0.8)] leading-[20px]">Get 12 premium productivity tools in one exclusive dev pack.</div>
             </div>
             <div className="flex items-center justify-between mt-[16px]">
-              <div className="font-['Inter',sans-serif] text-[#005f26] text-[24px] leading-[32px] font-bold">$49</div>
-              <svg width="16" height="20" fill="none" viewBox="0 0 16 20"><path d={svgPaths.p3faf9100} fill="#005F26" /></svg>
+              <div className="font-['Inter',sans-serif] text-[#000000] text-[24px] leading-[32px] font-bold">$49</div>
+              <svg width="16" height="20" fill="none" viewBox="0 0 16 20"><path d={svgPaths.p3faf9100} fill="#000000" /></svg>
             </div>
           </button>
         </div>
 
         {/* Category Chips */}
         <div className="flex gap-[12px] overflow-x-auto py-[8px] mb-[24px] scrollbar-hide">
-          <div className="bg-emerald-500 dark:bg-[#1cb853] flex items-center justify-center px-[24px] py-[10px] rounded-full shrink-0 shadow-sm dark:shadow-none transition-colors">
+          <div className="bg-[#1ed760] dark:bg-[#1ed760] flex items-center justify-center px-[24px] py-[10px] rounded-full shrink-0 shadow-sm dark:shadow-none transition-colors">
             <div className="font-['Inter',sans-serif] text-white dark:text-[#002a0c] text-[14px]">All</div>
           </div>
           {['Games', 'Productivity', 'Design', 'Utilities', 'Security', 'Social'].map((cat) => (
@@ -96,27 +114,53 @@ export default function HomePage() {
 
         {/* Trending Apps List */}
         <div className="flex flex-col gap-[16px]">
-          {trendingApps.map((app) => (
-            <button key={app.id} onClick={() => navigate(`/app/${app.id}`)} className="flex gap-[20px] items-center w-full p-[8px] rounded-[24px] hover:bg-gray-100 dark:hover:bg-[#131313] transition-colors">
-              <div className="flex items-center justify-center shrink-0 size-[80px] rounded-[16px] overflow-hidden bg-gray-200 dark:bg-[#262626]">
-                <img alt={app.name} className="size-full object-cover" src={app.image} />
-              </div>
-              <div className="flex flex-1 flex-col items-start gap-[4px]">
-                <div className="font-['Plus_Jakarta_Sans',sans-serif] font-bold text-[16px] text-gray-900 dark:text-white leading-[24px]">{app.name}</div>
-                <div className="font-['Inter',sans-serif] text-gray-500 dark:text-[#adaaaa] text-[12px] leading-[16px]">{app.category}</div>
-                <div className="flex gap-[8px] items-center pt-[4px]">
-                  <div className="bg-gray-200 dark:bg-[#262626] flex items-center px-[8px] py-[2px] rounded-[4px] transition-colors">
-                    <div className="font-['Inter',sans-serif] text-gray-600 dark:text-[#adaaaa] text-[10px] leading-[15px]">{app.price}</div>
-                  </div>
-                  <div className="flex gap-[4px] items-center">
-                    <svg width="10" height="10" fill="none" viewBox="0 0 10 9.5"><path d={svgPaths.p197ced20} className="fill-emerald-500 dark:fill-[#72FE8F]" /></svg>
-                    <div className="font-['Inter',sans-serif] text-emerald-600 dark:text-[#72fe8f] text-[10px] leading-[15px] font-bold">{app.rating}</div>
+          {loading ? (
+            <div className="text-center py-6 text-gray-500 dark:text-[#adaaaa]">Loading apps...</div>
+          ) : liveApps.length > 0 ? (
+            liveApps.map((app) => (
+              <button key={app._id} onClick={() => navigate(`/app/${app._id}`)} className="flex gap-[20px] items-center w-full p-[8px] rounded-[24px] hover:bg-gray-100 dark:hover:bg-[#131313] transition-colors">
+                <div className="flex items-center justify-center shrink-0 size-[80px] rounded-[16px] overflow-hidden bg-gray-200 dark:bg-[#262626]">
+                  <img alt={app.name} className="size-full object-cover" src={app.screenshots?.[0] || IMG.appname} />
+                </div>
+                <div className="flex flex-1 flex-col items-start gap-[4px]">
+                  <div className="font-['Plus_Jakarta_Sans',sans-serif] font-bold text-[16px] text-gray-900 dark:text-white leading-[24px]">{app.name}</div>
+                  <div className="font-['Inter',sans-serif] text-gray-500 dark:text-[#adaaaa] text-[12px] leading-[16px]">{app.category || "Utility"}</div>
+                  <div className="flex gap-[8px] items-center pt-[4px]">
+                    <div className="bg-gray-200 dark:bg-[#262626] flex items-center px-[8px] py-[2px] rounded-[4px] transition-colors">
+                      <div className="font-['Inter',sans-serif] text-gray-600 dark:text-[#adaaaa] text-[10px] leading-[15px]">Free</div>
+                    </div>
+                    <div className="flex gap-[4px] items-center">
+                      <svg width="10" height="10" fill="none" viewBox="0 0 10 9.5"><path d={svgPaths.p197ced20} className="fill-[#1ed760] dark:fill-[#1ed760]" /></svg>
+                      <div className="font-['Inter',sans-serif] text-[#1ed760] dark:text-[#1ed760] text-[10px] leading-[15px] font-bold">{app.averageRating || "4.8"}</div>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <svg width="16" height="16" fill="none" viewBox="0 0 16 16"><path d={svgPaths.p1c92c780} className="fill-gray-300 dark:fill-[#ADAAAA]" /></svg>
-            </button>
-          ))}
+                <svg width="16" height="16" fill="none" viewBox="0 0 16 16"><path d={svgPaths.p1c92c780} className="fill-gray-300 dark:fill-[#ADAAAA]" /></svg>
+              </button>
+            ))
+          ) : (
+            trendingApps.map((app) => (
+              <button key={app.id} onClick={() => navigate(`/app/${app.id}`)} className="flex gap-[20px] items-center w-full p-[8px] rounded-[24px] hover:bg-gray-100 dark:hover:bg-[#131313] transition-colors">
+                <div className="flex items-center justify-center shrink-0 size-[80px] rounded-[16px] overflow-hidden bg-gray-200 dark:bg-[#262626]">
+                  <img alt={app.name} className="size-full object-cover" src={app.image} />
+                </div>
+                <div className="flex flex-1 flex-col items-start gap-[4px]">
+                  <div className="font-['Plus_Jakarta_Sans',sans-serif] font-bold text-[16px] text-gray-900 dark:text-white leading-[24px]">{app.name}</div>
+                  <div className="font-['Inter',sans-serif] text-gray-500 dark:text-[#adaaaa] text-[12px] leading-[16px]">{app.category}</div>
+                  <div className="flex gap-[8px] items-center pt-[4px]">
+                    <div className="bg-gray-200 dark:bg-[#262626] flex items-center px-[8px] py-[2px] rounded-[4px] transition-colors">
+                      <div className="font-['Inter',sans-serif] text-gray-600 dark:text-[#adaaaa] text-[10px] leading-[15px]">{app.price}</div>
+                    </div>
+                    <div className="flex gap-[4px] items-center">
+                      <svg width="10" height="10" fill="none" viewBox="0 0 10 9.5"><path d={svgPaths.p197ced20} className="fill-[#1ed760] dark:fill-[#1ed760]" /></svg>
+                      <div className="font-['Inter',sans-serif] text-[#1ed760] dark:text-[#1ed760] text-[10px] leading-[15px] font-bold">{app.rating}</div>
+                    </div>
+                  </div>
+                </div>
+                <svg width="16" height="16" fill="none" viewBox="0 0 16 16"><path d={svgPaths.p1c92c780} className="fill-gray-300 dark:fill-[#ADAAAA]" /></svg>
+              </button>
+            ))
+          )}
         </div>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import { useNavigate, useParams } from "react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { apiGet } from "../api/client.js";
 
 const IMG = {
   appIcon: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=128&h=128&fit=crop",
@@ -44,6 +45,29 @@ export default function SharePage() {
   const { id } = useParams();
   const [copied, setCopied] = useState(false);
   const [selectedFriends, setSelectedFriends] = useState([]);
+  const [app, setApp] = useState(null);
+
+  useEffect(() => {
+    async function fetchApp() {
+      try {
+        const res = await apiGet(`/apps/${id}`);
+        if (res?.data) {
+          setApp(res.data);
+          return;
+        }
+      } catch (err) {
+        console.error("Failed to fetch app for sharing, falling back", err);
+      }
+
+      setApp({
+        _id: "codeflow",
+        name: "CodeFlow Pro",
+        category: "Productivity",
+        screenshots: null
+      });
+    }
+    fetchApp();
+  }, [id]);
 
   const toggleFriend = (name) => {
     setSelectedFriends(prev =>
@@ -72,11 +96,11 @@ export default function SharePage() {
         {/* App Info Header */}
         <div className="flex items-center gap-[20px] px-[32px] pb-[24px]">
           <div className="bg-gray-100 dark:bg-[#20201f] transition-colors rounded-[16px] shrink-0 size-[64px] overflow-hidden p-[4px]">
-            <img alt="App Icon" className="size-full rounded-[14px] object-cover" src={IMG.appIcon} />
+            <img alt="App Icon" className="size-full rounded-[14px] object-cover" src={app?.screenshots?.[0] || IMG.appIcon} />
           </div>
           <div className="flex-1">
-            <div className="font-['Plus_Jakarta_Sans',sans-serif] font-bold text-[20px] text-gray-900 dark:text-white leading-[28px]">CodeFlow Pro</div>
-            <div className="font-['Plus_Jakarta_Sans',sans-serif] text-gray-500 dark:text-[#adaaaa] text-[14px] leading-[20px]">v2.4.0 • Productivity</div>
+            <div className="font-['Plus_Jakarta_Sans',sans-serif] font-bold text-[20px] text-gray-900 dark:text-white leading-[28px]">{app?.name || "Loading..."}</div>
+            <div className="font-['Plus_Jakarta_Sans',sans-serif] text-gray-500 dark:text-[#adaaaa] text-[14px] leading-[20px]">{app?.category || "App"}</div>
           </div>
           <button onClick={() => navigate(-1)} className="bg-gray-100 hover:bg-gray-200 dark:bg-[#20201f] dark:hover:bg-[#2c2c2c] flex items-center justify-center rounded-full shrink-0 size-[40px] transition-colors">
             <svg width="16" height="16" fill="none" viewBox="0 0 20 20">
@@ -89,12 +113,12 @@ export default function SharePage() {
         <div className="px-[32px] pb-[32px]">
           <button onClick={handleCopyLink}
             className="flex items-center justify-center gap-[12px] h-[56px] w-full rounded-[16px] shadow-sm dark:shadow-[0px_8px_30px_0px_rgba(114,254,143,0.3)] transition-transform hover:scale-[1.02] active:scale-[0.98]"
-            style={{ backgroundImage: "linear-gradient(135deg, #72FE8F 0%, #1CB853 100%)" }}>
+            style={{ backgroundImage: "linear-gradient(135deg, #1ed760 0%, #1ed760 100%)" }}>
             <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
-              <rect x="9" y="9" width="13" height="13" rx="2" stroke="#005F26" strokeWidth="2" />
-              <path d="M5 15H4C2.89543 15 2 14.1046 2 13V4C2 2.89543 2.89543 2 4 2H13C14.1046 2 15 2.89543 15 4V5" stroke="#005F26" strokeWidth="2" />
+              <rect x="9" y="9" width="13" height="13" rx="2" stroke="#000000" strokeWidth="2" />
+              <path d="M5 15H4C2.89543 15 2 14.1046 2 13V4C2 2.89543 2.89543 2 4 2H13C14.1046 2 15 2.89543 15 4V5" stroke="#000000" strokeWidth="2" />
             </svg>
-            <div className="font-['Plus_Jakarta_Sans',sans-serif] font-bold text-[#005f26] text-[16px] leading-[24px]">
+            <div className="font-['Plus_Jakarta_Sans',sans-serif] font-bold text-[#000000] text-[16px] leading-[24px]">
               {copied ? "Link Copied!" : "Copy App Link"}
             </div>
           </button>
@@ -106,10 +130,10 @@ export default function SharePage() {
           <div className="flex gap-[20px] overflow-x-auto scrollbar-hide pb-[4px]">
             {friends.map((friend) => (
               <button key={friend.name} onClick={() => toggleFriend(friend.name)} className="flex flex-col items-center gap-[8px] shrink-0">
-                <div className={`relative rounded-full size-[64px] overflow-hidden ${selectedFriends.includes(friend.name) ? 'ring-2 ring-emerald-500 ring-offset-2 ring-offset-white dark:ring-[#72FE8F] dark:ring-offset-[#131313]' : 'opacity-80 hover:opacity-100'} transition-all`}>
+                <div className={`relative rounded-full size-[64px] overflow-hidden ${selectedFriends.includes(friend.name) ? 'ring-2 ring-[#1ed760] ring-offset-2 ring-offset-white dark:ring-[#1ed760] dark:ring-offset-[#131313]' : 'opacity-80 hover:opacity-100'} transition-all`}>
                   <img alt={friend.name} className="size-full object-cover" src={friend.img} />
                   {friend.online && (
-                    <div className="absolute bottom-[2px] right-[2px] size-[12px] rounded-full bg-emerald-500 dark:bg-[#72FE8F] shadow-[0_0_10px_rgba(16,185,129,0.4)] dark:shadow-[0_0_10px_#72fe8f44] border-2 border-white dark:border-[#131313]" />
+                    <div className="absolute bottom-[2px] right-[2px] size-[12px] rounded-full bg-[#1ed760] dark:bg-[#1ed760] shadow-[0_0_10px_rgba(16,185,129,0.4)] dark:shadow-[0_0_10px_#1ed76044] border-2 border-white dark:border-[#131313]" />
                   )}
                 </div>
                 <div className="font-['Plus_Jakarta_Sans',sans-serif] font-bold text-[12px] text-gray-700 dark:text-[#adaaaa] leading-[16px]">{friend.name}</div>

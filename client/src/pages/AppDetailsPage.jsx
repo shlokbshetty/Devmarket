@@ -1,5 +1,6 @@
 import { useNavigate, useParams } from "react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { apiGet } from "../api/client.js";
 import svgPaths from "../imports/svg-ilu7mp8pji.js";
 import svgDownloadPaths from "../imports/svg-x1iz0u28rz.js";
 
@@ -17,6 +18,43 @@ export default function AppDetailsPage() {
   const navigate = useNavigate();
   const { id } = useParams();
   const [showDownloadSheet, setShowDownloadSheet] = useState(false);
+  const [app, setApp] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchAppDetails() {
+      try {
+        const res = await apiGet(`/apps/${id}`);
+        if (res?.data) {
+          setApp(res.data);
+          return;
+        }
+      } catch (err) {
+        console.error("Failed to fetch app details, falling back to mock UI", err);
+      } finally {
+        setLoading(false);
+      }
+      
+      // Fallback UI
+      setApp({
+        _id: "codeflow",
+        name: "CodeFlow Pro",
+        developerId: { name: "VIBRANT SOFTWARE CO." },
+        category: "Productivity",
+        description: "Elevate your creative workflow with CodeFlow Pro. Featuring advanced development tools, real-time collaboration, and an AI-driven code library. Built for the modern digital creator.",
+        averageRating: "4.9",
+        screenshots: null
+      });
+    }
+    fetchAppDetails();
+  }, [id]);
+
+  if (loading) {
+    return <div className="p-8 text-center text-gray-500 dark:text-[#adaaaa]">Loading app details...</div>;
+  }
+
+  const primaryImage = app.screenshots?.[0] || IMG.heroBackground;
+  const iconImage = app.screenshots?.[0] || IMG.appIcon;
 
   return (
     <div className="bg-gray-50 dark:bg-[#0e0e0e] relative w-full min-h-full overflow-y-auto pb-[24px] transition-colors">
@@ -24,18 +62,18 @@ export default function AppDetailsPage() {
       <div className="h-[397px] overflow-clip relative w-full">
         <div className="absolute inset-[-10px] flex items-center justify-center">
           <div className="flex-none h-[417px] w-full opacity-60">
-            <img alt="" className="w-full h-full object-cover" src={IMG.heroBackground} />
+            <img alt="" className="w-full h-full object-cover" src={primaryImage} />
           </div>
         </div>
         <div className="absolute bg-gradient-to-t from-gray-50 dark:from-[#0e0e0e] inset-0 to-transparent via-[rgba(249,250,251,0.4)] dark:via-[rgba(14,14,14,0.4)] transition-colors" />
         <div className="absolute bottom-0 left-0 right-0 flex flex-col gap-[7px] pb-[32px] px-[24px]">
           <div className="flex gap-[24px] items-end w-full">
             <div className="bg-white dark:bg-[#262626] rounded-[24px] shrink-0 size-[96px] overflow-clip shadow-lg dark:shadow-[0px_25px_50px_-12px_rgba(0,0,0,0.25)] transition-colors">
-              <img alt="App Icon" className="size-full object-cover" src={IMG.appIcon} />
+              <img alt="App Icon" className="size-full object-cover" src={iconImage} />
             </div>
             <div className="flex flex-1 flex-col gap-[4px]">
-              <div className="font-['Plus_Jakarta_Sans',sans-serif] font-extrabold text-[36px] text-gray-900 dark:text-white tracking-[-1.8px] leading-[40px]">CodeFlow Pro</div>
-              <div className="font-['Inter',sans-serif] text-emerald-600 dark:text-[#72fe8f] text-[14px] tracking-[0.35px] leading-[20px] font-bold">VIBRANT SOFTWARE CO.</div>
+              <div className="font-['Plus_Jakarta_Sans',sans-serif] font-extrabold text-[36px] text-gray-900 dark:text-white tracking-[-1.8px] leading-[40px]">{app.name}</div>
+              <div className="font-['Inter',sans-serif] text-[#1ed760] dark:text-[#1ed760] text-[14px] tracking-[0.35px] leading-[20px] font-bold">{app.developerId?.name?.toUpperCase() || "UNKNOWN DEVELOPER"}</div>
             </div>
           </div>
         </div>
@@ -48,15 +86,15 @@ export default function AppDetailsPage() {
           <div className="flex gap-[16px]">
             <button onClick={() => setShowDownloadSheet(true)}
               className="flex flex-1 h-[56px] items-center justify-center rounded-[16px] shadow-sm dark:shadow-[0px_8px_30px_0px_rgba(114,254,143,0.3)] hover:opacity-90 transition-opacity"
-              style={{ backgroundImage: "linear-gradient(135deg, #72FE8F 0%, #1CB853 100%)" }}>
+              style={{ backgroundImage: "linear-gradient(135deg, #1ed760 0%, #1ed760 100%)" }}>
               <div className="font-['Plus_Jakarta_Sans',sans-serif] font-bold text-[#002a0c] text-[18px] leading-[28px]">Install</div>
             </button>
             <button className="bg-white hover:bg-gray-100 dark:hover:bg-[#2c2c2c] dark:bg-[#20201f] shadow-sm dark:shadow-none transition-colors flex h-[56px] items-center justify-center rounded-[16px] shrink-0 w-[56px]">
-              <svg width="20" height="19" fill="none" viewBox="0 0 20 18.35"><path d={svgPaths.p279a9400} className="fill-emerald-500 dark:fill-[#72FE8F]" /></svg>
+              <svg width="20" height="19" fill="none" viewBox="0 0 20 18.35"><path d={svgPaths.p279a9400} className="fill-[#1ed760] dark:fill-[#1ed760]" /></svg>
             </button>
           </div>
           <div className="flex gap-[32px] items-start">
-            {[{val:"4.9 ⭐",lbl:"Rating"},{val:"128 MB",lbl:"Size"},{val:"4+",lbl:"Age"}].map(s=>(
+            {[{val: `${app.averageRating || "0"} â­`, lbl: "Rating"}, {val: "128 MB", lbl: "Size"}, {val: app.category || "App", lbl: "Category"}].map(s=>(
               <div key={s.lbl} className="flex flex-1 flex-col gap-[8px] items-center">
                 <div className="font-['Inter',sans-serif] font-bold text-gray-700 dark:text-[#adaaaa] text-[14px] leading-[20px]">{s.val}</div>
                 <div className="font-['Inter',sans-serif] text-gray-400 dark:text-[#adaaaa] text-[10px] tracking-[1px] uppercase leading-[15px]">{s.lbl}</div>
@@ -69,7 +107,7 @@ export default function AppDetailsPage() {
         <div className="flex flex-col gap-[16px]">
           <div className="font-['Plus_Jakarta_Sans',sans-serif] font-bold text-[18px] text-gray-900 dark:text-white leading-[28px]">Screenshots</div>
           <div className="flex gap-[16px] overflow-x-auto scrollbar-hide pb-4">
-            {[IMG.screenshot1, IMG.screenshot2, IMG.screenshot3].map((img, idx) => (
+            {(app.screenshots && app.screenshots.length > 0 ? app.screenshots : [IMG.screenshot1, IMG.screenshot2, IMG.screenshot3]).map((img, idx) => (
               <div key={idx} className="h-[300px] rounded-[16px] shrink-0 w-[180px] overflow-hidden shadow-sm dark:shadow-none">
                 <img alt={`Screenshot ${idx + 1}`} className="size-full object-cover" src={img} />
               </div>
@@ -80,12 +118,12 @@ export default function AppDetailsPage() {
         {/* About */}
         <div className="bg-white dark:bg-[#131313] shadow-sm dark:shadow-none rounded-[24px] p-[24px] flex flex-col gap-[16px] transition-colors">
           <div className="font-['Plus_Jakarta_Sans',sans-serif] font-bold text-[18px] text-gray-900 dark:text-white leading-[28px]">About this app</div>
-          <div className="font-['Inter',sans-serif] text-gray-600 dark:text-[#adaaaa] text-[14px] leading-[23px]">Elevate your creative workflow with CodeFlow Pro. Featuring advanced development tools, real-time collaboration, and an AI-driven code library. Built for the modern digital creator.</div>
+          <div className="font-['Inter',sans-serif] text-gray-600 dark:text-[#adaaaa] text-[14px] leading-[23px] whitespace-pre-line">{app.description}</div>
         </div>
 
         {/* Additional Info */}
         <div className="flex flex-col gap-[24px]">
-          {[{t:"Developer",v:"Vibrant Software Systems Inc."},{t:"Works on this device",v:""},{t:"Data Not Collected",v:""}].map(i=>(
+          {[{t:"Developer",v: app.developerId?.name || "Unknown"},{t:"Works on this device",v:""},{t:"Data Not Collected",v:""}].map(i=>(
             <div key={i.t} className="flex flex-col gap-[8px]">
               <div className="font-['Plus_Jakarta_Sans',sans-serif] font-bold text-[14px] text-gray-900 dark:text-white leading-[20px]">{i.t}</div>
               {i.v && <div className="font-['Inter',sans-serif] text-gray-600 dark:text-[#adaaaa] text-[14px] leading-[20px]">{i.v}</div>}
@@ -94,7 +132,7 @@ export default function AppDetailsPage() {
         </div>
       </div>
 
-      {/* Download Sheet Overlay — z-[60] */}
+      {/* Download Sheet Overlay â€” z-[60] */}
       {showDownloadSheet && (
         <div className="fixed inset-0 z-[60] flex items-end justify-center" onClick={() => setShowDownloadSheet(false)}>
           <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
@@ -103,16 +141,16 @@ export default function AppDetailsPage() {
             <div className="bg-gray-300 dark:bg-[#262626] h-[6px] opacity-40 rounded-full w-[48px]" />
             <div className="flex flex-col items-center gap-[24px] w-full">
               <div className="bg-gray-100 dark:bg-[#20201f] transition-colors flex items-center justify-center p-[4px] rounded-[16px] size-[80px]">
-                <img alt="Flux Designer" className="size-full rounded-[14px] object-cover" src={IMG.fluxDesigner} />
+                <img alt={app.name} className="size-full rounded-[14px] object-cover" src={iconImage} />
               </div>
-              <div className="font-['Plus_Jakarta_Sans',sans-serif] font-extrabold text-[24px] text-center text-gray-900 dark:text-white leading-[32px]">Downloading Flux Designer</div>
-              <div className="font-['Inter',sans-serif] text-gray-500 dark:text-[#adaaaa] text-[14px] text-center leading-[20px]">42.5 MB of 128.0 MB • 2 mins remaining</div>
+              <div className="font-['Plus_Jakarta_Sans',sans-serif] font-extrabold text-[24px] text-center text-gray-900 dark:text-white leading-[32px]">Downloading {app.name}</div>
+              <div className="font-['Inter',sans-serif] text-gray-500 dark:text-[#adaaaa] text-[14px] text-center leading-[20px]">42.5 MB of 128.0 MB â€¢ 2 mins remaining</div>
               <div className="flex flex-col gap-[12px] w-full">
                 <div className="bg-gray-200 dark:bg-[#262626] h-[16px] overflow-clip relative rounded-full w-full transition-colors">
-                  <div className="absolute inset-y-0 left-0 w-[35%] rounded-full shadow-[0px_0px_15px_0px_rgba(16,185,129,0.4)] dark:shadow-[0px_0px_15px_0px_rgba(114,254,143,0.4)]" style={{ backgroundImage: "linear-gradient(135deg, #72FE8F 0%, #1CB853 100%)" }} />
+                  <div className="absolute inset-y-0 left-0 w-[35%] rounded-full shadow-[0px_0px_15px_0px_rgba(16,185,129,0.4)] dark:shadow-[0px_0px_15px_0px_rgba(114,254,143,0.4)]" style={{ backgroundImage: "linear-gradient(135deg, #1ed760 0%, #1ed760 100%)" }} />
                 </div>
                 <div className="flex items-start justify-between px-[4px] w-full">
-                  <div className="font-['Inter',sans-serif] text-emerald-600 dark:text-[#72fe8f] font-bold text-[10px] tracking-[1px] uppercase leading-[15px]">35% Complete</div>
+                  <div className="font-['Inter',sans-serif] text-[#1ed760] dark:text-[#1ed760] font-bold text-[10px] tracking-[1px] uppercase leading-[15px]">35% Complete</div>
                   <div className="font-['Inter',sans-serif] text-gray-500 dark:text-[#adaaaa] text-[10px] tracking-[1px] uppercase leading-[15px]">1.2 MB/s</div>
                 </div>
               </div>

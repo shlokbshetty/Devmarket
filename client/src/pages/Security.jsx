@@ -15,7 +15,7 @@ export function Security() {
         <div className="flex gap-[12px] items-center">
           <button onClick={() => navigate(-1)} className="size-[16px]">
             <svg className="block size-full" fill="none" viewBox="0 0 16 16">
-              <path d="M10 12L6 8L10 4" stroke={theme === 'dark' ? '#72FE8F' : '#10b981'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M10 12L6 8L10 4" stroke={theme === 'dark' ? '#1ed760' : '#10b981'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </button>
           <div className="font-bold text-[24px] tracking-[-0.5px]">Password & Security</div>
@@ -29,16 +29,16 @@ export function Security() {
           
           <div className="flex flex-col gap-[12px]">
             <input type="password" placeholder="Current Password" 
-              className="bg-gray-100 dark:bg-[#1a1a1a] h-[52px] w-full rounded-[12px] px-[16px] text-[14px] outline-none focus:border-b-2 border-emerald-500 dark:border-[#72FE8F] transition-all text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-[#767575]" />
+              className="bg-gray-100 dark:bg-[#1a1a1a] h-[52px] w-full rounded-[12px] px-[16px] text-[14px] outline-none focus:border-b-2 border-[#1ed760] dark:border-[#1ed760] transition-all text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-[#767575]" />
             <input type="password" placeholder="New Password" 
-              className="bg-gray-100 dark:bg-[#1a1a1a] h-[52px] w-full rounded-[12px] px-[16px] text-[14px] outline-none focus:border-b-2 border-emerald-500 dark:border-[#72FE8F] transition-all text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-[#767575]" />
+              className="bg-gray-100 dark:bg-[#1a1a1a] h-[52px] w-full rounded-[12px] px-[16px] text-[14px] outline-none focus:border-b-2 border-[#1ed760] dark:border-[#1ed760] transition-all text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-[#767575]" />
             <input type="password" placeholder="Confirm New Password" 
-              className="bg-gray-100 dark:bg-[#1a1a1a] h-[52px] w-full rounded-[12px] px-[16px] text-[14px] outline-none focus:border-b-2 border-emerald-500 dark:border-[#72FE8F] transition-all text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-[#767575]" />
+              className="bg-gray-100 dark:bg-[#1a1a1a] h-[52px] w-full rounded-[12px] px-[16px] text-[14px] outline-none focus:border-b-2 border-[#1ed760] dark:border-[#1ed760] transition-all text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-[#767575]" />
           </div>
           
           <button className="h-[48px] w-full rounded-[12px] shadow-[0px_8px_30px_0px_rgba(16,185,129,0.2)] dark:shadow-[0px_8px_30px_0px_rgba(114,254,143,0.3)] transition-transform hover:scale-[1.02] active:scale-[0.98] mt-[8px]"
-                  style={{ backgroundImage: theme === 'dark' ? "linear-gradient(135deg, #72FE8F 0%, #1CB853 100%)" : "linear-gradient(135deg, #10b981 0%, #059669 100%)" }}>
-            <div className="font-bold text-white dark:text-[#005f26] text-[16px]">Update Password</div>
+                  style={{ backgroundImage: theme === 'dark' ? "linear-gradient(135deg, #1ed760 0%, #1ed760 100%)" : "linear-gradient(135deg, #10b981 0%, #059669 100%)" }}>
+            <div className="font-bold text-white dark:text-[#000000] text-[16px]">Update Password</div>
           </button>
         </div>
 
@@ -52,7 +52,7 @@ export function Security() {
               <span className="text-[14px] text-gray-500 dark:text-[#adaaaa]">Add an extra layer of security</span>
             </div>
             <button onClick={() => setTfa(!tfa)}
-              className={`relative inline-flex h-[32px] w-[56px] items-center rounded-full transition-colors focus:outline-none ${tfa ? (theme === 'dark' ? 'bg-[#72FE8F]' : 'bg-emerald-500') : 'bg-gray-300 dark:bg-[#2c2c2c]'}`}>
+              className={`relative inline-flex h-[32px] w-[56px] items-center rounded-full transition-colors focus:outline-none ${tfa ? (theme === 'dark' ? 'bg-[#1ed760]' : 'bg-[#1ed760]') : 'bg-gray-300 dark:bg-[#2c2c2c]'}`}>
               <span className={`${tfa ? 'translate-x-[26px]' : 'translate-x-[2px]'} inline-block h-[28px] w-[28px] transform rounded-full bg-white transition-transform shadow-sm`} />
             </button>
           </div>
@@ -63,14 +63,14 @@ export function Security() {
           <div className="text-[12px] font-bold text-gray-500 dark:text-[#adaaaa] tracking-[1px] uppercase">Active Sessions</div>
           
           <div className="flex flex-col gap-[8px]">
-            <div className="bg-gray-100 dark:bg-[#1a1a1a] rounded-[16px] p-[16px] flex items-center justify-between border border-emerald-500/20 dark:border-[#72FE8F]/20 transition-colors">
+            <div className="bg-gray-100 dark:bg-[#1a1a1a] rounded-[16px] p-[16px] flex items-center justify-between border border-[#1ed760]/20 dark:border-[#1ed760]/20 transition-colors">
               <div className="flex items-center gap-[16px]">
-                <div className="p-[10px] bg-emerald-100 dark:bg-[#20201f] rounded-[12px] text-emerald-600 dark:text-[#72FE8F]">
+                <div className="p-[10px] bg-[#1ed760]/20 dark:bg-[#20201f] rounded-[12px] text-[#1ed760] dark:text-[#1ed760]">
                   <Laptop size={20} />
                 </div>
                 <div className="flex flex-col">
                   <span className="font-bold text-[14px]">Windows PC - Chrome</span>
-                  <span className="text-[12px] text-emerald-600 dark:text-[#72FE8F] font-medium">Active now</span>
+                  <span className="text-[12px] text-[#1ed760] dark:text-[#1ed760] font-medium">Active now</span>
                 </div>
               </div>
             </div>

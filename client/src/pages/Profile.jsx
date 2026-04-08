@@ -24,7 +24,7 @@ export function Profile() {
       <div className="w-full p-4 text-gray-900 dark:text-white min-h-[calc(100vh-65px)] bg-gray-50 dark:bg-[#0a0a0a] flex flex-col items-center justify-center">
         <h2 className="text-xl font-bold mb-2">Sign in Required</h2>
         <p className="text-gray-500 dark:text-zinc-400 text-sm mb-4">Please log in to view your profile.</p>
-        <button onClick={() => navigate('/login')} className="bg-emerald-400 dark:bg-[#34d399] text-black font-bold py-2.5 px-6 rounded-xl hover:bg-emerald-500 dark:hover:bg-[#2ebc87] transition-colors">Sign In</button>
+        <button onClick={() => navigate('/login')} className="bg-[#1ed760] dark:bg-[#1ed760] text-black font-bold py-2.5 px-6 rounded-xl hover:bg-[#1ed760] dark:hover:bg-[#1ed760] transition-colors">Sign In</button>
       </div>
     );
   }
@@ -77,7 +77,7 @@ export function Profile() {
         ) : (
           <button
             onClick={handleSave}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-400 dark:bg-[#34d399] text-black hover:bg-emerald-500 dark:hover:bg-[#2ebc87] rounded-lg transition-colors text-xs font-bold uppercase tracking-wider shadow-sm"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-[#1ed760] dark:bg-[#1ed760] text-black hover:bg-[#1ed760] dark:hover:bg-[#1ed760] rounded-lg transition-colors text-xs font-bold uppercase tracking-wider shadow-sm"
           >
             <Save size={14} /> Save
           </button>
@@ -88,7 +88,7 @@ export function Profile() {
         {/* Profile Header Card */}
         <div className="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] rounded-3xl p-5 flex flex-col items-center shadow-lg">
           <div className="relative mb-4 group cursor-pointer" onClick={handleImageClick}>
-            <div className="w-24 h-24 rounded-full overflow-hidden border-[3px] border-white dark:border-[#333] shadow-md dark:shadow-none group-hover:border-emerald-400 dark:group-hover:border-[#34d399] transition-colors">
+            <div className="w-24 h-24 rounded-full overflow-hidden border-[3px] border-white dark:border-[#333] shadow-md dark:shadow-none group-hover:border-[#1ed760] dark:group-hover:border-[#1ed760] transition-colors">
               <img
                 src={profilePic}
                 alt="Profile"
@@ -110,7 +110,7 @@ export function Profile() {
           </div>
 
           <h2 className="text-lg font-bold mb-0.5">{profile.name}</h2>
-          <p className="text-emerald-600 dark:text-[#34d399] text-xs font-bold mb-4 uppercase tracking-wider">{profile.company}</p>
+          <p className="text-[#1ed760] dark:text-[#1ed760] text-xs font-bold mb-4 uppercase tracking-wider">{profile.company}</p>
 
           <div className="w-full pt-4 border-t border-gray-100 dark:border-[#333] space-y-3 text-sm text-gray-700 dark:text-zinc-300">
             <div className="flex items-center justify-between bg-gray-50 dark:bg-[#111] p-3 rounded-2xl border border-gray-200 dark:border-[#222]">
@@ -140,7 +140,7 @@ export function Profile() {
                 disabled={!isEditing}
                 value={isEditing ? editedProfile.name : profile.name}
                 onChange={(e) => setEditedProfile({...editedProfile, name: e.target.value})}
-                className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-emerald-400 dark:focus:border-[#34d399] transition-colors disabled:opacity-70 disabled:bg-gray-100 dark:disabled:bg-[#1a1a1a]"
+                className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-[#1ed760] dark:focus:border-[#1ed760] transition-colors disabled:opacity-70 disabled:bg-gray-100 dark:disabled:bg-[#1a1a1a]"
               />
             </div>
 
@@ -151,7 +151,7 @@ export function Profile() {
                 disabled={!isEditing}
                 value={isEditing ? editedProfile.company : profile.company}
                 onChange={(e) => setEditedProfile({...editedProfile, company: e.target.value})}
-                className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-emerald-400 dark:focus:border-[#34d399] transition-colors disabled:opacity-70 disabled:bg-gray-100 dark:disabled:bg-[#1a1a1a]"
+                className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-[#1ed760] dark:focus:border-[#1ed760] transition-colors disabled:opacity-70 disabled:bg-gray-100 dark:disabled:bg-[#1a1a1a]"
               />
             </div>
 
@@ -162,7 +162,7 @@ export function Profile() {
                 disabled={!isEditing}
                 value={isEditing ? editedProfile.bio : profile.bio}
                 onChange={(e) => setEditedProfile({...editedProfile, bio: e.target.value})}
-                className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-emerald-400 dark:focus:border-[#34d399] transition-colors disabled:opacity-70 disabled:bg-gray-100 dark:disabled:bg-[#1a1a1a] resize-none"
+                className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-[#1ed760] dark:focus:border-[#1ed760] transition-colors disabled:opacity-70 disabled:bg-gray-100 dark:disabled:bg-[#1a1a1a] resize-none"
               />
             </div>
           </div>

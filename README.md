@@ -15,7 +15,7 @@ A platform that acts as a marketplace to explore, upload, review, and manage app
 - [Contact](#contact)
 
 ## About The Project
-The DevMarket platform is a full-stack MERN application designed to serve as a marketplace for developers and users. Users can search for apps, submit reviews, and download applications, while administrators retain full control to vet and approve incoming uploads, making it a safe ecosystem for software distribution.
+The DevMarket platform is a full-stack MERN application defined by its proprietary **"Editorial Discovery"** design system. It is designed to serve as a high-end marketplace for developers and users. Users can search for apps, submit reviews, and download applications using a borderless, dynamic Light/Dark mode interface, while administrators retain full control to vet and approve incoming uploads.
 
 ### Key Capabilities
 
@@ -34,11 +34,11 @@ Uses robust JWT-based authentication to manage user and centralized admin sessio
 <p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ## Built With
-- **Node.js**: Server and runtime environment.
-- **Express**: Backend and REST API framework.
-- **React**: Interactive and responsive frontend dashboard.
-- **MongoDB Atlas**: Cloud NoSQL database.
-- **Mongoose**: Object Data Modeling (ODM) library for MongoDB.
+- **React (Vite)**: Lightning-fast, interactive and responsive frontend dashboard.
+- **TailwindCSS**: Utility-first CSS framework establishing the borderless "Editorial Discovery" style.
+- **Next-Themes**: For seamless, modern Dark/Light mode theme syncing.
+- **Node.js & Express**: Backend and REST API framework.
+- **MongoDB Atlas & Mongoose**: Cloud NoSQL database and Object Data Modeling (ODM).
 - **JWT & Bcrypt**: For secure, encrypted authentication and authorization.
 
 <p align="right">(<a href="#table-of-contents">back to top</a>)</p>
@@ -91,7 +91,7 @@ npm run dev:server
 
 **Access the Applications:** 
 - The backend API runs at `http://localhost:5000`
-- The React application runs locally at `http://localhost:3000`
+- The React setup runs via Vite at `http://localhost:5173` (or `http://localhost:3000` depending on port availability)
 
 ### API Layout Options
 - **Public & Authentication:** `POST /api/auth/register`, `POST /api/auth/login`

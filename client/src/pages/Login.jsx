@@ -25,10 +25,10 @@ export function Login() {
     setError("");
     setLoading(true);
     try {
-      const data = await apiPost("/auth/mock-firebase", { 
-        email: mockEmail, 
-        name: mockName, 
-        role: selectedRole 
+      const data = await apiPost("/auth/mock-firebase", {
+        email: mockEmail,
+        name: mockName,
+        role: selectedRole
       });
       login(data.data);
       navigate("/");
@@ -104,8 +104,8 @@ export function Login() {
 
               <div className="space-y-1.5">
                 <label className="text-[10px] font-bold text-gray-500 dark:text-zinc-400 uppercase tracking-wider ml-1">Select Role</label>
-                <select 
-                  value={selectedRole} 
+                <select
+                  value={selectedRole}
                   onChange={(e) => setSelectedRole(e.target.value)}
                   className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-2xl px-5 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-blue-400 dark:focus:border-[#4285F4] transition-colors cursor-pointer"
                 >

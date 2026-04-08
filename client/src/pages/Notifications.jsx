@@ -23,7 +23,7 @@ export function Notifications() {
         <div className="flex gap-[12px] items-center">
           <button onClick={() => navigate(-1)} className="size-[16px]">
             <svg className="block size-full" fill="none" viewBox="0 0 16 16">
-              <path d="M10 12L6 8L10 4" stroke={theme === 'dark' ? '#72FE8F' : '#10b981'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M10 12L6 8L10 4" stroke={theme === 'dark' ? '#1ed760' : '#10b981'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </button>
           <div className="font-bold text-[24px] tracking-[-0.5px]">Notifications</div>
@@ -45,7 +45,7 @@ export function Notifications() {
                 <span className="text-[14px] text-gray-500 dark:text-[#adaaaa] leading-[20px]">{item.desc}</span>
               </div>
               <button onClick={() => togglePref(item.id)}
-                className={`relative inline-flex h-[32px] w-[56px] shrink-0 items-center rounded-full transition-colors focus:outline-none ${prefs[item.id] ? (theme === 'dark' ? 'bg-[#72FE8F]' : 'bg-emerald-500') : 'bg-gray-300 dark:bg-[#2c2c2c]'}`}>
+                className={`relative inline-flex h-[32px] w-[56px] shrink-0 items-center rounded-full transition-colors focus:outline-none ${prefs[item.id] ? (theme === 'dark' ? 'bg-[#1ed760]' : 'bg-[#1ed760]') : 'bg-gray-300 dark:bg-[#2c2c2c]'}`}>
                 <span className={`${prefs[item.id] ? 'translate-x-[26px]' : 'translate-x-[2px]'} inline-block h-[28px] w-[28px] transform rounded-full bg-white transition-transform shadow-sm`} />
               </button>
             </div>
@@ -67,7 +67,7 @@ export function Notifications() {
                 <span className="text-[14px] text-gray-500 dark:text-[#adaaaa] leading-[20px] pr-4">{item.desc}</span>
               </div>
               <button onClick={() => togglePref(item.id)}
-                className={`relative inline-flex h-[32px] w-[56px] shrink-0 items-center rounded-full transition-colors focus:outline-none ${prefs[item.id] ? (theme === 'dark' ? 'bg-[#72FE8F]' : 'bg-emerald-500') : 'bg-gray-300 dark:bg-[#2c2c2c]'}`}>
+                className={`relative inline-flex h-[32px] w-[56px] shrink-0 items-center rounded-full transition-colors focus:outline-none ${prefs[item.id] ? (theme === 'dark' ? 'bg-[#1ed760]' : 'bg-[#1ed760]') : 'bg-gray-300 dark:bg-[#2c2c2c]'}`}>
                 <span className={`${prefs[item.id] ? 'translate-x-[26px]' : 'translate-x-[2px]'} inline-block h-[28px] w-[28px] transform rounded-full bg-white transition-transform shadow-sm`} />
               </button>
             </div>
