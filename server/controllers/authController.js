@@ -117,3 +117,56 @@ exports.mockFirebaseLogin = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+exports.googleLogin = async (req, res) => {
+  try {
+    const { access_token, role } = req.body;
+    
+    if (!access_token || !role) {
+      return res.status(400).json({ success: false, message: 'Missing access_token or role' });
+    }
+
+    const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+      headers: { Authorization: `Bearer ${access_token}` },
+    });
+    
+    if (!response.ok) {
+      return res.status(401).json({ success: false, message: 'Invalid Google token' });
+    }
+    
+    const userInfo = await response.json();
+    const { email, name } = userInfo;
+    
+    if (!email) {
+      return res.status(400).json({ success: false, message: 'Could not retrieve email from Google' });
+    }
+
+    let user = await User.findOne({ contact: email });
+    
+    if (!user) {
+      const salt = await bcrypt.genSalt(10);
+      const randomPassword = Math.random().toString(36).slice(-10) + 'A1!';
+      const hashedPassword = await bcrypt.hash(randomPassword, salt);
+      user = await User.create({
+        name: name || 'Google User',
+        contact: email,
+        password: hashedPassword,
+        role: role
+      });
+    }
+
+    res.json({
+      success: true,
+      data: {
+        _id: user._id,
+        name: user.name,
+        contact: user.contact,
+        role: user.role,
+        token: generateToken(user._id)
+      }
+    });
+
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};

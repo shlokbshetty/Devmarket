@@ -3,31 +3,53 @@ import { Briefcase, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router";
 import { useAuth } from "../context/AuthContext.jsx";
 import { apiPost } from "../api/client.js";
+import { useGoogleLogin } from '@react-oauth/google';
 
 export function Login() {
-  const [mockEmail, setMockEmail] = useState("jane@developer.com");
-  const [mockName, setMockName] = useState("Jane Doe");
+  const [mockEmail, setMockEmail] = useState("");
+  const [mockName, setMockName] = useState("");
   const [showRoleSelect, setShowRoleSelect] = useState(false);
   const [selectedRole, setSelectedRole] = useState("user");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [googleToken, setGoogleToken] = useState(null);
 
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const handleGoogleMock = () => {
-    // Reveal the role selection instead of logging in right away
-    setShowRoleSelect(true);
-  };
+  const handleGoogleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      try {
+        setLoading(true);
+        const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+          headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
+        });
+        const userInfo = await res.json();
+        
+        setMockEmail(userInfo.email);
+        setMockName(userInfo.name);
+        setGoogleToken(tokenResponse.access_token);
+        setShowRoleSelect(true);
+      } catch (err) {
+        setError("Failed to fetch Google profile");
+      } finally {
+        setLoading(false);
+      }
+    },
+    onError: () => setError("Google Login Failed"),
+  });
 
   const submitMockLogin = async (e) => {
     e.preventDefault();
+    if (!googleToken) {
+      setError("No Google token found. Please sign in again.");
+      return;
+    }
     setError("");
     setLoading(true);
     try {
-      const data = await apiPost("/auth/mock-firebase", {
-        email: mockEmail,
-        name: mockName,
+      const data = await apiPost("/auth/google", {
+        access_token: googleToken,
         role: selectedRole
       });
       login(data.data);
@@ -76,11 +98,11 @@ export function Login() {
           {!showRoleSelect ? (
             <div className="flex flex-col gap-4">
               <button
-                onClick={handleGoogleMock}
+                onClick={handleGoogleLogin}
                 className="w-full bg-white dark:bg-[#1f1f1f] text-black dark:text-white font-bold border border-gray-300 dark:border-[#333] py-4 rounded-2xl hover:bg-gray-50 dark:hover:bg-[#2a2a2a] transition-all flex items-center justify-center gap-3 active:scale-[0.98] shadow-sm"
               >
                 <img src="https://static.cdnlogo.com/logos/g/35/google-icon.svg" alt="Google" className="w-5 h-5" />
-                Sign in with Google (Mock)
+                Sign in with Google
               </button>
             </div>
           ) : (
@@ -88,17 +110,15 @@ export function Login() {
               <div className="space-y-1.5">
                 <label className="text-[10px] font-bold text-gray-500 dark:text-zinc-400 uppercase tracking-wider ml-1">Mock Email</label>
                 <input
-                  type="email" value={mockEmail} onChange={(e) => setMockEmail(e.target.value)}
-                  className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-2xl px-5 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-blue-400 dark:focus:border-[#4285F4] transition-colors"
-                  required
+                  type="email" value={mockEmail} readOnly
+                  className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-2xl px-5 py-3 text-sm text-gray-500 dark:text-gray-400 focus:outline-none transition-colors cursor-not-allowed"
                 />
               </div>
               <div className="space-y-1.5">
                 <label className="text-[10px] font-bold text-gray-500 dark:text-zinc-400 uppercase tracking-wider ml-1">Mock Name</label>
                 <input
-                  type="text" value={mockName} onChange={(e) => setMockName(e.target.value)}
-                  className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-2xl px-5 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-blue-400 dark:focus:border-[#4285F4] transition-colors"
-                  required
+                  type="text" value={mockName} readOnly
+                  className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-2xl px-5 py-3 text-sm text-gray-500 dark:text-gray-400 focus:outline-none transition-colors cursor-not-allowed"
                 />
               </div>
 
