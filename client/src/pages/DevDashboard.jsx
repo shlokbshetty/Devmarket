@@ -3,7 +3,7 @@ import { UploadCloud, Image as ImageIcon, Plus, Trash2, CheckCircle2 } from "luc
 import { motion } from "motion/react";
 import { useNavigate } from "react-router";
 import { useAuth } from "../context/AuthContext.jsx";
-import { apiPost, apiUpload } from "../api/client.js";
+import { apiUpload } from "../api/client.js";
 
 const CATEGORIES = ["Games", "Productivity", "Utilities", "Creative Tools", "Security", "DevOps", "Education", "Other"];
 
@@ -14,6 +14,7 @@ export function DevDashboard() {
   const [appName, setAppName] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
+  const [version, setVersion] = useState("");
   const [apkFile, setApkFile] = useState(null);
   const [screenshots, setScreenshots] = useState([""]);
   const [submitted, setSubmitted] = useState(false);
@@ -52,15 +53,16 @@ export function DevDashboard() {
       formData.append('name', appName);
       formData.append('description', description);
       formData.append('category', category);
-      formData.append('apk', apkFile); // The file itself
+      formData.append('version', version);
+      formData.append('apk', apkFile);
       validScreenshots.forEach(s => formData.append('screenshots', s));
 
-      await apiUpload("/apps/upload-apk", formData); // using dedicated form data endpoint
+      await apiUpload("/apps/upload", formData);
 
       setSubmitted(true);
       setTimeout(() => {
         setSubmitted(false);
-        setAppName(""); setDescription(""); setCategory(""); setApkFile(null); setScreenshots([""]);
+        setAppName(""); setDescription(""); setCategory(""); setVersion(""); setApkFile(null); setScreenshots([""]);
       }, 3000);
     } catch (err) {
       setError(err.message);
@@ -116,11 +118,21 @@ export function DevDashboard() {
             </div>
 
             <div className="space-y-1.5">
+              <label className="text-[10px] font-bold text-gray-500 dark:text-zinc-400 uppercase tracking-wider ml-1">Version</label>
+              <input type="text" value={version} onChange={(e) => setVersion(e.target.value)} placeholder="e.g. 1.0.0"
+                className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-[#1ed760] dark:focus:border-[#1ed760] transition-colors" required />
+            </div>
+
+            <div className="space-y-1.5">
               <label className="text-[10px] font-bold text-gray-500 dark:text-zinc-400 uppercase tracking-wider ml-1">Upload APK</label>
               <div className="relative">
-                <Link2 className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-zinc-500" size={16} />
-                <input type="url" value={apkUrl} onChange={(e) => setApkUrl(e.target.value)} placeholder="https://drive.google.com/file/your-apk"
-                  className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-xl pl-10 pr-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-emerald-400 dark:focus:border-[#34d399] transition-colors" required />
+                <label className="flex items-center gap-3 w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-xl px-4 py-3 cursor-pointer hover:border-[#1ed760] dark:hover:border-[#1ed760] transition-colors">
+                  <UploadCloud size={16} className="text-gray-400 dark:text-zinc-500 shrink-0" />
+                  <span className="text-sm text-gray-500 dark:text-zinc-400 truncate">
+                    {apkFile ? apkFile.name : "Choose .apk file…"}
+                  </span>
+                  <input type="file" accept=".apk" className="hidden" onChange={(e) => setApkFile(e.target.files?.[0] || null)} required />
+                </label>
               </div>
             </div>
 
@@ -153,7 +165,7 @@ export function DevDashboard() {
             </div>
 
             <div className="pt-2">
-              <button type="submit" disabled={loading || !appName || !description || !category || !apkUrl}
+              <button type="submit" disabled={loading || !appName || !description || !category || !version || !apkFile}
                 className="w-full bg-emerald-400 dark:bg-[#34d399] text-black font-bold py-3.5 rounded-xl hover:bg-emerald-500 dark:hover:bg-[#2ebc87] disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-[0.98] shadow-md">
                 {loading ? "Submitting..." : "Submit for Review"}
               </button>

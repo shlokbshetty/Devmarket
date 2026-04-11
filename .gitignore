@@ -23,3 +23,13 @@ yarn-error.log*
 
 # Project specific
 server/uploads/
+*.sqlite
+*.sqlite-journal
+firebase-service-account.json
+
+# Mobile build artifacts
+client/android/app/build/
+client/android/app/build(1)/
+client/android/build/
+.gradle/
+capacitor-cordova-android-plugins/

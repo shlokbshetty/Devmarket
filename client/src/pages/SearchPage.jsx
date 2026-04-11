@@ -10,11 +10,11 @@ const IMG = {
 };
 
 const categories = [
-  { id: 1, name: "Popular apps", color: "#1ed760" },
-  { id: 2, name: "Business tools", color: "#88EBFF" },
-  { id: 3, name: "Social Media", color: "#7CFBB5" },
-  { id: 4, name: "Games", color: "#FF7351" },
-  { id: 5, name: "AI Categories", color: "#FFC876" },
+  { id: 1, name: "Games", color: "#FF7351" },
+  { id: 2, name: "Productivity", color: "#88EBFF" },
+  { id: 3, name: "Utilities", color: "#7CFBB5" },
+  { id: 4, name: "Creative Tools", color: "#FFC876" },
+  { id: 5, name: "Security", color: "#1ed760" },
 ];
 
 const collections = [
@@ -27,9 +27,9 @@ export default function SearchPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const initialSearch = queryParams.get("q") || "";
+  const [selectedCategory, setSelectedCategory] = useState(queryParams.get("category") || "");
   
-  const [searchQuery, setSearchQuery] = useState(initialSearch);
+  const [searchQuery, setSearchQuery] = useState(queryParams.get("q") || "");
   const [liveApps, setLiveApps] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -37,8 +37,14 @@ export default function SearchPage() {
     const fetchApps = async () => {
       setLoading(true);
       try {
-        const res = await apiGet(searchQuery ? `/apps/search?q=${searchQuery}` : "/apps/search");
-        setLiveApps(res?.data || []);
+        let path = "/apps/search";
+        const params = new URLSearchParams();
+        if (searchQuery) params.append("q", searchQuery);
+        if (selectedCategory) params.append("category", selectedCategory);
+        
+        const queryString = params.toString();
+        const res = await apiGet(queryString ? `${path}?${queryString}` : path);
+        setLiveApps(res?.apps || []);
       } catch (err) {
         console.error("Failed to fetch search results", err);
       } finally {
@@ -50,7 +56,7 @@ export default function SearchPage() {
       fetchApps();
     }, 300);
     return () => clearTimeout(timeoutId);
-  }, [searchQuery]);
+  }, [searchQuery, selectedCategory]);
 
   return (
     <div className="bg-gray-50 dark:bg-[#0e0e0e] relative w-full min-h-full overflow-y-auto pb-[24px] transition-colors">
@@ -79,7 +85,9 @@ export default function SearchPage() {
           </div>
           <div className="flex flex-col gap-[8px]">
             {categories.map((category) => (
-              <button key={category.id} onClick={() => navigate(`/search?category=${category.id}`)} className="rounded-[16px] w-full hover:bg-white dark:hover:bg-[#131313] transition-colors p-[8px]">
+              <button key={category.id} 
+                onClick={() => setSelectedCategory(selectedCategory === category.name ? "" : category.name)} 
+                className={`rounded-[16px] w-full transition-colors p-[8px] ${selectedCategory === category.name ? 'bg-white dark:bg-[#1a1a1a] ring-2 ring-[#1ed760]' : 'hover:bg-white dark:hover:bg-[#131313]'}`}>
                 <div className="flex gap-[16px] items-center px-[8px] py-[8px]">
                   <div className="bg-gray-100 dark:bg-[#1a1a1a] flex items-center justify-center rounded-[12px] shrink-0 size-[48px] transition-colors">
                     <svg width="24" height="24" viewBox="0 0 20 20" fill="none">

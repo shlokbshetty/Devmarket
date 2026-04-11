@@ -2,7 +2,6 @@ import { useNavigate, useParams } from "react-router";
 import { useState, useEffect } from "react";
 import { apiGet } from "../api/client.js";
 import svgPaths from "../imports/svg-ilu7mp8pji.js";
-import svgDownloadPaths from "../imports/svg-x1iz0u28rz.js";
 
 const IMG = {
   heroBackground: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop",
@@ -17,16 +16,77 @@ const IMG = {
 export default function AppDetailsPage() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [showDownloadSheet, setShowDownloadSheet] = useState(false);
   const [app, setApp] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [downloadState, setDownloadState] = useState('idle');
+  const [progress, setProgress] = useState(0);
+
+  const performInstall = async () => {
+    if (!app?.downloadUrl) return;
+    setDownloadState('downloading');
+    setProgress(0);
+
+    try {
+      const response = await fetch(app.downloadUrl);
+      if (!response.ok) throw new Error('Download failed');
+
+      const contentLength = response.headers.get('content-length');
+      const total = contentLength ? parseInt(contentLength, 10) : 0;
+      let loaded = 0;
+
+      const res = new Response(
+        new ReadableStream({
+          async start(controller) {
+            const reader = response.body.getReader();
+            while (true) {
+              const { done, value } = await reader.read();
+              if (done) break;
+              loaded += value.byteLength;
+              if (total) {
+                setProgress(Math.round((loaded / total) * 100));
+              } else {
+                setProgress(p => Math.min(p + 10, 90));
+              }
+              controller.enqueue(value);
+            }
+            controller.close();
+          },
+        })
+      );
+
+      const blob = await res.blob();
+
+      // Simulate extraction phase
+      setDownloadState('extracting');
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = url;
+      a.download = app.name ? `${app.name.replace(/\s+/g, '_')}.apk` : 'app.apk';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+
+      setDownloadState('done');
+    } catch (err) {
+      console.error(err);
+      setDownloadState('error');
+    }
+
+    setTimeout(() => {
+      setDownloadState('idle');
+      setProgress(0);
+    }, 3000);
+  };
 
   useEffect(() => {
     async function fetchAppDetails() {
       try {
         const res = await apiGet(`/apps/${id}`);
-        if (res?.data) {
-          setApp(res.data);
+        if (res?.app) {
+          setApp(res.app);
           return;
         }
       } catch (err) {
@@ -34,7 +94,7 @@ export default function AppDetailsPage() {
       } finally {
         setLoading(false);
       }
-      
+
       // Fallback UI
       setApp({
         _id: "codeflow",
@@ -43,7 +103,8 @@ export default function AppDetailsPage() {
         category: "Productivity",
         description: "Elevate your creative workflow with CodeFlow Pro. Featuring advanced development tools, real-time collaboration, and an AI-driven code library. Built for the modern digital creator.",
         averageRating: "4.9",
-        screenshots: null
+        screenshots: null,
+        downloadUrl: null,
       });
     }
     fetchAppDetails();
@@ -84,17 +145,31 @@ export default function AppDetailsPage() {
         {/* Install Button & Stats */}
         <div className="flex flex-col gap-[24px]">
           <div className="flex gap-[16px]">
-            <button onClick={() => setShowDownloadSheet(true)}
-              className="flex flex-1 h-[56px] items-center justify-center rounded-[16px] shadow-sm dark:shadow-[0px_8px_30px_0px_rgba(114,254,143,0.3)] hover:opacity-90 transition-opacity"
-              style={{ backgroundImage: "linear-gradient(135deg, #1ed760 0%, #1ed760 100%)" }}>
-              <div className="font-['Plus_Jakarta_Sans',sans-serif] font-bold text-[#002a0c] text-[18px] leading-[28px]">Install</div>
+            <button
+              onClick={downloadState === 'idle' ? performInstall : undefined}
+              className={`relative overflow-hidden flex flex-1 h-[56px] items-center justify-center rounded-[16px] shadow-sm transition-opacity ${downloadState === 'idle' ? 'cursor-pointer hover:opacity-90 dark:shadow-[0px_8px_30px_0px_rgba(114,254,143,0.3)]' : 'cursor-default'}`}
+              style={{ backgroundImage: "linear-gradient(135deg, #18a94b 0%, #158b3e 100%)" }}
+            >
+              {['downloading', 'extracting'].includes(downloadState) && (
+                <div
+                  className="absolute left-0 top-0 bottom-0 bg-[#1ed760] transition-all duration-300 ease-out"
+                  style={{ width: `${downloadState === 'extracting' ? 100 : progress}%` }}
+                />
+              )}
+              <div className="relative z-10 font-['Plus_Jakarta_Sans',sans-serif] font-bold text-white text-[18px] leading-[28px]">
+                {downloadState === 'idle' && 'Install'}
+                {downloadState === 'downloading' && `Downloading (${progress}%)`}
+                {downloadState === 'extracting' && 'Extracting...'}
+                {downloadState === 'done' && 'Installed'}
+                {downloadState === 'error' && 'Failed'}
+              </div>
             </button>
             <button className="bg-white hover:bg-gray-100 dark:hover:bg-[#2c2c2c] dark:bg-[#20201f] shadow-sm dark:shadow-none transition-colors flex h-[56px] items-center justify-center rounded-[16px] shrink-0 w-[56px]">
               <svg width="20" height="19" fill="none" viewBox="0 0 20 18.35"><path d={svgPaths.p279a9400} className="fill-[#1ed760] dark:fill-[#1ed760]" /></svg>
             </button>
           </div>
           <div className="flex gap-[32px] items-start">
-            {[{val: `${app.averageRating || "0"} â­`, lbl: "Rating"}, {val: "128 MB", lbl: "Size"}, {val: app.category || "App", lbl: "Category"}].map(s=>(
+            {[{val: `${app.averageRating || "0"} ⭐`, lbl: "Rating"}, {val: "128 MB", lbl: "Size"}, {val: app.category || "App", lbl: "Category"}].map(s=>(
               <div key={s.lbl} className="flex flex-1 flex-col gap-[8px] items-center">
                 <div className="font-['Inter',sans-serif] font-bold text-gray-700 dark:text-[#adaaaa] text-[14px] leading-[20px]">{s.val}</div>
                 <div className="font-['Inter',sans-serif] text-gray-400 dark:text-[#adaaaa] text-[10px] tracking-[1px] uppercase leading-[15px]">{s.lbl}</div>
@@ -131,49 +206,6 @@ export default function AppDetailsPage() {
           ))}
         </div>
       </div>
-
-      {/* Download Sheet Overlay â€” z-[60] */}
-      {showDownloadSheet && (
-        <div className="fixed inset-0 z-[60] flex items-end justify-center" onClick={() => setShowDownloadSheet(false)}>
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
-          <div className="backdrop-blur-[20px] bg-white/95 dark:bg-[rgba(14,14,14,0.95)] flex flex-col gap-[32px] items-center w-full max-w-[430px] pb-[48px] pt-[17px] px-[32px] rounded-tl-[40px] rounded-tr-[40px] shadow-[0px_-20px_60px_0px_rgba(0,0,0,0.1)] dark:shadow-[0px_-20px_60px_0px_rgba(0,0,0,0.8)] relative border-t border-gray-100 dark:border-[rgba(255,255,255,0.05)] transition-colors"
-            onClick={(e) => e.stopPropagation()}>
-            <div className="bg-gray-300 dark:bg-[#262626] h-[6px] opacity-40 rounded-full w-[48px]" />
-            <div className="flex flex-col items-center gap-[24px] w-full">
-              <div className="bg-gray-100 dark:bg-[#20201f] transition-colors flex items-center justify-center p-[4px] rounded-[16px] size-[80px]">
-                <img alt={app.name} className="size-full rounded-[14px] object-cover" src={iconImage} />
-              </div>
-              <div className="font-['Plus_Jakarta_Sans',sans-serif] font-extrabold text-[24px] text-center text-gray-900 dark:text-white leading-[32px]">Downloading {app.name}</div>
-              <div className="font-['Inter',sans-serif] text-gray-500 dark:text-[#adaaaa] text-[14px] text-center leading-[20px]">42.5 MB of 128.0 MB â€¢ 2 mins remaining</div>
-              <div className="flex flex-col gap-[12px] w-full">
-                <div className="bg-gray-200 dark:bg-[#262626] h-[16px] overflow-clip relative rounded-full w-full transition-colors">
-                  <div className="absolute inset-y-0 left-0 w-[35%] rounded-full shadow-[0px_0px_15px_0px_rgba(16,185,129,0.4)] dark:shadow-[0px_0px_15px_0px_rgba(114,254,143,0.4)]" style={{ backgroundImage: "linear-gradient(135deg, #1ed760 0%, #1ed760 100%)" }} />
-                </div>
-                <div className="flex items-start justify-between px-[4px] w-full">
-                  <div className="font-['Inter',sans-serif] text-[#1ed760] dark:text-[#1ed760] font-bold text-[10px] tracking-[1px] uppercase leading-[15px]">35% Complete</div>
-                  <div className="font-['Inter',sans-serif] text-gray-500 dark:text-[#adaaaa] text-[10px] tracking-[1px] uppercase leading-[15px]">1.2 MB/s</div>
-                </div>
-              </div>
-              <div className="flex flex-col gap-[16px] w-full mt-[24px]">
-                <div className="flex gap-[16px] justify-center w-full">
-                  <button className="bg-white border border-gray-200 dark:border-transparent dark:bg-[#20201f] hover:bg-gray-50 dark:hover:bg-[#2c2c2c] transition-colors flex gap-[8px] h-[56px] items-center justify-center rounded-full w-[154px]">
-                    <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><path d={svgDownloadPaths.p21276080} className="fill-gray-900 dark:fill-white" /></svg>
-                    <div className="font-['Plus_Jakarta_Sans',sans-serif] font-bold text-[14px] text-center text-gray-900 dark:text-white leading-[20px]">Pause</div>
-                  </button>
-                  <button className="bg-gray-100 dark:bg-[#131313] flex gap-[8px] h-[56px] items-center justify-center opacity-50 rounded-full w-[156px] border border-gray-200 dark:border-[rgba(72,72,71,0.2)]">
-                    <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><path d={svgDownloadPaths.p19e3b6c0} className="fill-gray-400 dark:fill-[#ADAAAA]" /></svg>
-                    <div className="font-['Plus_Jakarta_Sans',sans-serif] font-bold text-gray-400 dark:text-[#adaaaa] text-[14px] text-center leading-[20px]">Resume</div>
-                  </button>
-                </div>
-                <button onClick={() => setShowDownloadSheet(false)} className="flex gap-[8px] h-[56px] items-center justify-center rounded-full w-full border border-red-200 dark:border-[rgba(255,115,81,0.3)] bg-red-50 dark:bg-transparent">
-                  <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><path d={svgDownloadPaths.p28843fc0} fill="#FF7351" className="dark:fill-[#FF7351]" /></svg>
-                  <div className="font-['Plus_Jakarta_Sans',sans-serif] font-bold text-red-500 dark:text-[#ff7351] text-[14px] text-center leading-[20px]">Cancel Download</div>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

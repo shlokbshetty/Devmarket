@@ -31,8 +31,8 @@ export default function HomePage() {
   useEffect(() => {
     async function fetchApps() {
       try {
-        const res = await apiGet("/apps/search");
-        setLiveApps(res?.data || []);
+        const res = await apiGet("/apps");
+        setLiveApps(res?.apps || []);
       } catch (err) {
         console.error("Failed to fetch apps:", err);
       } finally {
@@ -96,13 +96,13 @@ export default function HomePage() {
 
         {/* Category Chips */}
         <div className="flex gap-[12px] overflow-x-auto py-[8px] mb-[24px] scrollbar-hide">
-          <div className="bg-[#1ed760] dark:bg-[#1ed760] flex items-center justify-center px-[24px] py-[10px] rounded-full shrink-0 shadow-sm dark:shadow-none transition-colors">
+          <button onClick={() => navigate("/search")} className="bg-[#1ed760] dark:bg-[#1ed760] flex items-center justify-center px-[24px] py-[10px] rounded-full shrink-0 shadow-sm dark:shadow-none transition-colors">
             <div className="font-['Inter',sans-serif] text-white dark:text-[#002a0c] text-[14px]">All</div>
-          </div>
+          </button>
           {['Games', 'Productivity', 'Design', 'Utilities', 'Security', 'Social'].map((cat) => (
-            <div key={cat} className="bg-white dark:bg-[#20201f] shadow-sm dark:shadow-none flex items-center justify-center px-[24px] py-[10px] rounded-full shrink-0 transition-colors">
+            <button key={cat} onClick={() => navigate(`/search?category=${cat}`)} className="bg-white dark:bg-[#20201f] shadow-sm dark:shadow-none flex items-center justify-center px-[24px] py-[10px] rounded-full shrink-0 transition-colors">
               <div className="font-['Inter',sans-serif] text-gray-500 dark:text-[#adaaaa] text-[14px]">{cat}</div>
-            </div>
+            </button>
           ))}
         </div>
 

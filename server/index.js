@@ -1,41 +1,61 @@
-/*
- * Assigned Member: Backend Member 1 & 2
- * Required Functions: Server setup, routes, cors
- */
 require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
-const connectDB = require('./config/db');
+const path = require('path');
+
+// Trigger Firebase Admin initialisation at startup
+require('./config/firebase');
+
+const { initDb, seedDemoData } = require('./config/initDb');
 
 const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
 const appRoutes = require('./routes/app');
-const reviewRoutes = require('./routes/review');
-
-connectDB();
 
 const app = express();
 
-app.use(cors()); // Allow all for demo including Vercel and Replit
+// CORS configuration
+const corsOptions = {
+  origin: process.env.CORS_ORIGIN || '*',
+  allowedHeaders: ['Authorization', 'Content-Type', 'X-Requested-With'],
+  optionsSuccessStatus: 204,
+};
+app.use(cors(corsOptions));
+
+// Handle OPTIONS preflight with 204
+app.options('*', cors(corsOptions));
+
 app.use(express.json());
 
-// Routes
+// Serve APK files as attachments under /downloads
+app.use(
+  '/downloads',
+  express.static('uploads/apk/', {
+    setHeaders: (res) => res.setHeader('Content-Disposition', 'attachment'),
+    fallthrough: false,
+  })
+);
+
+// API routes
 app.use('/api/auth', authRoutes);
-app.use('/api/admin', adminRoutes);
 app.use('/api/apps', appRoutes);
-app.use('/api/reviews', reviewRoutes);
+app.use('/api/admin', adminRoutes);
 
-const path = require('path');
-
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
+// SPA fallback
 app.use(express.static(path.join(__dirname, '../client/dist')));
-
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/dist/index.html'));
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+const PORT = process.env.PORT || 3000;
+
+async function start() {
+  await initDb();
+  await seedDemoData();
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server running at http://${process.env.LAN_IP || '0.0.0.0'}:${PORT}`);
+  });
+}
+
+start();

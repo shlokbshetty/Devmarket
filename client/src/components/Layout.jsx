@@ -21,9 +21,9 @@ export function Layout() {
   const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
   const closeSidebar = () => setSidebarOpen(false);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     closeSidebar();
-    logout();
+    await logout();
     navigate('/login');
   };
 

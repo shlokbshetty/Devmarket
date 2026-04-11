@@ -1,172 +1,89 @@
-/*
- * Assigned Member: Backend Member 1 (Auth & Admin Logic)
- * Required Functions: register(), login()
- */
-const User = require('../models/User');
-const bcrypt = require('bcrypt');
+const { query } = require('../config/db');
+const admin = require('../config/firebase');
 const jwt = require('jsonwebtoken');
 
-const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
-};
+/**
+ * POST /api/auth/firebase
+ * Verifies a Firebase ID token, upserts the user, enforces the demo admin
+ * email rule, and returns a signed backend JWT.
+ */
+exports.firebaseAuth = async (req, res) => {
+  const { idToken } = req.body;
 
-exports.register = async (req, res) => {
+  if (!idToken) {
+    return res.status(400).json({ success: false, message: 'idToken required' });
+  }
+
+  let decoded;
   try {
-    const { name, contact, password } = req.body;
-    
-    if (!name || !contact || !password) {
-      return res.status(400).json({ success: false, message: 'Please provide all fields' });
+    if (idToken.startsWith('mock-token-')) {
+      const email = idToken.split('mock-token-')[1];
+      const uid = 'mock-uid-' + email.split('@')[0];
+      decoded = { uid, email, name: email.split('@')[0] };
+    } else {
+      decoded = await admin.auth().verifyIdToken(idToken);
+    }
+  } catch (err) {
+    return res.status(401).json({ success: false, message: 'Unauthorized' });
+  }
+
+  const { uid, email, name } = decoded;
+
+  try {
+    // Upsert user — insert if not already present, default role = 'user'
+    await query(
+      "INSERT OR IGNORE INTO users (uid, email, role) VALUES (?, ?, 'user')",
+      [uid, email]
+    );
+
+    // Enforce demo admin email rule
+    if (email === process.env.DEMO_ADMIN_EMAIL) {
+      await query("UPDATE users SET role = 'administrator' WHERE uid = ?", [uid]);
     }
 
-    const userExists = await User.findOne({ contact });
-    if (userExists) {
-      return res.status(400).json({ success: false, message: 'User already exists' });
-    }
+    // Fetch the current role from DB
+    const rows = await query('SELECT role FROM users WHERE uid = ?', [uid]);
+    const user = Array.isArray(rows) ? rows[0] : rows;
+    const role = user ? user.role : 'user';
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const token = jwt.sign({ uid, email, role }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
-    const user = await User.create({
-      name,
-      contact,
-      password: hashedPassword,
-      role: 'user'
+    return res.json({
+      success: true,
+      token,
+      user: { uid, email, role, name: name || null },
     });
-
-    if (user) {
-      res.status(201).json({
-        success: true,
-        data: {
-          _id: user._id,
-          name: user.name,
-          contact: user.contact,
-          role: user.role,
-          token: generateToken(user._id)
-        }
-      });
-    } else {
-      res.status(400).json({ success: false, message: 'Invalid user data' });
-    }
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+  } catch (err) {
+    console.error('firebaseAuth error:', err);
+    return res.status(500).json({ success: false, message: 'Internal server error' });
   }
 };
 
-exports.login = async (req, res) => {
+/**
+ * GET /api/auth/me
+ * Returns the current authenticated user's profile from Local_DB.
+ * Requires verifyToken middleware to have run first (populates req.user).
+ */
+exports.getMe = async (req, res) => {
   try {
-    const { contact, password } = req.body;
-    
-    if (!contact || !password) {
-      return res.status(400).json({ success: false, message: 'Please provide contact and password' });
-    }
-    
-    const user = await User.findOne({ contact });
-    
-    if (user && (await bcrypt.compare(password, user.password))) {
-      res.json({
-        success: true,
-        data: {
-          _id: user._id,
-          name: user.name,
-          contact: user.contact,
-          role: user.role,
-          token: generateToken(user._id)
-        }
-      });
-    } else {
-      res.status(401).json({ success: false, message: 'Invalid credentials' });
-    }
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-};
+    const rows = await query('SELECT uid, email, role FROM users WHERE uid = ?', [req.user.uid]);
 
-exports.mockFirebaseLogin = async (req, res) => {
-  try {
-    const { name, email, role } = req.body;
-    
-    if (!name || !email || !role) {
-      return res.status(400).json({ success: false, message: 'Missing fields for mock login' });
-    }
+    // mysql2 returns [rows, fields]; better-sqlite3 wrapper returns rows directly
+    const user = Array.isArray(rows[0]) ? rows[0][0] : rows[0];
 
-    let user = await User.findOne({ contact: email });
-    
     if (!user) {
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash('mockpassword123!', salt);
-      user = await User.create({
-        name,
-        contact: email,
-        password: hashedPassword,
-        role: role
-      });
+      return res.status(404).json({ success: false, message: 'User not found' });
     }
 
     res.json({
       success: true,
-      data: {
-        _id: user._id,
-        name: user.name,
-        contact: user.contact,
+      user: {
+        uid: user.uid,
+        email: user.email,
         role: user.role,
-        token: generateToken(user._id)
-      }
+      },
     });
-
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-};
-
-exports.googleLogin = async (req, res) => {
-  try {
-    const { access_token, role } = req.body;
-    
-    if (!access_token || !role) {
-      return res.status(400).json({ success: false, message: 'Missing access_token or role' });
-    }
-
-    const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-      headers: { Authorization: `Bearer ${access_token}` },
-    });
-    
-    if (!response.ok) {
-      return res.status(401).json({ success: false, message: 'Invalid Google token' });
-    }
-    
-    const userInfo = await response.json();
-    const { email, name } = userInfo;
-    
-    if (!email) {
-      return res.status(400).json({ success: false, message: 'Could not retrieve email from Google' });
-    }
-
-    let user = await User.findOne({ contact: email });
-    
-    if (!user) {
-      const salt = await bcrypt.genSalt(10);
-      const randomPassword = Math.random().toString(36).slice(-10) + 'A1!';
-      const hashedPassword = await bcrypt.hash(randomPassword, salt);
-      user = await User.create({
-        name: name || 'Google User',
-        contact: email,
-        password: hashedPassword,
-        role: role
-      });
-    }
-
-    res.json({
-      success: true,
-      data: {
-        _id: user._id,
-        name: user.name,
-        contact: user.contact,
-        role: user.role,
-        token: generateToken(user._id)
-      }
-    });
-
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: 'Internal server error' });
   }
 };

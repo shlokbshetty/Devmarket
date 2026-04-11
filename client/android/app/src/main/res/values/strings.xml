@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">DevMarket</string>
+    <string name="title_activity_main">DevMarket</string>
+    <string name="package_name">com.devmarket.app</string>
+    <string name="custom_url_scheme">com.devmarket.app</string>
+</resources>
