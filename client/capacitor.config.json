@@ -16,7 +16,7 @@
     },
     "GoogleSignIn": {
       "scopes": ["profile", "email"],
-      "serverClientId": "484259839788-your-server-client-id.apps.googleusercontent.com",
+      "serverClientId": "484259839788-4mg1l1rpt7jkfq1vfg2n3remrpf9ed3t.apps.googleusercontent.com",
       "forceCodeForRefreshToken": true
     }
   }

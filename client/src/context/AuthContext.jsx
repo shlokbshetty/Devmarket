@@ -143,6 +143,12 @@ export function AuthProvider({ children }) {
 
       // 2. Enhanced mobile redirect result handling
       try {
+        if (isMobile()) {
+          console.log('Initializing Native Google Sign-In...');
+          await GoogleSignIn.initialize({
+            clientId: '484259839788-4mg1l1rpt7jkfq1vfg2n3remrpf9ed3t.apps.googleusercontent.com',
+          });
+        }
         await handleMobileRedirectResult();
       } catch (err) {
         console.error("Mobile redirect auth error:", err);

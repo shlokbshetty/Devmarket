@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "484259839788",
+    "project_id": "devmarket-de597",
+    "storage_bucket": "devmarket-de597.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:484259839788:android:e4bd4b71c2c217a5d33689",
+        "android_client_info": {
+          "package_name": "com.devmarket.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "484259839788-4mg1l1rpt7jkfq1vfg2n3remrpf9ed3t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBT6205RTz7BmtaRdAj_9bH3TiHtvHXpXE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "484259839788-4mg1l1rpt7jkfq1vfg2n3remrpf9ed3t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

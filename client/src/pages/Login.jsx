@@ -142,12 +142,9 @@ export function Login() {
           {loginType === "user" && (
             <div className="flex flex-col gap-4">
               <button
-                onClick={(e) => handleButtonInteraction(e, handleGoogleLogin)}
-                onTouchStart={handleTouchStart}
-                onTouchEnd={handleTouchEnd}
-                onTouchCancel={handleTouchCancel}
+                onClick={handleGoogleLogin}
                 disabled={loading}
-                className={`w-full bg-white dark:bg-[#1f1f1f] text-black dark:text-white font-bold border border-gray-300 dark:border-[#333] py-4 rounded-2xl hover:bg-gray-50 dark:hover:bg-[#2a2a2a] transition-all flex items-center justify-center gap-3 active:scale-[0.98] shadow-sm disabled:opacity-50 disabled:cursor-not-allowed ${isPressed ? 'scale-[0.98] bg-gray-100 dark:bg-[#2a2a2a]' : ''}`}
+                className={`w-full bg-white dark:bg-[#1f1f1f] text-black dark:text-white font-bold border border-gray-300 dark:border-[#333] py-4 rounded-2xl hover:bg-gray-50 dark:hover:bg-[#2a2a2a] transition-all flex items-center justify-center gap-3 active:scale-[0.98] shadow-sm disabled:opacity-50 disabled:cursor-not-allowed`}
                 style={{ 
                   touchAction: 'manipulation',
                   WebkitTapHighlightColor: 'transparent',
