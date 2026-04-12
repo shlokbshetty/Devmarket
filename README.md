@@ -1,124 +1,321 @@
-# DevMarket
-A platform that acts as a marketplace to explore, upload, review, and manage applications.
+# DevMarket - Android App Marketplace
 
-[Installation Guide](#getting-started) · [Contact](#contact)
+A comprehensive platform for developers to upload, manage, and distribute Android applications with admin approval workflows.
 
-## Table of Contents
-- [About The Project](#about-the-project)
-- [Built With](#built-with)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-- [Usage](#usage)
-- [Roadmap](#roadmap)
-- [License](#license)
-- [Contact](#contact)
+[Quick Start](#quick-start) · [Test Accounts](#test-accounts) · [API Documentation](#api-documentation) · [Mobile Build](#mobile-build)
 
-## About The Project
-The DevMarket platform is a full-stack MERN application defined by its proprietary **"Editorial Discovery"** design system. It is designed to serve as a high-end marketplace for developers and users. Users can search for apps, submit reviews, and download applications using a borderless, dynamic Light/Dark mode interface, while administrators retain full control to vet and approve incoming uploads.
+## 🚀 Features
 
-### Key Capabilities
+### For Developers
+- **APK Upload**: Upload Android APK files directly to the platform
+- **App Management**: Manage your uploaded applications and track approval status
+- **File Storage**: APK files are stored locally on the server for distribution
+- **Developer Dashboard**: Dedicated interface for app submission and management
 
-**App Management and Discovery**
-Allows easy upload of app details, external APK links, and screenshots, along with instant searching and categorized browsing.
+### For Administrators  
+- **App Approval**: Review and approve/reject submitted applications
+- **User Management**: Promote users to developer status
+- **Admin Dashboard**: Comprehensive admin panel for platform management
+- **Content Moderation**: Maintain platform quality through approval workflows
 
-**Review System**
-Integrated user rating and review system to foster a community, helping users decide by observing peer feedback.
+### For Users
+- **App Discovery**: Browse and search approved applications
+- **Direct Downloads**: Download APK files directly from the platform
+- **Category Filtering**: Find apps by category (Games, Productivity, etc.)
+- **Responsive Design**: Works seamlessly on web and mobile devices
 
-**Admin Dashboards and Roles**
-Empowers administrators to review, approve applications to go "Live," and securely remove malicious submissions to maintain platform integrity.
+## 🏗️ Architecture
 
-**Secure Authentication**
-Uses robust JWT-based authentication to manage user and centralized admin sessions efficiently.
+### Frontend (React + Vite)
+- **Location**: `client/`
+- **Framework**: React 18 with Vite for fast development
+- **Styling**: TailwindCSS with dark/light mode support
+- **Mobile**: Capacitor for Android APK generation
+- **Authentication**: Firebase Auth with backend JWT integration
 
-<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
+### Backend (Node.js + Express)
+- **Location**: `server/`
+- **Database**: SQLite for local development (MySQL compatible)
+- **File Storage**: Local filesystem storage for APK files
+- **Authentication**: Firebase Admin SDK + JWT tokens
+- **API**: RESTful API with role-based access control
 
-## Built With
-- **React (Vite)**: Lightning-fast, interactive and responsive frontend dashboard.
-- **TailwindCSS**: Utility-first CSS framework establishing the borderless "Editorial Discovery" style.
-- **Next-Themes**: For seamless, modern Dark/Light mode theme syncing.
-- **Node.js & Express**: Backend and REST API framework.
-- **MongoDB Atlas & Mongoose**: Cloud NoSQL database and Object Data Modeling (ODM).
-- **JWT & Bcrypt**: For secure, encrypted authentication and authorization.
+### Project Structure
+```
+DevMarket/
+├── client/                 # React frontend
+│   ├── src/
+│   │   ├── components/     # Reusable UI components
+│   │   ├── pages/          # Page components
+│   │   ├── context/        # React context (auth, etc.)
+│   │   └── api/           # API client functions
+│   ├── android/           # Capacitor Android project
+│   └── dist/              # Built web assets
+├── server/                # Node.js backend
+│   ├── controllers/       # Route handlers
+│   ├── routes/           # API route definitions
+│   ├── middleware/       # Auth & validation middleware
+│   ├── config/           # Database & Firebase config
+│   └── models/           # Database models
+├── uploads/              # APK file storage
+└── docs/                 # Documentation
+```
 
-<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
-
-## Getting Started
-To get a local copy up and running, follow these simple steps.
+## 🚀 Quick Start
 
 ### Prerequisites
-Before you begin, ensure you have the following installed:
-- Node.js (v14 or higher) 
-- A MongoDB cluster URL (like MongoDB Atlas)
+- Node.js 16+ 
+- npm or yarn
+- Android Studio (for mobile builds)
 
 ### Installation
 
-1. **Clone the Repository**
+1. **Clone the repository**
    ```bash
    git clone https://github.com/shlokbshetty/Devmarket.git
+   cd Devmarket
    ```
 
-2. **Install Packages**
-   Install all dependencies for both root (acting as server) and client directories:
+2. **Install dependencies**
    ```bash
-   npm install && cd client && npm install
+   # Install server dependencies
+   npm install
+
+   # Install client dependencies
+   cd client && npm install && cd ..
    ```
 
-3. **Configure Environment Variables**
-   Create a `.env` file in the root directory (where server files live) and populate it with your valid cluster details:
+3. **Environment setup**
+   ```bash
+   # Copy environment template
+   cp .env.example .env
+   ```
+
+4. **Configure environment variables**
+   Edit `.env` file:
    ```env
-   PORT=5000
-   MONGO_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/devmarket?retryWrites=true&w=majority
-   JWT_SECRET=your_jwt_secret_key
+   # Server Configuration
+   PORT=3000
+   LAN_IP=192.168.1.100  # Your local IP for mobile testing
+   
+   # Database
+   DB_TYPE=sqlite
+   
+   # Authentication
+   JWT_SECRET=your-super-secret-jwt-key-here
+   DEMO_ADMIN_EMAIL=admin@devmarket.lan
+   
+   # Firebase (for production)
+   VITE_FIREBASE_API_KEY=mock-key  # Use 'mock-key' for development
    ```
 
-<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
+5. **Start the application**
+   ```bash
+   # Start both server and client
+   npm run dev
+   ```
 
-## Usage
+   **Access the application:**
+   - Frontend: http://localhost:5173
+   - Backend API: http://localhost:3000
+   - Mobile (if configured): http://YOUR_LAN_IP:3000
 
-### Start the Server and Client
-You can run both the frontend and backend servers concurrently using the custom script defined in the root setup:
+## 👥 Test Accounts
 
-```bash
-npm run dev
+The application includes pre-configured test accounts for development:
+
+### Admin Account
+- **Email**: `admin@devmarket.lan`
+- **Role**: Administrator
+- **Permissions**: 
+  - Approve/reject app submissions
+  - Manage users and promote to developer
+  - Access admin dashboard
+  - Full platform control
+
+### Developer Account  
+- **Email**: `developer@devmarket.lan`
+- **Role**: Developer
+- **Permissions**:
+  - Upload APK files
+  - Manage own applications
+  - Access developer dashboard
+  - Submit apps for approval
+
+### Regular User
+- **Email**: `user@devmarket.lan` (or any other email)
+- **Role**: User
+- **Permissions**:
+  - Browse approved applications
+  - Download APK files
+  - Search and filter apps
+
+### Using Test Accounts
+1. Click "Sign in with Google" on the login page
+2. In development mode, you'll see test account options
+3. Enter one of the test emails above
+4. You'll be automatically logged in with the appropriate role
+
+## 📱 Mobile Build (Android APK)
+
+### Setup Android Development
+1. **Install Android Studio**
+2. **Configure Capacitor**
+   ```bash
+   cd client
+   npx cap add android
+   npx cap sync android
+   ```
+
+3. **Build for production**
+   ```bash
+   # Build web assets
+   npm run build
+   
+   # Copy to Android
+   npx cap copy android
+   
+   # Open in Android Studio
+   npx cap open android
+   ```
+
+4. **Build APK in Android Studio**
+   - Build → Generate Signed Bundle/APK
+   - Choose APK and follow the signing process
+
+### Mobile Features
+- **Responsive Design**: Optimized for mobile screens
+- **Touch Events**: Enhanced button interactions for mobile
+- **Offline Capability**: Basic offline functionality
+- **Native Integration**: Uses Capacitor for native features
+
+## 🔧 API Documentation
+
+### Authentication Endpoints
+```
+POST /api/auth/firebase     # Exchange Firebase token for JWT
+GET  /api/auth/me          # Get current user profile
 ```
 
-### Run server separately
-If you prefer, you can just start the server alone and view the APIs:
-```bash
-npm run dev:server
+### App Management Endpoints
+```
+GET  /api/apps             # List approved apps
+GET  /api/apps/search      # Search apps with filters
+GET  /api/apps/:id         # Get single app details
+POST /api/apps/upload      # Upload APK (developers only)
 ```
 
-**Access the Applications:** 
-- The backend API runs at `http://localhost:5000`
-- The React setup runs via Vite at `http://localhost:5173` (or `http://localhost:3000` depending on port availability)
+### Admin Endpoints
+```
+GET  /api/admin/apps/pending        # List pending apps
+PUT  /api/admin/apps/:id/approve    # Approve app
+PUT  /api/admin/apps/:id/reject     # Reject app
+GET  /api/admin/users               # List all users
+PUT  /api/admin/users/:uid/promote  # Promote user to developer
+```
 
-### API Layout Options
-- **Public & Authentication:** `POST /api/auth/register`, `POST /api/auth/login`
-- **Application Handling:** `POST /api/apps/upload`, `GET /api/apps/search`, `GET /api/apps/:id`
-- **Reviews Support:** `POST /api/reviews`
-- **Administrator Role:** `PUT /api/admin/approve/:id` and `DELETE /api/admin/remove/:id`
+### File Downloads
+```
+GET /downloads/:filename   # Download APK files
+```
 
-<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
+## 🛠️ Development
 
-## Roadmap
-- [ ] Add real-time notifications for approved apps
-- [ ] Enhance admin moderation dashboard with graphical statistics
-- [ ] Integrate a recommendation engine based on user activity
-- [ ] Allow multi-platform app hosting, beyond mobile apps.
-- [ ] Enable built-in app monetization handling
+### Running Tests
+```bash
+# Frontend tests
+cd client && npm test
 
-<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
+# Backend tests  
+cd server && npm test
+```
 
-## License
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+### Development Scripts
+```bash
+# Start development servers
+npm run dev              # Both client and server
+npm run dev:server       # Server only
+npm run dev:client       # Client only
 
-<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
+# Build for production
+npm run build           # Build client
+npm run build:server    # Build server (if applicable)
 
-## Contact
-Shlok Shetty
+# Mobile development
+cd client
+npm run android         # Build and sync Android
+```
+
+### Database Management
+The application uses SQLite for local development with automatic schema initialization:
+
+- **Database file**: `devmarket.sqlite` (auto-created)
+- **Schema**: Automatically initialized on first run
+- **Demo data**: Seeded automatically with test accounts and sample apps
+
+## 🔒 Security Features
+
+- **JWT Authentication**: Secure token-based authentication
+- **Role-based Access**: Admin, Developer, and User roles
+- **File Validation**: APK file type validation and size limits
+- **CORS Protection**: Configurable CORS settings
+- **Input Sanitization**: SQL injection protection
+
+## 📦 Deployment
+
+### Production Deployment
+1. **Environment Configuration**
+   ```env
+   NODE_ENV=production
+   PORT=3000
+   DB_TYPE=mysql  # or sqlite
+   MONGO_URI=your-production-database-url
+   JWT_SECRET=your-production-jwt-secret
+   ```
+
+2. **Build Assets**
+   ```bash
+   cd client && npm run build
+   ```
+
+3. **Start Production Server**
+   ```bash
+   npm start
+   ```
+
+### Docker Deployment (Optional)
+```dockerfile
+# Dockerfile example
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY . .
+EXPOSE 3000
+CMD ["npm", "start"]
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 👨‍💻 Author
+
+**Shlok Shetty**
 - GitHub: [@shlokbshetty](https://github.com/shlokbshetty)
 - Email: shettyshlok87@gmail.com
-- Project Link: [https://github.com/shlokbshetty/Devmarket](https://github.com/shlokbshetty/Devmarket)
 
-<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
+## 🙏 Acknowledgments
+
+- React and Vite teams for excellent development tools
+- TailwindCSS for the utility-first CSS framework
+- Capacitor team for seamless mobile integration
+- Firebase for authentication services

@@ -4,12 +4,19 @@
   "description": "DevMarket Platform - Mobile App Marketplace",
   "main": "server/index.js",
   "scripts": {
+    "setup": "node setup.js",
     "build": "npm --prefix client install && npm --prefix client run build",
     "start": "node server/index.js",
     "dev:server": "nodemon server/index.js",
     "dev:client": "cd client && npm run dev",
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
-    "test": "jest --setupFiles dotenv/config --runInBand"
+    "test": "jest --setupFiles dotenv/config --runInBand",
+    "test:client": "cd client && npm test",
+    "android:dev": "cd client && cp capacitor.config.dev.json capacitor.config.json && npm run build && npx cap sync android",
+    "android:prod": "cd client && git checkout capacitor.config.json && npm run build && npx cap copy android",
+    "android:open": "cd client && npx cap open android",
+    "clean": "rm -rf node_modules client/node_modules client/dist uploads/*.apk *.sqlite",
+    "reset": "npm run clean && npm run setup"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",

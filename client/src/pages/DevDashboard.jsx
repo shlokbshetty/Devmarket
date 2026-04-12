@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { UploadCloud, Image as ImageIcon, Plus, Trash2, CheckCircle2 } from "lucide-react";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router";
@@ -20,13 +20,25 @@ export function DevDashboard() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [pressedButtons, setPressedButtons] = useState(new Set());
 
   if (!isAuthenticated) {
     return (
       <div className="w-full p-4 text-gray-900 dark:text-white min-h-[calc(100vh-65px)] bg-gray-50 dark:bg-[#0a0a0a] flex flex-col items-center justify-center">
         <h2 className="text-xl font-bold mb-2">Sign in Required</h2>
         <p className="text-gray-500 dark:text-zinc-400 text-sm mb-4">You need to be logged in to access this page.</p>
-        <button onClick={() => navigate('/login')} className="bg-emerald-400 dark:bg-[#34d399] text-black font-bold py-2.5 px-6 rounded-xl hover:bg-emerald-500 dark:hover:bg-[#2ebc87] transition-colors">
+        <button 
+          onClick={(e) => handleButtonInteraction(e, () => navigate('/login'))}
+          onTouchStart={() => handleTouchStart('signin-btn')}
+          onTouchEnd={() => handleTouchEnd('signin-btn')}
+          onTouchCancel={() => handleTouchCancel('signin-btn')}
+          className={`bg-emerald-400 dark:bg-[#34d399] text-black font-bold py-2.5 px-6 rounded-xl hover:bg-emerald-500 dark:hover:bg-[#2ebc87] transition-colors ${pressedButtons.has('signin-btn') ? 'scale-[0.98] opacity-80' : ''}`}
+          style={{ 
+            touchAction: 'manipulation',
+            WebkitTapHighlightColor: 'transparent',
+            userSelect: 'none'
+          }}
+        >
           Sign In
         </button>
       </div>
@@ -44,6 +56,13 @@ export function DevDashboard() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    e.stopPropagation();
+    
+    // Provide haptic feedback on mobile if available
+    if (navigator.vibrate) {
+      navigator.vibrate(50);
+    }
+    
     setError("");
     setLoading(true);
     try {
@@ -71,8 +90,47 @@ export function DevDashboard() {
     }
   };
 
+  // Enhanced button event handling for mobile
+  const handleButtonInteraction = useCallback((e, action) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Provide haptic feedback on mobile if available
+    if (navigator.vibrate) {
+      navigator.vibrate(50);
+    }
+    
+    action();
+  }, []);
+
+  const handleTouchStart = useCallback((buttonId) => {
+    setPressedButtons(prev => new Set(prev).add(buttonId));
+  }, []);
+
+  const handleTouchEnd = useCallback((buttonId) => {
+    setPressedButtons(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(buttonId);
+      return newSet;
+    });
+  }, []);
+
+  const handleTouchCancel = useCallback((buttonId) => {
+    setPressedButtons(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(buttonId);
+      return newSet;
+    });
+  }, []);
+
   const addScreenshot = () => { if (screenshots.length < 5) setScreenshots([...screenshots, ""]); };
-  const removeScreenshot = (i) => setScreenshots(screenshots.filter((_, idx) => idx !== i));
+  const removeScreenshot = (i) => {
+    // Provide haptic feedback on mobile if available
+    if (navigator.vibrate) {
+      navigator.vibrate(50);
+    }
+    setScreenshots(screenshots.filter((_, idx) => idx !== i));
+  };
   const updateScreenshot = (i, val) => { const u = [...screenshots]; u[i] = val; setScreenshots(u); };
 
   return (
@@ -150,14 +208,38 @@ export function DevDashboard() {
                         className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-xl pl-9 pr-4 py-2.5 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#1ed760] dark:focus:border-[#1ed760] transition-colors" />
                     </div>
                     {screenshots.length > 1 && (
-                      <button type="button" onClick={() => removeScreenshot(i)} className="p-2 text-gray-400 dark:text-zinc-500 hover:text-red-500 transition-colors">
+                      <button 
+                        type="button" 
+                        onClick={(e) => handleButtonInteraction(e, () => removeScreenshot(i))}
+                        onTouchStart={() => handleTouchStart(`remove-${i}`)}
+                        onTouchEnd={() => handleTouchEnd(`remove-${i}`)}
+                        onTouchCancel={() => handleTouchCancel(`remove-${i}`)}
+                        className={`p-2 text-gray-400 dark:text-zinc-500 hover:text-red-500 transition-colors ${pressedButtons.has(`remove-${i}`) ? 'scale-[0.98] opacity-80' : ''}`}
+                        style={{ 
+                          touchAction: 'manipulation',
+                          WebkitTapHighlightColor: 'transparent',
+                          userSelect: 'none'
+                        }}
+                      >
                         <Trash2 size={14} />
                       </button>
                     )}
                   </div>
                 ))}
                 {screenshots.length < 5 && (
-                  <button type="button" onClick={addScreenshot} className="flex items-center gap-2 text-xs font-bold text-[#1ed760] dark:text-[#1ed760] hover:text-[#1ed760] dark:hover:text-[#1ed760] transition-colors py-1">
+                  <button 
+                    type="button" 
+                    onClick={(e) => handleButtonInteraction(e, addScreenshot)}
+                    onTouchStart={() => handleTouchStart('add-screenshot')}
+                    onTouchEnd={() => handleTouchEnd('add-screenshot')}
+                    onTouchCancel={() => handleTouchCancel('add-screenshot')}
+                    className={`flex items-center gap-2 text-xs font-bold text-[#1ed760] dark:text-[#1ed760] hover:text-[#1ed760] dark:hover:text-[#1ed760] transition-colors py-1 ${pressedButtons.has('add-screenshot') ? 'scale-[0.98] opacity-80' : ''}`}
+                    style={{ 
+                      touchAction: 'manipulation',
+                      WebkitTapHighlightColor: 'transparent',
+                      userSelect: 'none'
+                    }}
+                  >
                     <Plus size={14} /> Add Screenshot URL
                   </button>
                 )}
@@ -165,8 +247,19 @@ export function DevDashboard() {
             </div>
 
             <div className="pt-2">
-              <button type="submit" disabled={loading || !appName || !description || !category || !version || !apkFile}
-                className="w-full bg-emerald-400 dark:bg-[#34d399] text-black font-bold py-3.5 rounded-xl hover:bg-emerald-500 dark:hover:bg-[#2ebc87] disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-[0.98] shadow-md">
+              <button 
+                type="submit" 
+                disabled={loading || !appName || !description || !category || !version || !apkFile}
+                onTouchStart={() => handleTouchStart('submit-btn')}
+                onTouchEnd={() => handleTouchEnd('submit-btn')}
+                onTouchCancel={() => handleTouchCancel('submit-btn')}
+                className={`w-full bg-emerald-400 dark:bg-[#34d399] text-black font-bold py-3.5 rounded-xl hover:bg-emerald-500 dark:hover:bg-[#2ebc87] disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-[0.98] shadow-md ${pressedButtons.has('submit-btn') ? 'scale-[0.98] opacity-80' : ''}`}
+                style={{ 
+                  touchAction: 'manipulation',
+                  WebkitTapHighlightColor: 'transparent',
+                  userSelect: 'none'
+                }}
+              >
                 {loading ? "Submitting..." : "Submit for Review"}
               </button>
             </div>

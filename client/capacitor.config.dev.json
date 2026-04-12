@@ -2,10 +2,14 @@
   "appId": "com.devmarket.app",
   "appName": "DevMarket",
   "webDir": "dist",
+  "server": {
+    "url": "http://192.168.0.103:3000",
+    "cleartext": true
+  },
   "android": {
     "allowMixedContent": true,
     "captureInput": true,
-    "webContentsDebuggingEnabled": false
+    "webContentsDebuggingEnabled": true
   },
   "plugins": {
     "App": {

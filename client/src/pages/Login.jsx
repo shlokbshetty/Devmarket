@@ -1,27 +1,80 @@
-import { useState } from "react";
-import { Briefcase, ArrowRight } from "lucide-react";
+import { useState, useCallback } from "react";
+import { Briefcase, ArrowRight, User, Shield, Code, Lock } from "lucide-react";
 import { useNavigate } from "react-router";
 import { useAuth } from "../context/AuthContext.jsx";
 
 export function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isPressed, setIsPressed] = useState(false);
+  const [loginType, setLoginType] = useState("user"); // "user", "admin", "developer"
+  const [credentials, setCredentials] = useState({ username: "", password: "" });
 
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, loginWithCredentials } = useAuth();
 
   const handleGoogleLogin = async () => {
+    console.log('🔵 Google login button clicked!');
     setError("");
     setLoading(true);
     try {
+      console.log('🔵 Calling login function...');
       await login();
+      console.log('🔵 Login successful, navigating...');
       navigate("/");
     } catch (err) {
+      console.error('🔵 Login error:', err);
       setError(err.message || "Sign in failed. Please try again.");
     } finally {
       setLoading(false);
     }
   };
+
+  const handleCredentialLogin = async (e) => {
+    e.preventDefault();
+    console.log('🟢 Credential login button clicked!');
+    setError("");
+    setLoading(true);
+    try {
+      console.log('🟢 Calling loginWithCredentials function...');
+      await loginWithCredentials(credentials.username, credentials.password, loginType);
+      console.log('🟢 Credential login successful, navigating...');
+      navigate("/");
+    } catch (err) {
+      console.error('🟢 Credential login error:', err);
+      setError(err.message || "Sign in failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Enhanced button event handling for mobile
+  const handleButtonInteraction = useCallback((e, action) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Provide haptic feedback on mobile if available
+    if (navigator.vibrate) {
+      navigator.vibrate(50);
+    }
+    
+    action();
+  }, []);
+
+  const handleTouchStart = useCallback((e) => {
+    e.preventDefault();
+    setIsPressed(true);
+  }, []);
+
+  const handleTouchEnd = useCallback((e) => {
+    e.preventDefault();
+    setIsPressed(false);
+  }, []);
+
+  const handleTouchCancel = useCallback((e) => {
+    e.preventDefault();
+    setIsPressed(false);
+  }, []);
 
   return (
     <div className="bg-gray-100 dark:bg-black min-h-screen flex justify-center w-full transition-colors">
@@ -46,30 +99,129 @@ export function Login() {
             </div>
           )}
 
-          {import.meta.env.VITE_FIREBASE_API_KEY === 'mock-key' && (
-            <div className="mb-6 p-4 bg-[#1ed760]/10 border border-[#1ed760]/20 rounded-2xl text-[#1ed760] text-xs font-semibold text-center">
-              <span className="block mb-1 opacity-100">🛠️ DEVELOPER MODE</span>
-              <p className="opacity-70 font-medium">Real Google Auth is disabled. Clicking the button will prompt for a mock email to simulate login.</p>
+          {/* Login Type Selection */}
+          <div className="mb-6">
+            <div className="flex gap-2 mb-4">
+              <button
+                onClick={() => setLoginType("user")}
+                className={`flex-1 py-2 px-3 rounded-lg text-sm font-bold transition-colors ${
+                  loginType === "user" 
+                    ? "bg-blue-500 text-white" 
+                    : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
+                }`}
+              >
+                <User size={16} className="inline mr-1" />
+                User
+              </button>
+              <button
+                onClick={() => setLoginType("developer")}
+                className={`flex-1 py-2 px-3 rounded-lg text-sm font-bold transition-colors ${
+                  loginType === "developer" 
+                    ? "bg-green-500 text-white" 
+                    : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
+                }`}
+              >
+                <Code size={16} className="inline mr-1" />
+                Developer
+              </button>
+              <button
+                onClick={() => setLoginType("admin")}
+                className={`flex-1 py-2 px-3 rounded-lg text-sm font-bold transition-colors ${
+                  loginType === "admin" 
+                    ? "bg-purple-500 text-white" 
+                    : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
+                }`}
+              >
+                <Shield size={16} className="inline mr-1" />
+                Admin
+              </button>
+            </div>
+          </div>
+
+          {/* Google Auth for Users */}
+          {loginType === "user" && (
+            <div className="flex flex-col gap-4">
+              <button
+                onClick={(e) => handleButtonInteraction(e, handleGoogleLogin)}
+                onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
+                onTouchCancel={handleTouchCancel}
+                disabled={loading}
+                className={`w-full bg-white dark:bg-[#1f1f1f] text-black dark:text-white font-bold border border-gray-300 dark:border-[#333] py-4 rounded-2xl hover:bg-gray-50 dark:hover:bg-[#2a2a2a] transition-all flex items-center justify-center gap-3 active:scale-[0.98] shadow-sm disabled:opacity-50 disabled:cursor-not-allowed ${isPressed ? 'scale-[0.98] bg-gray-100 dark:bg-[#2a2a2a]' : ''}`}
+                style={{ 
+                  touchAction: 'manipulation',
+                  WebkitTapHighlightColor: 'transparent',
+                  userSelect: 'none'
+                }}
+              >
+                {loading ? (
+                  "Signing in..."
+                ) : (
+                  <>
+                    <img src="https://static.cdnlogo.com/logos/g/35/google-icon.svg" alt="Google" className="w-5 h-5" />
+                    Sign in with Google
+                    <ArrowRight size={18} />
+                  </>
+                )}
+              </button>
             </div>
           )}
 
-          <div className="flex flex-col gap-4">
-            <button
-              onClick={handleGoogleLogin}
-              disabled={loading}
-              className="w-full bg-white dark:bg-[#1f1f1f] text-black dark:text-white font-bold border border-gray-300 dark:border-[#333] py-4 rounded-2xl hover:bg-gray-50 dark:hover:bg-[#2a2a2a] transition-all flex items-center justify-center gap-3 active:scale-[0.98] shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? (
-                "Signing in..."
-              ) : (
-                <>
-                  <img src="https://static.cdnlogo.com/logos/g/35/google-icon.svg" alt="Google" className="w-5 h-5" />
-                  Sign in with Google
-                  <ArrowRight size={18} />
-                </>
-              )}
-            </button>
-          </div>
+          {/* Credential Login for Admin/Developer */}
+          {(loginType === "admin" || loginType === "developer") && (
+            <form onSubmit={handleCredentialLogin} className="space-y-4">
+              <div>
+                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
+                  <Lock size={16} className="inline mr-1" />
+                  {loginType === "admin" ? "Admin" : "Developer"} Login
+                </label>
+                <input
+                  type="text"
+                  placeholder="Username"
+                  value={credentials.username}
+                  onChange={(e) => setCredentials({...credentials, username: e.target.value})}
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:border-blue-500 dark:focus:border-blue-400"
+                  required
+                />
+              </div>
+              <div>
+                <input
+                  type="password"
+                  placeholder="Password"
+                  value={credentials.password}
+                  onChange={(e) => setCredentials({...credentials, password: e.target.value})}
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:border-blue-500 dark:focus:border-blue-400"
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={loading}
+                className={`w-full py-4 rounded-2xl font-bold transition-all flex items-center justify-center gap-3 active:scale-[0.98] shadow-sm disabled:opacity-50 disabled:cursor-not-allowed ${
+                  loginType === "admin" 
+                    ? "bg-purple-500 hover:bg-purple-600 text-white" 
+                    : "bg-green-500 hover:bg-green-600 text-white"
+                }`}
+              >
+                {loading ? (
+                  "Signing in..."
+                ) : (
+                  <>
+                    {loginType === "admin" ? <Shield size={18} /> : <Code size={18} />}
+                    Sign in as {loginType === "admin" ? "Admin" : "Developer"}
+                    <ArrowRight size={18} />
+                  </>
+                )}
+              </button>
+              
+              {/* Demo Credentials */}
+              <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-xl text-xs text-gray-600 dark:text-gray-400">
+                <div className="font-bold mb-1">Demo Credentials:</div>
+                <div>Username: {loginType === "admin" ? "admin" : "developer"}</div>
+                <div>Password: {loginType === "admin" ? "admin123" : "dev123"}</div>
+              </div>
+            </form>
+          )}
         </div>
       </div>
     </div>

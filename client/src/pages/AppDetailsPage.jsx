@@ -2,6 +2,8 @@ import { useNavigate, useParams } from "react-router";
 import { useState, useEffect } from "react";
 import { apiGet } from "../api/client.js";
 import svgPaths from "../imports/svg-ilu7mp8pji.js";
+import { Capacitor } from '@capacitor/core';
+import { Browser } from '@capacitor/browser';
 
 const IMG = {
   heroBackground: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop",
@@ -27,6 +29,12 @@ export default function AppDetailsPage() {
     setProgress(0);
 
     try {
+      if (Capacitor.isNativePlatform()) {
+        await Browser.open({ url: app.downloadUrl });
+        setDownloadState('done');
+        setTimeout(() => setDownloadState('idle'), 3000);
+        return;
+      }
       const response = await fetch(app.downloadUrl);
       if (!response.ok) throw new Error('Download failed');
 

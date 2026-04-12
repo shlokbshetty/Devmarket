@@ -147,7 +147,22 @@ async function seedDemoData() {
     console.log(`Seeded demo admin user: ${demoEmail}`);
   }
 
-  // 3. Insert Demo Apps if not present
+  // 3. Insert demo developer user
+  const devEmail = 'developer@devmarket.lan';
+  const devResult = await query(
+    'SELECT uid FROM users WHERE email = ?',
+    [devEmail]
+  );
+  const devRows = Array.isArray(devResult[0]) ? devResult[0] : devResult;
+  if (devRows.length === 0) {
+    await query(
+      "INSERT INTO users (uid, email, role) VALUES (?, ?, 'developer')",
+      ['demo-developer', devEmail]
+    );
+    console.log(`Seeded demo developer user: ${devEmail}`);
+  }
+
+  // 4. Insert Demo Apps if not present
   const appsToSeed = [
     { 
       name: 'SynthCode Pro', 

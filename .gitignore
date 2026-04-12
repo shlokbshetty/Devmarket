@@ -21,8 +21,16 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# IDE files
+.idea/
+.idea(1)/
+.vscode/
+*.swp
+*.swo
+
 # Project specific
 server/uploads/
+uploads/
 *.sqlite
 *.sqlite-journal
 firebase-service-account.json
@@ -33,3 +41,6 @@ client/android/app/build(1)/
 client/android/build/
 .gradle/
 capacitor-cordova-android-plugins/
+
+# Old/duplicate directories
+Frontend_UI/

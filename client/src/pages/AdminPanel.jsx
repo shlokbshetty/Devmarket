@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Search, Check, X, Clock, ChevronRight, Shield, Users } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { useNavigate } from "react-router";
@@ -23,6 +23,7 @@ export function AdminPanel() {
   const [usersLoading, setUsersLoading] = useState(false);
   const [usersError, setUsersError] = useState("");
   const [promoteLoading, setPromoteLoading] = useState(null);
+  const [pressedButtons, setPressedButtons] = useState(new Set());
 
   useEffect(() => {
     if (isAuthenticated && isAdmin) {
@@ -56,20 +57,15 @@ export function AdminPanel() {
     }
   };
 
-  const handlePromote = async (uid) => {
-    setPromoteLoading(uid);
-    try {
-      await apiPut(`/admin/users/${uid}/promote`);
-      setUsers(users.map(u => u.uid === uid ? { ...u, role: "developer" } : u));
-    } catch (err) {
-      setUsersError(err.message);
-    } finally {
-      setPromoteLoading(null);
-    }
-  };
-
   const handleAction = async (e, id, action) => {
     e.stopPropagation();
+    e.preventDefault();
+    
+    // Provide haptic feedback on mobile if available
+    if (navigator.vibrate) {
+      navigator.vibrate(50);
+    }
+    
     setActionLoading(id);
     try {
       if (action === 'Approve') {
@@ -87,6 +83,50 @@ export function AdminPanel() {
     }
   };
 
+  const handlePromote = async (uid) => {
+    // Provide haptic feedback on mobile if available
+    if (navigator.vibrate) {
+      navigator.vibrate(50);
+    }
+    
+    setPromoteLoading(uid);
+    try {
+      await apiPut(`/admin/users/${uid}/promote`);
+      setUsers(users.map(u => u.uid === uid ? { ...u, role: "developer" } : u));
+    } catch (err) {
+      setUsersError(err.message);
+    } finally {
+      setPromoteLoading(null);
+    }
+  };
+
+  // Enhanced button event handling for mobile
+  const handleButtonInteraction = useCallback((e, action) => {
+    e.preventDefault();
+    e.stopPropagation();
+    action();
+  }, []);
+
+  const handleTouchStart = useCallback((buttonId) => {
+    setPressedButtons(prev => new Set(prev).add(buttonId));
+  }, []);
+
+  const handleTouchEnd = useCallback((buttonId) => {
+    setPressedButtons(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(buttonId);
+      return newSet;
+    });
+  }, []);
+
+  const handleTouchCancel = useCallback((buttonId) => {
+    setPressedButtons(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(buttonId);
+      return newSet;
+    });
+  }, []);
+
   if (!isAuthenticated || !isAdmin) {
     return (
       <div className="w-full p-4 text-gray-900 dark:text-white min-h-[calc(100vh-65px)] bg-gray-50 dark:bg-[#0a0a0a] flex flex-col items-center justify-center">
@@ -94,7 +134,20 @@ export function AdminPanel() {
         <h2 className="text-xl font-bold mb-2">Admin Access Only</h2>
         <p className="text-gray-500 dark:text-zinc-400 text-sm mb-4 text-center">You need admin privileges to access this page.</p>
         {!isAuthenticated && (
-          <button onClick={() => navigate('/login')} className="bg-[#1ed760] dark:bg-[#1ed760] text-black font-bold py-2.5 px-6 rounded-xl hover:bg-[#1ed760] dark:hover:bg-[#1ed760] transition-colors">Sign In</button>
+          <button 
+            onClick={(e) => handleButtonInteraction(e, () => navigate('/login'))}
+            onTouchStart={() => handleTouchStart('signin-btn')}
+            onTouchEnd={() => handleTouchEnd('signin-btn')}
+            onTouchCancel={() => handleTouchCancel('signin-btn')}
+            className={`bg-[#1ed760] dark:bg-[#1ed760] text-black font-bold py-2.5 px-6 rounded-xl hover:bg-[#1ed760] dark:hover:bg-[#1ed760] transition-colors ${pressedButtons.has('signin-btn') ? 'scale-[0.98] opacity-80' : ''}`}
+            style={{ 
+              touchAction: 'manipulation',
+              WebkitTapHighlightColor: 'transparent',
+              userSelect: 'none'
+            }}
+          >
+            Sign In
+          </button>
         )}
       </div>
     );
@@ -116,14 +169,30 @@ export function AdminPanel() {
       {/* Tabs */}
       <div className="flex gap-2 mb-6">
         <button
-          onClick={() => setActiveTab("apps")}
-          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-colors ${activeTab === "apps" ? "bg-[#1ed760] text-black" : "bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] text-gray-600 dark:text-zinc-400 hover:border-[#1ed760] dark:hover:border-[#1ed760]"}`}
+          onClick={(e) => handleButtonInteraction(e, () => setActiveTab("apps"))}
+          onTouchStart={() => handleTouchStart('apps-tab')}
+          onTouchEnd={() => handleTouchEnd('apps-tab')}
+          onTouchCancel={() => handleTouchCancel('apps-tab')}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-colors ${activeTab === "apps" ? "bg-[#1ed760] text-black" : "bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] text-gray-600 dark:text-zinc-400 hover:border-[#1ed760] dark:hover:border-[#1ed760]"} ${pressedButtons.has('apps-tab') ? 'scale-[0.98] opacity-80' : ''}`}
+          style={{ 
+            touchAction: 'manipulation',
+            WebkitTapHighlightColor: 'transparent',
+            userSelect: 'none'
+          }}
         >
           <Clock size={14} /> Apps
         </button>
         <button
-          onClick={() => setActiveTab("users")}
-          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-colors ${activeTab === "users" ? "bg-[#1ed760] text-black" : "bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] text-gray-600 dark:text-zinc-400 hover:border-[#1ed760] dark:hover:border-[#1ed760]"}`}
+          onClick={(e) => handleButtonInteraction(e, () => setActiveTab("users"))}
+          onTouchStart={() => handleTouchStart('users-tab')}
+          onTouchEnd={() => handleTouchEnd('users-tab')}
+          onTouchCancel={() => handleTouchCancel('users-tab')}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-colors ${activeTab === "users" ? "bg-[#1ed760] text-black" : "bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] text-gray-600 dark:text-zinc-400 hover:border-[#1ed760] dark:hover:border-[#1ed760]"} ${pressedButtons.has('users-tab') ? 'scale-[0.98] opacity-80' : ''}`}
+          style={{ 
+            touchAction: 'manipulation',
+            WebkitTapHighlightColor: 'transparent',
+            userSelect: 'none'
+          }}
         >
           <Users size={14} /> Users
         </button>
@@ -192,12 +261,34 @@ export function AdminPanel() {
                           <span>{app.screenshots?.length || 0} screenshots</span>
                         </div>
                         <div className="flex gap-2 pt-2">
-                          <button onClick={(e) => handleAction(e, app.id, 'Reject')} disabled={actionLoading === app.id}
-                            className="flex-1 flex items-center justify-center gap-2 bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-500 hover:bg-red-500 hover:text-white py-2.5 rounded-xl transition-all text-sm font-bold border border-red-100 dark:border-transparent disabled:opacity-50">
+                          <button 
+                            onClick={(e) => handleAction(e, app.id, 'Reject')} 
+                            onTouchStart={() => handleTouchStart(`reject-${app.id}`)}
+                            onTouchEnd={() => handleTouchEnd(`reject-${app.id}`)}
+                            onTouchCancel={() => handleTouchCancel(`reject-${app.id}`)}
+                            disabled={actionLoading === app.id}
+                            className={`flex-1 flex items-center justify-center gap-2 bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-500 hover:bg-red-500 hover:text-white py-2.5 rounded-xl transition-all text-sm font-bold border border-red-100 dark:border-transparent disabled:opacity-50 ${pressedButtons.has(`reject-${app.id}`) ? 'scale-[0.98] opacity-80' : ''}`}
+                            style={{ 
+                              touchAction: 'manipulation',
+                              WebkitTapHighlightColor: 'transparent',
+                              userSelect: 'none'
+                            }}
+                          >
                             <X size={16} /> Reject
                           </button>
-                          <button onClick={(e) => handleAction(e, app.id, 'Approve')} disabled={actionLoading === app.id}
-                            className="flex-1 flex items-center justify-center gap-2 bg-[#1ed760]/10 dark:bg-[#1ed760]/10 text-[#1ed760] dark:text-[#1ed760] hover:bg-[#1ed760] hover:text-black py-2.5 rounded-xl transition-all text-sm font-bold border border-[#1ed760]/20 dark:border-transparent disabled:opacity-50">
+                          <button 
+                            onClick={(e) => handleAction(e, app.id, 'Approve')} 
+                            onTouchStart={() => handleTouchStart(`approve-${app.id}`)}
+                            onTouchEnd={() => handleTouchEnd(`approve-${app.id}`)}
+                            onTouchCancel={() => handleTouchCancel(`approve-${app.id}`)}
+                            disabled={actionLoading === app.id}
+                            className={`flex-1 flex items-center justify-center gap-2 bg-[#1ed760]/10 dark:bg-[#1ed760]/10 text-[#1ed760] dark:text-[#1ed760] hover:bg-[#1ed760] hover:text-black py-2.5 rounded-xl transition-all text-sm font-bold border border-[#1ed760]/20 dark:border-transparent disabled:opacity-50 ${pressedButtons.has(`approve-${app.id}`) ? 'scale-[0.98] opacity-80' : ''}`}
+                            style={{ 
+                              touchAction: 'manipulation',
+                              WebkitTapHighlightColor: 'transparent',
+                              userSelect: 'none'
+                            }}
+                          >
                             <Check size={16} /> Approve
                           </button>
                         </div>
@@ -245,9 +336,17 @@ export function AdminPanel() {
                   </div>
                   {u.role === "user" && (
                     <button
-                      onClick={() => handlePromote(u.uid)}
+                      onClick={(e) => handleButtonInteraction(e, () => handlePromote(u.uid))}
+                      onTouchStart={() => handleTouchStart(`promote-${u.uid}`)}
+                      onTouchEnd={() => handleTouchEnd(`promote-${u.uid}`)}
+                      onTouchCancel={() => handleTouchCancel(`promote-${u.uid}`)}
                       disabled={promoteLoading === u.uid}
-                      className="w-full sm:w-auto shrink-0 bg-[#1ed760]/10 text-[#1ed760] hover:bg-[#1ed760] hover:text-black border border-[#1ed760]/20 dark:border-transparent px-3 py-2 sm:py-1.5 rounded-xl text-xs font-bold transition-all disabled:opacity-50"
+                      className={`w-full sm:w-auto shrink-0 bg-[#1ed760]/10 text-[#1ed760] hover:bg-[#1ed760] hover:text-black border border-[#1ed760]/20 dark:border-transparent px-3 py-2 sm:py-1.5 rounded-xl text-xs font-bold transition-all disabled:opacity-50 ${pressedButtons.has(`promote-${u.uid}`) ? 'scale-[0.98] opacity-80' : ''}`}
+                      style={{ 
+                        touchAction: 'manipulation',
+                        WebkitTapHighlightColor: 'transparent',
+                        userSelect: 'none'
+                      }}
                     >
                       {promoteLoading === u.uid ? "..." : "Promote Developer"}
                     </button>

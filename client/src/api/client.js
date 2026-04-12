@@ -1,5 +1,7 @@
 const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api';
 
+console.log('🌐 API Client initialized with base URL:', API_BASE);
+
 function getAuthHeaders() {
   const stored = localStorage.getItem('devmarket_auth');
   if (stored) {
@@ -12,6 +14,7 @@ function getAuthHeaders() {
 }
 
 async function request(method, path, body = null) {
+  const url = `${API_BASE}${path}`;
   const headers = {
     'Content-Type': 'application/json',
     ...getAuthHeaders(),
@@ -19,13 +22,25 @@ async function request(method, path, body = null) {
   const config = { method, headers };
   if (body) config.body = JSON.stringify(body);
 
-  const res = await fetch(`${API_BASE}${path}`, config);
-  const data = await res.json();
+  console.log(`🔄 API Request: ${method} ${url}`);
+  console.log('📋 Headers:', headers);
+  if (body) console.log('📦 Body:', body);
 
-  if (!res.ok) {
-    throw new Error(data.message || 'Something went wrong');
+  try {
+    const res = await fetch(url, config);
+    console.log(`📡 Response status: ${res.status}`);
+    
+    const data = await res.json();
+    console.log('📥 Response data:', data);
+
+    if (!res.ok) {
+      throw new Error(data.message || 'Something went wrong');
+    }
+    return data;
+  } catch (error) {
+    console.error('❌ API Request failed:', error);
+    throw error;
   }
-  return data;
 }
 
 export const apiGet = (path) => request('GET', path);
