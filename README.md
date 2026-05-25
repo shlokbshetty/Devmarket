@@ -4,7 +4,7 @@ A comprehensive platform for developers to upload, manage, and distribute Androi
 
 [Quick Start](#quick-start) · [Test Accounts](#test-accounts) · [API Documentation](#api-documentation) · [Mobile Build](#mobile-build)
 
-## 🚀 Features
+##  Features
 
 ### For Developers
 - **APK Upload**: Upload Android APK files directly to the platform
@@ -24,7 +24,7 @@ A comprehensive platform for developers to upload, manage, and distribute Androi
 - **Category Filtering**: Find apps by category (Games, Productivity, etc.)
 - **Responsive Design**: Works seamlessly on web and mobile devices
 
-## 🏗️ Architecture
+##  Architecture
 
 ### Frontend (React + Vite)
 - **Location**: `client/`
@@ -61,7 +61,7 @@ DevMarket/
 └── docs/                 # Documentation
 ```
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Prerequisites
 - Node.js 16+ 
@@ -120,7 +120,7 @@ DevMarket/
    - Backend API: http://localhost:3000
    - Mobile (if configured): http://YOUR_LAN_IP:3000
 
-## 👥 Test Accounts
+##  Test Accounts
 
 The application includes pre-configured test accounts for development:
 
@@ -156,7 +156,7 @@ The application includes pre-configured test accounts for development:
 3. Enter one of the test emails above
 4. You'll be automatically logged in with the appropriate role
 
-## 📱 Mobile Build (Android APK)
+##  Mobile Build (Android APK)
 
 ### Setup Android Development
 1. **Install Android Studio**
@@ -189,7 +189,7 @@ The application includes pre-configured test accounts for development:
 - **Offline Capability**: Basic offline functionality
 - **Native Integration**: Uses Capacitor for native features
 
-## 🔧 API Documentation
+##  API Documentation
 
 ### Authentication Endpoints
 ```
@@ -219,7 +219,7 @@ PUT  /api/admin/users/:uid/promote  # Promote user to developer
 GET /downloads/:filename   # Download APK files
 ```
 
-## 🛠️ Development
+##  Development
 
 ### Running Tests
 ```bash
@@ -253,7 +253,7 @@ The application uses SQLite for local development with automatic schema initiali
 - **Schema**: Automatically initialized on first run
 - **Demo data**: Seeded automatically with test accounts and sample apps
 
-## 🔒 Security Features
+##  Security Features
 
 - **JWT Authentication**: Secure token-based authentication
 - **Role-based Access**: Admin, Developer, and User roles
@@ -261,7 +261,7 @@ The application uses SQLite for local development with automatic schema initiali
 - **CORS Protection**: Configurable CORS settings
 - **Input Sanitization**: SQL injection protection
 
-## 📦 Deployment
+##  Deployment
 
 ### Production Deployment
 1. **Environment Configuration**
@@ -295,7 +295,7 @@ EXPOSE 3000
 CMD ["npm", "start"]
 ```
 
-## 🤝 Contributing
+##  Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -304,13 +304,13 @@ CMD ["npm", "start"]
 5. Open a Pull Request
 
 
-## 👨‍💻 Author
+##  Author
 
 **Shlok Shetty**
 - GitHub: [@shlokbshetty](https://github.com/shlokbshetty)
 - Email: shettyshlok87@gmail.com
 
-## 🙏 Acknowledgments
+##  Acknowledgments
 
 - React and Vite teams for excellent development tools
 - TailwindCSS for the utility-first CSS framework
