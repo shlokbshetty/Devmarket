@@ -1,318 +1,137 @@
-# DevMarket - Android App Marketplace
+# DevMarket Enterprise Platform
 
-A comprehensive platform for developers to upload, manage, and distribute Android applications with admin approval workflows.
+[![Node.js](https://img.shields.io/badge/Node.js-18.x%20%7C%2020.x-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![React](https://img.shields.io/badge/React-18.2.0-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
+[![Express](https://img.shields.io/badge/Express-4.18.2-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
+[![Capacitor](https://img.shields.io/badge/Capacitor-Android-119EFF?style=for-the-badge&logo=capacitor&logoColor=white)](https://capacitorjs.com/)
+[![SQLite](https://img.shields.io/badge/SQLite-Better--SQLite3-003B57?style=for-the-badge&logo=sqlite&logoColor=white)](https://sqlite.org/)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
+[![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen?style=for-the-badge)](package.json)
 
-[Quick Start](#quick-start) · [Test Accounts](#test-accounts) · [API Documentation](#api-documentation) · [Mobile Build](#mobile-build)
+> **Enterprise mobile distribution and moderation engine providing end-to-end APK package verification, lifecycle-governed role management, and cross-platform native delivery.**
 
-##  Features
+---
 
-### For Developers
-- **APK Upload**: Upload Android APK files directly to the platform
-- **App Management**: Manage your uploaded applications and track approval status
-- **File Storage**: APK files are stored locally on the server for distribution
-- **Developer Dashboard**: Dedicated interface for app submission and management
+## Architecture & Data Flow Diagram
 
-### For Administrators  
-- **App Approval**: Review and approve/reject submitted applications
-- **User Management**: Promote users to developer status
-- **Admin Dashboard**: Comprehensive admin panel for platform management
-- **Content Moderation**: Maintain platform quality through approval workflows
+```mermaid
+graph TD
+    subgraph ClientLayer ["Client Presentation Layer"]
+        WA["Web Client (React 18 + Vite)"]
+        MA["Android Native Wrapper (Capacitor)"]
+    end
 
-### For Users
-- **App Discovery**: Browse and search approved applications
-- **Direct Downloads**: Download APK files directly from the platform
-- **Category Filtering**: Find apps by category (Games, Productivity, etc.)
-- **Responsive Design**: Works seamlessly on web and mobile devices
+    subgraph GatewayAuth ["Ingress & Identity Layer"]
+        CORS["Express Ingress & CORS Shield"]
+        FB["Firebase Authentication SDK"]
+        MW["JWT Token Verification & RBAC Middleware"]
+    end
 
-##  Architecture
+    subgraph ServiceLayer ["Core Service Orchestration"]
+        AuthSvc["Identity & User Provisioning Service"]
+        UploadSvc["Multipart APK Intake & MIME Parser (Multer)"]
+        CatalogSvc["Application Discovery & Filter Pipeline"]
+        AdminSvc["Moderation & Role Governance Pipeline"]
+    end
 
-### Frontend (React + Vite)
-- **Location**: `client/`
-- **Framework**: React 18 with Vite for fast development
-- **Styling**: TailwindCSS with dark/light mode support
-- **Mobile**: Capacitor for Android APK generation
-- **Authentication**: Firebase Auth with backend JWT integration
+    subgraph PersistenceLayer ["Storage & Data Tier"]
+        DB[("Embedded SQLite / MySQL Persistence")]
+        FS[("Atomic Local Blob Storage (/uploads/apk)")]
+    end
 
-### Backend (Node.js + Express)
-- **Location**: `server/`
-- **Database**: SQLite for local development (MySQL compatible)
-- **File Storage**: Local filesystem storage for APK files
-- **Authentication**: Firebase Admin SDK + JWT tokens
-- **API**: RESTful API with role-based access control
+    WA -->|HTTPS / API Requests| CORS
+    MA -->|HTTPS / API Requests| CORS
+    WA -.->|ID Token Handshake| FB
+    MA -.->|OAuth Native Auth| FB
+    FB -->|Verified Identity| MW
+    CORS --> MW
 
-### Project Structure
-```
-DevMarket/
-├── client/                 # React frontend
-│   ├── src/
-│   │   ├── components/     # Reusable UI components
-│   │   ├── pages/          # Page components
-│   │   ├── context/        # React context (auth, etc.)
-│   │   └── api/           # API client functions
-│   ├── android/           # Capacitor Android project
-│   └── dist/              # Built web assets
-├── server/                # Node.js backend
-│   ├── controllers/       # Route handlers
-│   ├── routes/           # API route definitions
-│   ├── middleware/       # Auth & validation middleware
-│   ├── config/           # Database & Firebase config
-│   └── models/           # Database models
-├── uploads/              # APK file storage
-└── docs/                 # Documentation
+    MW -->|Auth Routes| AuthSvc
+    MW -->|Role: Developer| UploadSvc
+    MW -->|Public Access| CatalogSvc
+    MW -->|Role: Admin| AdminSvc
+
+    AuthSvc --> DB
+    UploadSvc -->|Binary Package (.apk)| FS
+    UploadSvc -->|Metadata Indexing| DB
+    CatalogSvc --> DB
+    AdminSvc --> DB
+    CatalogSvc -->|Stream Package| FS
 ```
 
-##  Quick Start
+---
+
+## Core Features
+
+- **Asynchronous Package Ingestion & Validation**: Streaming multipart file parser enforcing strict 200MB boundaries and MIME-type integrity checks (`application/vnd.android.package-archive`) to prevent unauthorized binaries.
+- **Dual-Tier Identity Architecture**: Hybrid Firebase Admin SDK and standard HMAC-SHA256 JWT validation supporting Google OAuth federated tokens alongside encrypted credential fallback.
+- **Granular Role-Based Access Governance (RBAC)**: Enforces privilege boundaries across User, Developer, and Administrator personas with token revocation and promotion workflows.
+- **Audit-Controlled Moderation Pipeline**: Staged lifecycle transitions (`pending` &rarr; `approved` / `rejected`) safeguarding mobile consumers against unverified distribution payloads.
+- **High-Throughput Binary Streaming**: Byte-range static file delivery server configured with forced `Content-Disposition: attachment` headers for cross-subnet LAN downloads.
+- **Hybrid Native Compilation**: Pre-configured Capacitor runtime container enabling instantaneous parity across standard desktop browsers and physical Android hardware.
+
+---
+
+## Tech Stack Directory
+
+| Layer | Technologies |
+| :--- | :--- |
+| **Frontend** | React 18, Vite, TailwindCSS, Lucide React, Capacitor Android Bridge |
+| **Backend** | Node.js (v18+), Express.js, Multer Streaming Engine |
+| **Database & State Tier** | SQLite (`better-sqlite3`), Mongoose/MySQL compatibility drivers, React Context API |
+| **DevOps & Verification** | Jest, Supertest, Fast-Check (Property-Based Testing), Memfs Virtualization, Concurrently |
+
+---
+
+## Quickstart & Verification
 
 ### Prerequisites
-- Node.js 16+ 
-- npm or yarn
-- Android Studio (for mobile builds)
+- **Node.js**: `v18.0.0` or higher
+- **Package Manager**: `npm v9+` or `yarn`
+- **Android SDK / Android Studio** (Optional, for native mobile builds)
 
-### Installation
+### Environment Configuration
+Copy `.env.example` to `.env` in the project root:
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/shlokbshetty/Devmarket.git
-   cd Devmarket
-   ```
+```env
+# Server Runtime
+PORT=3000
+LAN_IP=127.0.0.1
+NODE_ENV=development
 
-2. **Install dependencies**
-   ```bash
-   # Install server dependencies
-   npm install
+# Authentication
+JWT_SECRET=enterprise_devmarket_production_jwt_secret_token
+FIREBASE_SERVICE_ACCOUNT_PATH=./firebase-service-account.json
 
-   # Install client dependencies
-   cd client && npm install && cd ..
-   ```
-
-3. **Environment setup**
-   ```bash
-   # Copy environment template
-   cp .env.example .env
-   ```
-
-4. **Configure environment variables**
-   Edit `.env` file:
-   ```env
-   # Server Configuration
-   PORT=3000
-   LAN_IP=192.168.1.100  # Your local IP for mobile testing
-   
-   # Database
-   DB_TYPE=sqlite
-   
-   # Authentication
-   JWT_SECRET=your-super-secret-jwt-key-here
-   DEMO_ADMIN_EMAIL=admin@devmarket.lan
-   
-   # Firebase (for production)
-   VITE_FIREBASE_API_KEY=mock-key  # Use 'mock-key' for development
-   ```
-
-5. **Start the application**
-   ```bash
-   # Start both server and client
-   npm run dev
-   ```
-
-   **Access the application:**
-   - Frontend: http://localhost:5173
-   - Backend API: http://localhost:3000
-   - Mobile (if configured): http://YOUR_LAN_IP:3000
-
-##  Test Accounts
-
-The application includes pre-configured test accounts for development:
-
-### Admin Account
-- **Email**: `admin@devmarket.lan`
-- **Role**: Administrator
-- **Permissions**: 
-  - Approve/reject app submissions
-  - Manage users and promote to developer
-  - Access admin dashboard
-  - Full platform control
-
-### Developer Account  
-- **Email**: `developer@devmarket.lan`
-- **Role**: Developer
-- **Permissions**:
-  - Upload APK files
-  - Manage own applications
-  - Access developer dashboard
-  - Submit apps for approval
-
-### Regular User
-- **Email**: `user@devmarket.lan` (or any other email)
-- **Role**: User
-- **Permissions**:
-  - Browse approved applications
-  - Download APK files
-  - Search and filter apps
-
-### Using Test Accounts
-1. Click "Sign in with Google" on the login page
-2. In development mode, you'll see test account options
-3. Enter one of the test emails above
-4. You'll be automatically logged in with the appropriate role
-
-##  Mobile Build (Android APK)
-
-### Setup Android Development
-1. **Install Android Studio**
-2. **Configure Capacitor**
-   ```bash
-   cd client
-   npx cap add android
-   npx cap sync android
-   ```
-
-3. **Build for production**
-   ```bash
-   # Build web assets
-   npm run build
-   
-   # Copy to Android
-   npx cap copy android
-   
-   # Open in Android Studio
-   npx cap open android
-   ```
-
-4. **Build APK in Android Studio**
-   - Build → Generate Signed Bundle/APK
-   - Choose APK and follow the signing process
-
-### Mobile Features
-- **Responsive Design**: Optimized for mobile screens
-- **Touch Events**: Enhanced button interactions for mobile
-- **Offline Capability**: Basic offline functionality
-- **Native Integration**: Uses Capacitor for native features
-
-##  API Documentation
-
-### Authentication Endpoints
-```
-POST /api/auth/firebase     # Exchange Firebase token for JWT
-GET  /api/auth/me          # Get current user profile
+# Client Bridge
+VITE_API_BASE_URL=http://localhost:3000/api
 ```
 
-### App Management Endpoints
-```
-GET  /api/apps             # List approved apps
-GET  /api/apps/search      # Search apps with filters
-GET  /api/apps/:id         # Get single app details
-POST /api/apps/upload      # Upload APK (developers only)
-```
-
-### Admin Endpoints
-```
-GET  /api/admin/apps/pending        # List pending apps
-PUT  /api/admin/apps/:id/approve    # Approve app
-PUT  /api/admin/apps/:id/reject     # Reject app
-GET  /api/admin/users               # List all users
-PUT  /api/admin/users/:uid/promote  # Promote user to developer
-```
-
-### File Downloads
-```
-GET /downloads/:filename   # Download APK files
-```
-
-##  Development
-
-### Running Tests
+### Installation & Execution
 ```bash
-# Frontend tests
-cd client && npm test
+# 1. Install root dependencies and bootstrap SQLite schema
+npm run setup
 
-# Backend tests  
-cd server && npm test
+# 2. Run automated validation suite (Jest + Fast-Check property tests)
+npm test
+
+# 3. Launch concurrent full-stack development environment
+npm run dev
 ```
 
-### Development Scripts
-```bash
-# Start development servers
-npm run dev              # Both client and server
-npm run dev:server       # Server only
-npm run dev:client       # Client only
+---
 
-# Build for production
-npm run build           # Build client
-npm run build:server    # Build server (if applicable)
+## API & Route Specification
 
-# Mobile development
-cd client
-npm run android         # Build and sync Android
-```
-
-### Database Management
-The application uses SQLite for local development with automatic schema initialization:
-
-- **Database file**: `devmarket.sqlite` (auto-created)
-- **Schema**: Automatically initialized on first run
-- **Demo data**: Seeded automatically with test accounts and sample apps
-
-##  Security Features
-
-- **JWT Authentication**: Secure token-based authentication
-- **Role-based Access**: Admin, Developer, and User roles
-- **File Validation**: APK file type validation and size limits
-- **CORS Protection**: Configurable CORS settings
-- **Input Sanitization**: SQL injection protection
-
-##  Deployment
-
-### Production Deployment
-1. **Environment Configuration**
-   ```env
-   NODE_ENV=production
-   PORT=3000
-   DB_TYPE=mysql  # or sqlite
-   MONGO_URI=your-production-database-url
-   JWT_SECRET=your-production-jwt-secret
-   ```
-
-2. **Build Assets**
-   ```bash
-   cd client && npm run build
-   ```
-
-3. **Start Production Server**
-   ```bash
-   npm start
-   ```
-
-### Docker Deployment (Optional)
-```dockerfile
-# Dockerfile example
-FROM node:18-alpine
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci --only=production
-COPY . .
-EXPOSE 3000
-CMD ["npm", "start"]
-```
-
-##  Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-
-##  Author
-
-**Shlok Shetty**
-- GitHub: [@shlokbshetty](https://github.com/shlokbshetty)
-- Email: shettyshlok87@gmail.com
-
-##  Acknowledgments
-
-- React and Vite teams for excellent development tools
-- TailwindCSS for the utility-first CSS framework
-- Capacitor team for seamless mobile integration
-- Firebase for authentication services
+| HTTP Method | Route | Authorization | Request Body / Params | Expected Response | Description |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `POST` | `/api/auth/firebase` | Public | `{ idToken: string }` | `200 OK` + `{ token, user }` | Exchange Firebase ID token for backend JWT |
+| `POST` | `/api/auth/credentials` | Public | `{ username, password }` | `200 OK` + `{ token, user }` | Authenticate system credentials |
+| `GET` | `/api/auth/me` | Bearer Token | Header: `Authorization` | `200 OK` + User Object | Retrieve authenticated session claims |
+| `GET` | `/api/apps` | Public | Query: `category`, `search` | `200 OK` + `App[]` | Paginated index of approved applications |
+| `GET` | `/api/apps/:id` | Public | Route: `id` | `200 OK` + `App` | Retrieve detailed application metadata |
+| `POST` | `/api/apps/upload` | Developer | Form-Data: `file` (APK), `name`, `desc` | `201 Created` + `AppRecord` | Multipart APK package ingestion |
+| `GET` | `/api/admin/apps/pending` | Administrator | None | `200 OK` + `PendingApp[]` | Retrieve submissions awaiting moderation |
+| `PUT` | `/api/admin/apps/:id/approve` | Administrator | Route: `id` | `200 OK` + `{ success: true }` | Transition app status to `approved` |
+| `PUT` | `/api/admin/apps/:id/reject` | Administrator | Route: `id` | `200 OK` + `{ success: true }` | Transition app status to `rejected` |
+| `PUT` | `/api/admin/users/:uid/promote`| Administrator | Route: `uid` | `200 OK` + `{ success: true }` | Elevate user to Developer role |
