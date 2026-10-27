@@ -212,10 +212,22 @@ export function Login() {
               </button>
               
               {/* Demo Credentials */}
-              <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-xl text-xs text-gray-600 dark:text-gray-400">
-                <div className="font-bold mb-1">Demo Credentials:</div>
-                <div>Username: {loginType === "admin" ? "admin" : "developer"}</div>
-                <div>Password: {loginType === "admin" ? "admin123" : "dev123"}</div>
+              <div 
+                onClick={() => {
+                  if (loginType === 'admin') {
+                    setCredentials({ username: 'admin', password: 'admin123' });
+                  } else {
+                    setCredentials({ username: 'developer', password: 'dev123' });
+                  }
+                }}
+                className="mt-4 p-3.5 bg-gray-50 dark:bg-[#1a1a1a] border border-dashed border-gray-300 dark:border-white/10 rounded-2xl text-xs text-gray-600 dark:text-gray-300 cursor-pointer hover:border-[#1ed760] transition-colors"
+              >
+                <div className="flex items-center justify-between mb-1 font-bold text-gray-900 dark:text-white">
+                  <span>Demo Credentials (Tap to Auto-fill):</span>
+                  <span className="text-[#1ed760] text-[11px]">Auto-fill ⚡</span>
+                </div>
+                <div>Username: <code className="bg-gray-200 dark:bg-[#262626] px-1.5 py-0.5 rounded text-[11px] font-mono">{loginType === "admin" ? "admin" : "developer"}</code></div>
+                <div className="mt-1">Password: <code className="bg-gray-200 dark:bg-[#262626] px-1.5 py-0.5 rounded text-[11px] font-mono">{loginType === "admin" ? "admin123" : "dev123"}</code></div>
               </div>
             </form>
           )}
