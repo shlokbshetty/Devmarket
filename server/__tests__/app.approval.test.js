@@ -91,6 +91,27 @@ const arbStatus = fc.constantFrom('pending', 'approved', 'rejected');
 // Tests
 // ---------------------------------------------------------------------------
 
+let mockCurrentDb;
+
+jest.mock('../config/db', () => ({
+  query: (sql, params = []) => {
+    return new Promise((resolve, reject) => {
+      try {
+        const stmt = mockCurrentDb.prepare(sql);
+        const verb = sql.trim().split(/\s+/)[0].toUpperCase();
+        if (verb === 'SELECT') {
+          resolve(stmt.all(params));
+        } else {
+          const info = stmt.run(params);
+          resolve(info);
+        }
+      } catch (err) {
+        reject(err);
+      }
+    });
+  },
+}));
+
 describe('Property 14: App status update is applied correctly', () => {
   // **Validates: Requirements 7.2, 7.3**
 
@@ -101,27 +122,9 @@ describe('Property 14: App status update is applied correctly', () => {
   beforeEach(() => {
     mockDb = new Database(':memory:');
     applySchema(mockDb);
+    mockCurrentDb = mockDb;
 
     jest.resetModules();
-    jest.mock('../config/db', () => ({
-      query: (sql, params = []) => {
-        return new Promise((resolve, reject) => {
-          try {
-            const stmt = mockDb.prepare(sql);
-            const verb = sql.trim().split(/\s+/)[0].toUpperCase();
-            if (verb === 'SELECT') {
-              resolve(stmt.all(params));
-            } else {
-              const info = stmt.run(params);
-              resolve(info);
-            }
-          } catch (err) {
-            reject(err);
-          }
-        });
-      },
-    }));
-
     const adminController = require('../controllers/adminController');
     approveApp = adminController.approveApp;
     rejectApp = adminController.rejectApp;
@@ -189,27 +192,9 @@ describe('Property 16: Approval/rejection of non-existent app returns 404', () =
   beforeEach(() => {
     mockDb = new Database(':memory:');
     applySchema(mockDb);
+    mockCurrentDb = mockDb;
 
     jest.resetModules();
-    jest.mock('../config/db', () => ({
-      query: (sql, params = []) => {
-        return new Promise((resolve, reject) => {
-          try {
-            const stmt = mockDb.prepare(sql);
-            const verb = sql.trim().split(/\s+/)[0].toUpperCase();
-            if (verb === 'SELECT') {
-              resolve(stmt.all(params));
-            } else {
-              const info = stmt.run(params);
-              resolve(info);
-            }
-          } catch (err) {
-            reject(err);
-          }
-        });
-      },
-    }));
-
     const adminController = require('../controllers/adminController');
     approveApp = adminController.approveApp;
     rejectApp = adminController.rejectApp;
@@ -251,21 +236,22 @@ describe('Property 16: Approval/rejection of non-existent app returns 404', () =
   test('approveApp returns 404 for unknown id even when other apps exist', async () => {
     await fc.assert(
       fc.asyncProperty(arbUid, fc.integer({ min: 1, max: 999999 }), async (uid, unknownId) => {
-        seedDeveloper(mockDb, uid);
-        const existingId = insertApp(mockDb, uid, 'pending');
+        try {
+          mockDb.exec('DELETE FROM apps; DELETE FROM users;');
+          seedDeveloper(mockDb, uid);
+          const existingId = insertApp(mockDb, uid, 'pending');
 
-        // Ensure the unknown id is actually different from the inserted one
-        fc.pre(unknownId !== existingId);
+          // Ensure the unknown id is actually different from the inserted one
+          fc.pre(unknownId !== existingId);
 
-        const { req, res } = makeReqResNext(unknownId);
-        await approveApp(req, res);
+          const { req, res } = makeReqResNext(unknownId);
+          await approveApp(req, res);
 
-        expect(res._status).toBe(404);
-        expect(res._body).toMatchObject({ success: false });
-
-        // Clean up
-        mockDb.prepare('DELETE FROM apps WHERE id = ?').run(existingId);
-        mockDb.prepare('DELETE FROM users WHERE uid = ?').run(uid);
+          expect(res._status).toBe(404);
+          expect(res._body).toMatchObject({ success: false });
+        } finally {
+          mockDb.exec('DELETE FROM apps; DELETE FROM users;');
+        }
       }),
       { numRuns: 100 }
     );
@@ -274,20 +260,21 @@ describe('Property 16: Approval/rejection of non-existent app returns 404', () =
   test('rejectApp returns 404 for unknown id even when other apps exist', async () => {
     await fc.assert(
       fc.asyncProperty(arbUid, fc.integer({ min: 1, max: 999999 }), async (uid, unknownId) => {
-        seedDeveloper(mockDb, uid);
-        const existingId = insertApp(mockDb, uid, 'pending');
+        try {
+          mockDb.exec('DELETE FROM apps; DELETE FROM users;');
+          seedDeveloper(mockDb, uid);
+          const existingId = insertApp(mockDb, uid, 'pending');
 
-        fc.pre(unknownId !== existingId);
+          fc.pre(unknownId !== existingId);
 
-        const { req, res } = makeReqResNext(unknownId);
-        await rejectApp(req, res);
+          const { req, res } = makeReqResNext(unknownId);
+          await rejectApp(req, res);
 
-        expect(res._status).toBe(404);
-        expect(res._body).toMatchObject({ success: false });
-
-        // Clean up
-        mockDb.prepare('DELETE FROM apps WHERE id = ?').run(existingId);
-        mockDb.prepare('DELETE FROM users WHERE uid = ?').run(uid);
+          expect(res._status).toBe(404);
+          expect(res._body).toMatchObject({ success: false });
+        } finally {
+          mockDb.exec('DELETE FROM apps; DELETE FROM users;');
+        }
       }),
       { numRuns: 100 }
     );
@@ -303,29 +290,12 @@ describe('Property 15: App listing returns only approved apps', () => {
   beforeEach(() => {
     mockDb = new Database(':memory:');
     applySchema(mockDb);
+    mockCurrentDb = mockDb;
 
     process.env.LAN_IP = '192.168.1.1';
+    process.env.PORT = '3000';
 
     jest.resetModules();
-    jest.mock('../config/db', () => ({
-      query: (sql, params = []) => {
-        return new Promise((resolve, reject) => {
-          try {
-            const stmt = mockDb.prepare(sql);
-            const verb = sql.trim().split(/\s+/)[0].toUpperCase();
-            if (verb === 'SELECT') {
-              resolve(stmt.all(params));
-            } else {
-              const info = stmt.run(params);
-              resolve(info);
-            }
-          } catch (err) {
-            reject(err);
-          }
-        });
-      },
-    }));
-
     const appController = require('../controllers/appController');
     getApps = appController.getApps;
   });
@@ -334,6 +304,7 @@ describe('Property 15: App listing returns only approved apps', () => {
     mockDb.close();
     jest.resetModules();
     delete process.env.LAN_IP;
+    delete process.env.PORT;
   });
 
   // Arbitrary: an array of 0–20 apps each with a random status
@@ -354,171 +325,64 @@ describe('Property 15: App listing returns only approved apps', () => {
         const insertedIds = [];
         const insertedUids = new Set();
 
-        for (const app of appCollection) {
-          // Ensure the developer user exists (INSERT OR IGNORE handles duplicates)
-          if (!insertedUids.has(app.uid)) {
-            mockDb.prepare(
-              `INSERT OR IGNORE INTO users (uid, email, role) VALUES (?, ?, 'developer')`
-            ).run(app.uid, `${app.uid}@test.com`);
-            insertedUids.add(app.uid);
-          }
-
-          const info = mockDb.prepare(
-            `INSERT INTO apps (developer_uid, name, filename, status) VALUES (?, ?, ?, ?)`
-          ).run(app.uid, app.name, app.filename, app.status);
-          insertedIds.push(info.lastInsertRowid);
-        }
-
-        // Build a minimal req/res pair (getApps doesn't use req params)
-        const req = {};
-        const res = {
-          _status: 200,
-          _body: null,
-          status(code) { this._status = code; return this; },
-          json(body) { this._body = body; return this; },
-        };
-
-        await getApps(req, res);
-
-        // Response must be successful
-        expect(res._body.success).toBe(true);
-        expect(Array.isArray(res._body.apps)).toBe(true);
-
-        // Every returned app must have status "approved"
-        for (const returnedApp of res._body.apps) {
-          expect(returnedApp.status).toBe('approved');
-        }
-
-        // The count of returned apps must equal the number of approved apps seeded
-        const approvedCount = appCollection.filter((a) => a.status === 'approved').length;
-        expect(res._body.apps.length).toBe(approvedCount);
-
-        // Each returned app must have a correctly constructed downloadUrl
-        for (const returnedApp of res._body.apps) {
-          expect(returnedApp.downloadUrl).toBe(
-            `http://192.168.1.1:3000/downloads/${returnedApp.filename}`
-          );
-        }
-
-        // Clean up for next iteration
-        for (const id of insertedIds) {
-          mockDb.prepare('DELETE FROM apps WHERE id = ?').run(id);
-        }
-        for (const uid of insertedUids) {
-          mockDb.prepare('DELETE FROM users WHERE uid = ?').run(uid);
-        }
-      }),
-      { numRuns: 100 }
-    );
-  });
-});
-
-// ---------------------------------------------------------------------------
-// Property 15: App listing returns only approved apps
-// ---------------------------------------------------------------------------
-
-describe('Property 15: App listing returns only approved apps', () => {
-  // **Validates: Requirements 7.4**
-
-  let mockDb;
-  let getApps;
-
-  beforeEach(() => {
-    mockDb = new Database(':memory:');
-    applySchema(mockDb);
-    process.env.LAN_IP = '192.168.1.1';
-
-    jest.resetModules();
-    jest.mock('../config/db', () => ({
-      query: (sql, params = []) => {
-        return new Promise((resolve, reject) => {
-          try {
-            const stmt = mockDb.prepare(sql);
-            const verb = sql.trim().split(/\s+/)[0].toUpperCase();
-            if (verb === 'SELECT') {
-              resolve(stmt.all(params));
-            } else {
-              resolve(stmt.run(params));
+        try {
+          for (const app of appCollection) {
+            // Ensure the developer user exists (INSERT OR IGNORE handles duplicates)
+            if (!insertedUids.has(app.uid)) {
+              mockDb.prepare(
+                `INSERT OR IGNORE INTO users (uid, email, role) VALUES (?, ?, 'developer')`
+              ).run(app.uid, `${app.uid}@test.com`);
+              insertedUids.add(app.uid);
             }
-          } catch (err) {
-            reject(err);
+
+            const info = mockDb.prepare(
+              `INSERT INTO apps (developer_uid, name, filename, status) VALUES (?, ?, ?, ?)`
+            ).run(app.uid, app.name, app.filename, app.status);
+            insertedIds.push(info.lastInsertRowid);
           }
-        });
-      },
-    }));
 
-    getApps = require('../controllers/appController').getApps;
-  });
+          // Build a minimal req/res pair (getApps doesn't use req params)
+          const req = {};
+          const res = {
+            _status: 200,
+            _body: null,
+            status(code) { this._status = code; return this; },
+            json(body) { this._body = body; return this; },
+          };
 
-  afterEach(() => {
-    mockDb.close();
-    jest.resetModules();
-    delete process.env.LAN_IP;
-  });
+          await getApps(req, res);
 
-  const arbAppCollection = fc.array(
-    fc.record({
-      uid: fc.stringMatching(/^[a-zA-Z0-9]{1,32}$/),
-      name: fc.string({ minLength: 1, maxLength: 50 }),
-      filename: fc.stringMatching(/^[a-zA-Z0-9_-]{1,30}\.apk$/),
-      status: fc.constantFrom('pending', 'approved', 'rejected'),
-    }),
-    { minLength: 0, maxLength: 20 }
-  );
+          // Response must be successful
+          expect(res._body.success).toBe(true);
+          expect(Array.isArray(res._body.apps)).toBe(true);
 
-  test('GET /api/apps returns only approved apps for any status distribution', async () => {
-    await fc.assert(
-      fc.asyncProperty(arbAppCollection, async (appCollection) => {
-        const insertedIds = [];
-        const insertedUids = new Set();
-
-        for (const app of appCollection) {
-          if (!insertedUids.has(app.uid)) {
-            mockDb.prepare(
-              `INSERT OR IGNORE INTO users (uid, email, role) VALUES (?, ?, 'developer')`
-            ).run(app.uid, `${app.uid}@test.com`);
-            insertedUids.add(app.uid);
+          // Every returned app must have status "approved"
+          for (const returnedApp of res._body.apps) {
+            expect(returnedApp.status).toBe('approved');
           }
-          const info = mockDb.prepare(
-            `INSERT INTO apps (developer_uid, name, filename, status) VALUES (?, ?, ?, ?)`
-          ).run(app.uid, app.name, app.filename, app.status);
-          insertedIds.push(info.lastInsertRowid);
-        }
 
-        const req = {};
-        const res = {
-          _status: 200,
-          _body: null,
-          status(code) { this._status = code; return this; },
-          json(body) { this._body = body; return this; },
-        };
+          // The count of returned apps must equal the number of approved apps seeded
+          const approvedCount = appCollection.filter((a) => a.status === 'approved').length;
+          expect(res._body.apps.length).toBe(approvedCount);
 
-        await getApps(req, res);
-
-        expect(res._body.success).toBe(true);
-        expect(Array.isArray(res._body.apps)).toBe(true);
-
-        for (const returnedApp of res._body.apps) {
-          expect(returnedApp.status).toBe('approved');
-        }
-
-        const approvedCount = appCollection.filter((a) => a.status === 'approved').length;
-        expect(res._body.apps.length).toBe(approvedCount);
-
-        for (const returnedApp of res._body.apps) {
-          expect(returnedApp.downloadUrl).toBe(
-            `http://192.168.1.1:3000/downloads/${returnedApp.filename}`
-          );
-        }
-
-        for (const id of insertedIds) {
-          mockDb.prepare('DELETE FROM apps WHERE id = ?').run(id);
-        }
-        for (const uid of insertedUids) {
-          mockDb.prepare('DELETE FROM users WHERE uid = ?').run(uid);
+          // Each returned app must have a correctly constructed downloadUrl
+          for (const returnedApp of res._body.apps) {
+            expect(returnedApp.downloadUrl).toBe(
+              `http://192.168.1.1:3000/downloads/${returnedApp.filename}`
+            );
+          }
+        } finally {
+          // Clean up for next iteration
+          for (const id of insertedIds) {
+            mockDb.prepare('DELETE FROM apps WHERE id = ?').run(id);
+          }
+          for (const uid of insertedUids) {
+            mockDb.prepare('DELETE FROM users WHERE uid = ?').run(uid);
+          }
         }
       }),
       { numRuns: 100 }
     );
   });
 });
+

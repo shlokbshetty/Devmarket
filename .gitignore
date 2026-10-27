@@ -44,3 +44,6 @@ capacitor-cordova-android-plugins/
 
 # Old/duplicate directories
 Frontend_UI/
+
+#agent
+.agent
