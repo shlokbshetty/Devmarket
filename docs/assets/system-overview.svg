@@ -1,0 +1,311 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 820" width="1200" height="820" font-family="'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#090D16" />
+      <stop offset="50%" stop-color="#0F172A" />
+      <stop offset="100%" stop-color="#0B1120" />
+    </linearGradient>
+
+    <!-- Layer Header Gradients -->
+    <linearGradient id="clientGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0284C7" stop-opacity="0.25" />
+      <stop offset="100%" stop-color="#0369A1" stop-opacity="0.08" />
+    </linearGradient>
+    <linearGradient id="gatewayGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#7C3AED" stop-opacity="0.25" />
+      <stop offset="100%" stop-color="#5B21B6" stop-opacity="0.08" />
+    </linearGradient>
+    <linearGradient id="controllerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#10B981" stop-opacity="0.25" />
+      <stop offset="100%" stop-color="#047857" stop-opacity="0.08" />
+    </linearGradient>
+    <linearGradient id="dataGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#F59E0B" stop-opacity="0.25" />
+      <stop offset="100%" stop-color="#B45309" stop-opacity="0.08" />
+    </linearGradient>
+    <linearGradient id="extGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#EC4899" stop-opacity="0.25" />
+      <stop offset="100%" stop-color="#BE185D" stop-opacity="0.08" />
+    </linearGradient>
+
+    <!-- Drop Shadow Filter -->
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.5" />
+    </filter>
+
+    <!-- Arrow Markers -->
+    <marker id="arrowHttp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#38BDF8" />
+    </marker>
+    <marker id="arrowAuth" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#F472B6" />
+    </marker>
+    <marker id="arrowDb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#FBBF24" />
+    </marker>
+    <marker id="arrowFile" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#34D399" />
+    </marker>
+  </defs>
+
+  <!-- Canvas Background -->
+  <rect width="1200" height="820" fill="url(#bgGrad)" rx="12" />
+  <rect x="8" y="8" width="1184" height="804" fill="none" stroke="#1E293B" stroke-width="1.5" rx="10" />
+
+  <!-- Title Header -->
+  <text x="40" y="42" fill="#F8FAFC" font-size="22" font-weight="700" letter-spacing="0.5">DevMarket — Full-Stack &amp; Hybrid Android Architecture</text>
+  <text x="40" y="64" fill="#94A3B8" font-size="13">React 18 + Vite 6 + Tailwind v4 + Capacitor 8 Android Runtime | Express 4 + Dual SQLite/MySQL Engine + Firebase Auth</text>
+
+  <!-- ===================================================================== -->
+  <!-- 1. CLIENT LAYER (TOP LEFT) -->
+  <!-- ===================================================================== -->
+  <g filter="url(#shadow)">
+    <rect x="35" y="85" width="820" height="155" rx="10" fill="url(#clientGrad)" stroke="#0284C7" stroke-width="1.5" />
+    <text x="55" y="110" fill="#38BDF8" font-size="13" font-weight="700" letter-spacing="1">CLIENT PRESENTATION &amp; CAPACITOR HYBRID RUNTIME (PORT 5173 / ANDROID APK)</text>
+
+    <!-- React SPA Box -->
+    <rect x="55" y="125" width="245" height="98" rx="8" fill="#0F172A" stroke="#38BDF8" stroke-width="1" />
+    <text x="70" y="147" fill="#F8FAFC" font-size="13" font-weight="600">React 18 + Vite 6 + Tailwind v4</text>
+    <text x="70" y="166" fill="#94A3B8" font-size="11">• Pages: Home, Search, AppDetails</text>
+    <text x="70" y="183" fill="#94A3B8" font-size="11">• Portals: DevDashboard, AdminPanel</text>
+    <text x="70" y="200" fill="#94A3B8" font-size="11">• AuthContext (JWT + Retry Backoff)</text>
+    <text x="70" y="216" fill="#38BDF8" font-size="10" font-family="monospace">client/src/App.jsx</text>
+
+    <!-- API Client Box -->
+    <rect x="320" y="125" width="245" height="98" rx="8" fill="#0F172A" stroke="#38BDF8" stroke-width="1" />
+    <text x="335" y="147" fill="#F8FAFC" font-size="13" font-weight="600">Unified REST &amp; Multipart Client</text>
+    <text x="335" y="166" fill="#94A3B8" font-size="11">• Bearer JWT Header Injection</text>
+    <text x="335" y="183" fill="#94A3B8" font-size="11">• apiGet / apiPost / apiPut / apiUpload</text>
+    <text x="335" y="200" fill="#94A3B8" font-size="11">• Byte-Range APK Stream Receiver</text>
+    <text x="335" y="216" fill="#38BDF8" font-size="10" font-family="monospace">client/src/api/client.js</text>
+
+    <!-- Capacitor Native Bridge Box -->
+    <rect x="585" y="125" width="250" height="98" rx="8" fill="#0F172A" stroke="#38BDF8" stroke-width="1" />
+    <text x="600" y="147" fill="#F8FAFC" font-size="13" font-weight="600">Capacitor 8 Android Bridge</text>
+    <text x="600" y="166" fill="#94A3B8" font-size="11">• @capacitor/haptics &amp; status-bar</text>
+    <text x="600" y="183" fill="#94A3B8" font-size="11">• @capacitor/app Hardware Back</text>
+    <text x="600" y="200" fill="#94A3B8" font-size="11">• Native Google Sign-In &amp; APK Installer</text>
+    <text x="600" y="216" fill="#38BDF8" font-size="10" font-family="monospace">client/src/utils/nativeBridge.js</text>
+  </g>
+
+  <!-- ===================================================================== -->
+  <!-- 2. EXTERNAL SERVICES LAYER (TOP RIGHT) -->
+  <!-- ===================================================================== -->
+  <g filter="url(#shadow)">
+    <rect x="880" y="85" width="285" height="295" rx="10" fill="url(#extGrad)" stroke="#EC4899" stroke-width="1.5" />
+    <text x="900" y="110" fill="#F472B6" font-size="13" font-weight="700" letter-spacing="1">EXTERNAL AUTH SERVICES</text>
+
+    <!-- Firebase Client Auth -->
+    <rect x="900" y="125" width="245" height="105" rx="8" fill="#0F172A" stroke="#F472B6" stroke-width="1" />
+    <text x="915" y="147" fill="#F8FAFC" font-size="13" font-weight="600">Firebase Authentication</text>
+    <text x="915" y="166" fill="#94A3B8" font-size="11">• Google OAuth 2.0 Provider</text>
+    <text x="915" y="183" fill="#94A3B8" font-size="11">• Web Popup &amp; Mobile Redirect</text>
+    <text x="915" y="200" fill="#94A3B8" font-size="11">• Mock-Key Dev Mode Bypass</text>
+    <text x="915" y="218" fill="#F472B6" font-size="10" font-family="monospace">client/src/config/firebase.js</text>
+
+    <!-- Firebase Admin SDK -->
+    <rect x="900" y="255" width="245" height="105" rx="8" fill="#0F172A" stroke="#F472B6" stroke-width="1" />
+    <text x="915" y="277" fill="#F8FAFC" font-size="13" font-weight="600">Firebase Admin SDK</text>
+    <text x="915" y="296" fill="#94A3B8" font-size="11">• Service Account Cert Auth</text>
+    <text x="915" y="313" fill="#94A3B8" font-size="11">• admin.auth().verifyIdToken()</text>
+    <text x="915" y="330" fill="#94A3B8" font-size="11">• Token Exchange to Backend JWT</text>
+    <text x="915" y="348" fill="#F472B6" font-size="10" font-family="monospace">server/config/firebase.js</text>
+  </g>
+
+  <!-- ===================================================================== -->
+  <!-- 3. API GATEWAY & MIDDLEWARE LAYER (MIDDLE) -->
+  <!-- ===================================================================== -->
+  <g filter="url(#shadow)">
+    <rect x="35" y="275" width="820" height="145" rx="10" fill="url(#gatewayGrad)" stroke="#8B5CF6" stroke-width="1.5" />
+    <text x="55" y="300" fill="#C4B5FD" font-size="13" font-weight="700" letter-spacing="1">API GATEWAY &amp; MIDDLEWARE PIPELINE (EXPRESS.JS — PORT 3000 / 3001)</text>
+
+    <!-- Express & CORS -->
+    <rect x="55" y="312" width="185" height="92" rx="8" fill="#0F172A" stroke="#8B5CF6" stroke-width="1" />
+    <text x="68" y="334" fill="#F8FAFC" font-size="12" font-weight="600">Express Router &amp; CORS</text>
+    <text x="68" y="352" fill="#94A3B8" font-size="11">• LAN Preflight (204)</text>
+    <text x="68" y="368" fill="#94A3B8" font-size="11">• JSON Body Parser</text>
+    <text x="68" y="384" fill="#94A3B8" font-size="11">• SPA Fallback (/dist)</text>
+    <text x="68" y="397" fill="#C4B5FD" font-size="10" font-family="monospace">server/index.js</text>
+
+    <!-- JWT Verification -->
+    <rect x="255" y="312" width="185" height="92" rx="8" fill="#0F172A" stroke="#8B5CF6" stroke-width="1" />
+    <text x="268" y="334" fill="#F8FAFC" font-size="12" font-weight="600">JWT Auth Verifier</text>
+    <text x="268" y="352" fill="#94A3B8" font-size="11">• verifyToken Middleware</text>
+    <text x="268" y="368" fill="#94A3B8" font-size="11">• HMAC-SHA256 (7d TTL)</text>
+    <text x="268" y="384" fill="#94A3B8" font-size="11">• Attaches req.user</text>
+    <text x="268" y="397" fill="#C4B5FD" font-size="10" font-family="monospace">authMiddleware.js</text>
+
+    <!-- RBAC Role Guards -->
+    <rect x="455" y="312" width="185" height="92" rx="8" fill="#0F172A" stroke="#8B5CF6" stroke-width="1" />
+    <text x="468" y="334" fill="#F8FAFC" font-size="12" font-weight="600">RBAC Role Guards</text>
+    <text x="468" y="352" fill="#94A3B8" font-size="11">• requireDeveloper Guard</text>
+    <text x="468" y="368" fill="#94A3B8" font-size="11">• requireAdmin Guard</text>
+    <text x="468" y="384" fill="#94A3B8" font-size="11">• 401 / 403 Enforcement</text>
+    <text x="468" y="397" fill="#C4B5FD" font-size="10" font-family="monospace">authMiddleware.js</text>
+
+    <!-- Multer APK Engine -->
+    <rect x="655" y="312" width="180" height="92" rx="8" fill="#0F172A" stroke="#8B5CF6" stroke-width="1" />
+    <text x="668" y="334" fill="#F8FAFC" font-size="12" font-weight="600">Multer APK Intake</text>
+    <text x="668" y="352" fill="#94A3B8" font-size="11">• 200 MB Size Ceiling</text>
+    <text x="668" y="368" fill="#94A3B8" font-size="11">• MIME &amp; .apk Filter</text>
+    <text x="668" y="384" fill="#94A3B8" font-size="11">• Static /downloads</text>
+    <text x="668" y="397" fill="#C4B5FD" font-size="10" font-family="monospace">appController.js</text>
+  </g>
+
+  <!-- ===================================================================== -->
+  <!-- 4. BUSINESS LOGIC & CONTROLLERS LAYER -->
+  <!-- ===================================================================== -->
+  <g filter="url(#shadow)">
+    <rect x="35" y="455" width="820" height="145" rx="10" fill="url(#controllerGrad)" stroke="#10B981" stroke-width="1.5" />
+    <text x="55" y="480" fill="#6EE7B7" font-size="13" font-weight="700" letter-spacing="1">BUSINESS LOGIC &amp; ROUTE CONTROLLERS (server/controllers/* &amp; server/routes/*)</text>
+
+    <!-- authController -->
+    <rect x="55" y="492" width="185" height="92" rx="8" fill="#0F172A" stroke="#10B981" stroke-width="1" />
+    <text x="68" y="514" fill="#F8FAFC" font-size="12" font-weight="600">authController.js</text>
+    <text x="68" y="532" fill="#94A3B8" font-size="11">• POST /api/auth/firebase</text>
+    <text x="68" y="548" fill="#94A3B8" font-size="11">• POST /api/auth/credentials</text>
+    <text x="68" y="564" fill="#94A3B8" font-size="11">• GET /api/auth/me</text>
+    <text x="68" y="578" fill="#6EE7B7" font-size="10" font-family="monospace">routes/auth.js</text>
+
+    <!-- appController -->
+    <rect x="255" y="492" width="185" height="92" rx="8" fill="#0F172A" stroke="#10B981" stroke-width="1" />
+    <text x="268" y="514" fill="#F8FAFC" font-size="12" font-weight="600">appController.js</text>
+    <text x="268" y="532" fill="#94A3B8" font-size="11">• POST /api/apps/upload</text>
+    <text x="268" y="548" fill="#94A3B8" font-size="11">• GET /api/apps &amp; /search</text>
+    <text x="268" y="564" fill="#94A3B8" font-size="11">• GET /api/apps/:id</text>
+    <text x="268" y="578" fill="#6EE7B7" font-size="10" font-family="monospace">routes/app.js</text>
+
+    <!-- adminController -->
+    <rect x="455" y="492" width="185" height="92" rx="8" fill="#0F172A" stroke="#10B981" stroke-width="1" />
+    <text x="468" y="514" fill="#F8FAFC" font-size="12" font-weight="600">adminController.js</text>
+    <text x="468" y="532" fill="#94A3B8" font-size="11">• GET /api/admin/apps/pending</text>
+    <text x="468" y="548" fill="#94A3B8" font-size="11">• PUT approve / reject</text>
+    <text x="468" y="564" fill="#94A3B8" font-size="11">• GET &amp; PUT /users/promote</text>
+    <text x="468" y="578" fill="#6EE7B7" font-size="10" font-family="monospace">routes/admin.js</text>
+
+    <!-- reviewController -->
+    <rect x="655" y="492" width="180" height="92" rx="8" fill="#0F172A" stroke="#10B981" stroke-width="1" />
+    <text x="668" y="514" fill="#F8FAFC" font-size="12" font-weight="600">reviewController.js</text>
+    <text x="668" y="532" fill="#94A3B8" font-size="11">• POST /api/reviews</text>
+    <text x="668" y="548" fill="#94A3B8" font-size="11">• 1-5 Star Rating Validation</text>
+    <text x="668" y="564" fill="#94A3B8" font-size="11">• Recalculates avgRating</text>
+    <text x="668" y="578" fill="#6EE7B7" font-size="10" font-family="monospace">routes/review.js</text>
+  </g>
+
+  <!-- ===================================================================== -->
+  <!-- 5. DATA & PERSISTENCE LAYER (BOTTOM) -->
+  <!-- ===================================================================== -->
+  <g filter="url(#shadow)">
+    <rect x="35" y="635" width="820" height="155" rx="10" fill="url(#dataGrad)" stroke="#F59E0B" stroke-width="1.5" />
+    <text x="55" y="660" fill="#FCD34D" font-size="13" font-weight="700" letter-spacing="1">DATA &amp; PERSISTENCE LAYER (SQLITE / MYSQL ADAPTER + MONGOOSE SCHEMAS + APK STORAGE)</text>
+
+    <!-- Unified SQL Adapter -->
+    <rect x="55" y="672" width="250" height="102" rx="8" fill="#0F172A" stroke="#F59E0B" stroke-width="1" />
+    <text x="68" y="694" fill="#F8FAFC" font-size="12" font-weight="600">Unified SQL Adapter (db.js)</text>
+    <text x="68" y="712" fill="#94A3B8" font-size="11">• SQLite: better-sqlite3 (devmarket.sqlite)</text>
+    <text x="68" y="728" fill="#94A3B8" font-size="11">• MySQL: mysql2/promise Pool</text>
+    <text x="68" y="744" fill="#94A3B8" font-size="11">• Auto-Migration &amp; Demo Seeding</text>
+    <text x="68" y="762" fill="#FCD34D" font-size="10" font-family="monospace">server/config/initDb.js</text>
+
+    <!-- Relational & Document Schemas -->
+    <rect x="320" y="672" width="265" height="102" rx="8" fill="#0F172A" stroke="#F59E0B" stroke-width="1" />
+    <text x="333" y="694" fill="#F8FAFC" font-size="12" font-weight="600">Core Entities &amp; Models</text>
+    <text x="333" y="712" fill="#94A3B8" font-size="11">• users (uid PK, email, role, created_at)</text>
+    <text x="333" y="728" fill="#94A3B8" font-size="11">• apps (id PK, developer_uid FK, status)</text>
+    <text x="333" y="744" fill="#94A3B8" font-size="11">• reviews (appId, userId, rating 1..5)</text>
+    <text x="333" y="762" fill="#FCD34D" font-size="10" font-family="monospace">server/models/{User,App,Review}.js</text>
+
+    <!-- Local APK File System -->
+    <rect x="600" y="672" width="235" height="102" rx="8" fill="#0F172A" stroke="#34D399" stroke-width="1" />
+    <text x="613" y="694" fill="#F8FAFC" font-size="12" font-weight="600">Local APK File System</text>
+    <text x="613" y="712" fill="#94A3B8" font-size="11">• Directory: /uploads/apk/</text>
+    <text x="613" y="728" fill="#94A3B8" font-size="11">• Naming: {timestamp}-{orig}.apk</text>
+    <text x="613" y="744" fill="#94A3B8" font-size="11">• Served via GET /downloads/:file</text>
+    <text x="613" y="762" fill="#34D399" font-size="10" font-family="monospace">uploads/apk/*.apk</text>
+  </g>
+
+  <!-- ===================================================================== -->
+  <!-- 6. LEGEND BOX (BOTTOM RIGHT) -->
+  <!-- ===================================================================== -->
+  <g filter="url(#shadow)">
+    <rect x="880" y="415" width="285" height="375" rx="10" fill="#0F172A" stroke="#334155" stroke-width="1.5" />
+    <text x="900" y="442" fill="#F8FAFC" font-size="14" font-weight="700" letter-spacing="0.8">ARCHITECTURE LEGEND</text>
+    <line x1="900" y1="452" x2="1145" y2="452" stroke="#334155" stroke-width="1" />
+
+    <!-- Layer Color Key -->
+    <text x="900" y="475" fill="#94A3B8" font-size="11" font-weight="600">SYSTEM TIERS</text>
+
+    <rect x="900" y="487" width="16" height="16" rx="4" fill="#0284C7" fill-opacity="0.4" stroke="#38BDF8" stroke-width="1.5" />
+    <text x="926" y="499" fill="#E2E8F0" font-size="12">Client UI &amp; Capacitor Android</text>
+
+    <rect x="900" y="513" width="16" height="16" rx="4" fill="#7C3AED" fill-opacity="0.4" stroke="#8B5CF6" stroke-width="1.5" />
+    <text x="926" y="525" fill="#E2E8F0" font-size="12">API Gateway &amp; Security Guards</text>
+
+    <rect x="900" y="539" width="16" height="16" rx="4" fill="#10B981" fill-opacity="0.4" stroke="#10B981" stroke-width="1.5" />
+    <text x="926" y="551" fill="#E2E8F0" font-size="12">Business Logic &amp; Controllers</text>
+
+    <rect x="900" y="565" width="16" height="16" rx="4" fill="#F59E0B" fill-opacity="0.4" stroke="#F59E0B" stroke-width="1.5" />
+    <text x="926" y="577" fill="#E2E8F0" font-size="12">Database &amp; APK Persistence</text>
+
+    <rect x="900" y="591" width="16" height="16" rx="4" fill="#EC4899" fill-opacity="0.4" stroke="#F472B6" stroke-width="1.5" />
+    <text x="926" y="603" fill="#E2E8F0" font-size="12">External Firebase Identity</text>
+
+    <line x1="900" y1="620" x2="1145" y2="620" stroke="#334155" stroke-width="1" />
+
+    <!-- Connector Key -->
+    <text x="900" y="642" fill="#94A3B8" font-size="11" font-weight="600">DATA FLOW CONNECTORS</text>
+
+    <line x1="900" y1="660" x2="945" y2="660" stroke="#38BDF8" stroke-width="2.5" marker-end="url(#arrowHttp)" />
+    <text x="958" y="664" fill="#E2E8F0" font-size="12">Synchronous HTTP / REST</text>
+
+    <line x1="900" y1="690" x2="945" y2="690" stroke="#F472B6" stroke-width="2" stroke-dasharray="5,4" marker-end="url(#arrowAuth)" />
+    <text x="958" y="694" fill="#E2E8F0" font-size="12">OAuth / Token Verification</text>
+
+    <line x1="900" y1="720" x2="945" y2="720" stroke="#FBBF24" stroke-width="2.5" marker-end="url(#arrowDb)" />
+    <text x="958" y="724" fill="#E2E8F0" font-size="12">Parameterized SQL / DB I/O</text>
+
+    <line x1="900" y1="750" x2="945" y2="750" stroke="#34D399" stroke-width="2.5" stroke-dasharray="8,4" marker-end="url(#arrowFile)" />
+    <text x="958" y="754" fill="#E2E8F0" font-size="12">Multipart APK / File Stream</text>
+  </g>
+
+  <!-- ===================================================================== -->
+  <!-- 7. DIRECTIONAL ARROWS & CONNECTORS -->
+  <!-- ===================================================================== -->
+  <!-- React SPA <-> Unified API Client -->
+  <line x1="300" y1="174" x2="318" y2="174" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrowHttp)" />
+  <!-- React SPA <-> Capacitor Bridge -->
+  <line x1="565" y1="174" x2="583" y2="174" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrowHttp)" />
+
+  <!-- Client -> Firebase Auth (OAuth Popup/Redirect) -->
+  <path d="M 835 155 L 898 155" fill="none" stroke="#F472B6" stroke-width="2" stroke-dasharray="5,4" marker-end="url(#arrowAuth)" />
+
+  <!-- API Client -> Express Router -->
+  <path d="M 442 223 L 442 252 L 147 252 L 147 310" fill="none" stroke="#38BDF8" stroke-width="2.5" marker-end="url(#arrowHttp)" />
+
+  <!-- Express -> JWT -> RBAC -> Multer -->
+  <line x1="240" y1="358" x2="253" y2="358" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrowHttp)" />
+  <line x1="440" y1="358" x2="453" y2="358" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrowHttp)" />
+  <line x1="640" y1="358" x2="653" y2="358" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrowHttp)" />
+
+  <!-- Gateway -> Controllers -->
+  <line x1="147" y1="404" x2="147" y2="490" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrowHttp)" />
+  <line x1="347" y1="404" x2="347" y2="490" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrowHttp)" />
+  <line x1="547" y1="404" x2="547" y2="490" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrowHttp)" />
+  <line x1="745" y1="404" x2="745" y2="490" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrowHttp)" />
+
+  <!-- authController -> Firebase Admin SDK (verifyIdToken) -->
+  <path d="M 147 492 L 147 438 L 1022 438 L 1022 362" fill="none" stroke="#F472B6" stroke-width="2" stroke-dasharray="5,4" marker-end="url(#arrowAuth)" />
+
+  <!-- Controllers -> Database Adapter -->
+  <path d="M 147 584 L 147 670" fill="none" stroke="#FBBF24" stroke-width="2.5" marker-end="url(#arrowDb)" />
+  <path d="M 347 584 L 347 620 L 210 620 L 210 670" fill="none" stroke="#FBBF24" stroke-width="2.5" marker-end="url(#arrowDb)" />
+  <path d="M 547 584 L 547 620 L 260 620 L 260 670" fill="none" stroke="#FBBF24" stroke-width="2.5" marker-end="url(#arrowDb)" />
+  <path d="M 745 584 L 745 620 L 452 620 L 452 670" fill="none" stroke="#FBBF24" stroke-width="2.5" marker-end="url(#arrowDb)" />
+
+  <!-- Unified SQL Adapter -> Core Entities -->
+  <line x1="305" y1="723" x2="318" y2="723" stroke="#FBBF24" stroke-width="2.5" marker-end="url(#arrowDb)" />
+
+  <!-- Multer / appController -> Local APK File System -->
+  <path d="M 835 358 L 868 358 L 868 723 L 837 723" fill="none" stroke="#34D399" stroke-width="2.5" stroke-dasharray="8,4" marker-end="url(#arrowFile)" />
+</svg>
