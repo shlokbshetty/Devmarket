@@ -23,7 +23,7 @@ Only the latest minor release series receives active security patches and depend
 ### Disclosure Process
 If you discover a potential security vulnerability in DevMarket (such as authentication bypass, privilege escalation between `user`/`developer`/`administrator`, arbitrary file upload bypass, path traversal on `/downloads`, or SQL injection):
 
-1. **Private Report**: Submit a private security advisory via the repository's **GitHub Security Advisories** tab (`Security > Advisories > Report a vulnerability`) or email the maintainers directly at `security@devmarket.local` with the subject line `[SECURITY] DevMarket Vulnerability Report`.
+1. **Private Report**: Submit a private security advisory via the repository's **GitHub Security Advisories** tab (`Security > Advisories > Report a vulnerability`) or email the maintainers directly at `shettyshlok87@gmail.com` with the subject line `[SECURITY] DevMarket Vulnerability Report`.
 2. **Required Details**:
    - Affected component (`server/controllers/authController.js`, `server/middleware/authMiddleware.js`, `appController.js`, Capacitor Android manifest, etc.).
    - Step-by-step proof-of-concept (`curl` command, payload, or test script) demonstrating the issue.
