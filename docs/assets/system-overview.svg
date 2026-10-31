@@ -1,311 +1,469 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 820" width="1200" height="820" font-family="'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 820" width="100%" height="100%" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+
   <defs>
-    <!-- Background Gradient -->
-    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#090D16" />
-      <stop offset="50%" stop-color="#0F172A" />
-      <stop offset="100%" stop-color="#0B1120" />
+    <!-- Background Gradients -->
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#080C16"/>
+      <stop offset="50%" stop-color="#0D1527"/>
+      <stop offset="100%" stop-color="#090E1A"/>
     </linearGradient>
 
-    <!-- Layer Header Gradients -->
-    <linearGradient id="clientGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#0284C7" stop-opacity="0.25" />
-      <stop offset="100%" stop-color="#0369A1" stop-opacity="0.08" />
+    <!-- Subtle Dot Grid Pattern -->
+    <pattern id="dotGrid" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#334155" opacity="0.3"/>
+    </pattern>
+
+    <!-- Card Background Gradients -->
+    <linearGradient id="cardGradDark" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#182235"/>
+      <stop offset="100%" stop-color="#0F172A"/>
     </linearGradient>
-    <linearGradient id="gatewayGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#7C3AED" stop-opacity="0.25" />
-      <stop offset="100%" stop-color="#5B21B6" stop-opacity="0.08" />
-    </linearGradient>
-    <linearGradient id="controllerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#10B981" stop-opacity="0.25" />
-      <stop offset="100%" stop-color="#047857" stop-opacity="0.08" />
-    </linearGradient>
-    <linearGradient id="dataGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#F59E0B" stop-opacity="0.25" />
-      <stop offset="100%" stop-color="#B45309" stop-opacity="0.08" />
-    </linearGradient>
-    <linearGradient id="extGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#EC4899" stop-opacity="0.25" />
-      <stop offset="100%" stop-color="#BE185D" stop-opacity="0.08" />
+    <linearGradient id="cardGradElevated" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1E293B"/>
+      <stop offset="100%" stop-color="#111827"/>
     </linearGradient>
 
-    <!-- Drop Shadow Filter -->
-    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%">
-      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.5" />
+    <!-- Tier Container Gradients -->
+    <linearGradient id="tierGradCyan" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0284C7" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#0369A1" stop-opacity="0.04"/>
+    </linearGradient>
+    <linearGradient id="tierGradIndigo" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#6366F1" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#4F46E5" stop-opacity="0.04"/>
+    </linearGradient>
+    <linearGradient id="tierGradPurple" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#8B5CF6" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#6D28D9" stop-opacity="0.04"/>
+    </linearGradient>
+    <linearGradient id="tierGradEmerald" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#10B981" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#047857" stop-opacity="0.04"/>
+    </linearGradient>
+    <linearGradient id="tierGradAmber" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#F59E0B" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#B45309" stop-opacity="0.04"/>
+    </linearGradient>
+
+    <!-- Ambient Glow Drops -->
+    <filter id="glowCyan" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="40" result="blur"/>
+    </filter>
+    <filter id="glowPurple" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="50" result="blur"/>
+    </filter>
+    <filter id="glowEmerald" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="45" result="blur"/>
+    </filter>
+    <filter id="dropShadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.5"/>
     </filter>
 
     <!-- Arrow Markers -->
-    <marker id="arrowHttp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-      <path d="M 0 1 L 10 5 L 0 9 z" fill="#38BDF8" />
+    <marker id="arrowCyan" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#38BDF8"/>
     </marker>
-    <marker id="arrowAuth" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-      <path d="M 0 1 L 10 5 L 0 9 z" fill="#F472B6" />
+    <marker id="arrowEmerald" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#34D399"/>
     </marker>
-    <marker id="arrowDb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-      <path d="M 0 1 L 10 5 L 0 9 z" fill="#FBBF24" />
+    <marker id="arrowPurple" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#A855F7"/>
     </marker>
-    <marker id="arrowFile" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-      <path d="M 0 1 L 10 5 L 0 9 z" fill="#34D399" />
+    <marker id="arrowAmber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#FBBF24"/>
+    </marker>
+    <marker id="arrowRose" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#FB7185"/>
     </marker>
   </defs>
 
-  <!-- Canvas Background -->
-  <rect width="1200" height="820" fill="url(#bgGrad)" rx="12" />
-  <rect x="8" y="8" width="1184" height="804" fill="none" stroke="#1E293B" stroke-width="1.5" rx="10" />
 
-  <!-- Title Header -->
-  <text x="40" y="42" fill="#F8FAFC" font-size="22" font-weight="700" letter-spacing="0.5">DevMarket — Full-Stack &amp; Hybrid Android Architecture</text>
-  <text x="40" y="64" fill="#94A3B8" font-size="13">React 18 + Vite 6 + Tailwind v4 + Capacitor 8 Android Runtime | Express 4 + Dual SQLite/MySQL Engine + Firebase Auth</text>
+    <!-- Ambient Glow Highlights -->
+    <circle cx="150" cy="180" r="140" fill="#0284C7" opacity="0.08" filter="url(#glowCyan)"/>
+    <circle cx="680" cy="380" r="170" fill="#8B5CF6" opacity="0.07" filter="url(#glowPurple)"/>
+    <circle cx="1100" cy="580" r="150" fill="#10B981" opacity="0.06" filter="url(#glowEmerald)"/>
 
-  <!-- ===================================================================== -->
-  <!-- 1. CLIENT LAYER (TOP LEFT) -->
-  <!-- ===================================================================== -->
-  <g filter="url(#shadow)">
-    <rect x="35" y="85" width="820" height="155" rx="10" fill="url(#clientGrad)" stroke="#0284C7" stroke-width="1.5" />
-    <text x="55" y="110" fill="#38BDF8" font-size="13" font-weight="700" letter-spacing="1">CLIENT PRESENTATION &amp; CAPACITOR HYBRID RUNTIME (PORT 5173 / ANDROID APK)</text>
+    <!-- Canvas Frame -->
+    <rect width="1280" height="820" fill="url(#bgGradient)" rx="14"/>
+    <rect width="1280" height="820" fill="url(#dotGrid)" rx="14"/>
+    <rect x="6" y="6" width="1268" height="808" fill="none" stroke="#1E293B" stroke-width="1.5" rx="10"/>
 
-    <!-- React SPA Box -->
-    <rect x="55" y="125" width="245" height="98" rx="8" fill="#0F172A" stroke="#38BDF8" stroke-width="1" />
-    <text x="70" y="147" fill="#F8FAFC" font-size="13" font-weight="600">React 18 + Vite 6 + Tailwind v4</text>
-    <text x="70" y="166" fill="#94A3B8" font-size="11">• Pages: Home, Search, AppDetails</text>
-    <text x="70" y="183" fill="#94A3B8" font-size="11">• Portals: DevDashboard, AdminPanel</text>
-    <text x="70" y="200" fill="#94A3B8" font-size="11">• AuthContext (JWT + Retry Backoff)</text>
-    <text x="70" y="216" fill="#38BDF8" font-size="10" font-family="monospace">client/src/App.jsx</text>
+    <!-- Main Header Banner -->
+    <g transform="translate(36, 26)">
+      <text x="0" y="18" fill="#F8FAFC" font-size="20" font-weight="800" letter-spacing="0.4">DevMarket &#8212; Full-Stack &amp; Hybrid Android Architecture</text>
+      <text x="0" y="36" fill="#94A3B8" font-size="11.5">React 18 + Vite 6 + Tailwind v4 + Capacitor 8 Android | Express 5 + Dual SQLite/MySQL + Firebase Auth</text>
+      <!-- Badge Pill -->
+      <g transform="translate(1040, 2)">
+        <rect x="0" y="0" width="168" height="28" rx="14" fill="#0F172A" stroke="#38BDF8" stroke-width="1.2"/>
+        <circle cx="14" cy="14" r="3.5" fill="#22C55E"/>
+        <text x="25" y="17.5" fill="#38BDF8" font-size="10" font-weight="700" letter-spacing="0.6">v2.0 PRODUCTION</text>
+      </g>
+    </g>
 
-    <!-- API Client Box -->
-    <rect x="320" y="125" width="245" height="98" rx="8" fill="#0F172A" stroke="#38BDF8" stroke-width="1" />
-    <text x="335" y="147" fill="#F8FAFC" font-size="13" font-weight="600">Unified REST &amp; Multipart Client</text>
-    <text x="335" y="166" fill="#94A3B8" font-size="11">• Bearer JWT Header Injection</text>
-    <text x="335" y="183" fill="#94A3B8" font-size="11">• apiGet / apiPost / apiPut / apiUpload</text>
-    <text x="335" y="200" fill="#94A3B8" font-size="11">• Byte-Range APK Stream Receiver</text>
-    <text x="335" y="216" fill="#38BDF8" font-size="10" font-family="monospace">client/src/api/client.js</text>
-
-    <!-- Capacitor Native Bridge Box -->
-    <rect x="585" y="125" width="250" height="98" rx="8" fill="#0F172A" stroke="#38BDF8" stroke-width="1" />
-    <text x="600" y="147" fill="#F8FAFC" font-size="13" font-weight="600">Capacitor 8 Android Bridge</text>
-    <text x="600" y="166" fill="#94A3B8" font-size="11">• @capacitor/haptics &amp; status-bar</text>
-    <text x="600" y="183" fill="#94A3B8" font-size="11">• @capacitor/app Hardware Back</text>
-    <text x="600" y="200" fill="#94A3B8" font-size="11">• Native Google Sign-In &amp; APK Installer</text>
-    <text x="600" y="216" fill="#38BDF8" font-size="10" font-family="monospace">client/src/utils/nativeBridge.js</text>
-  </g>
-
-  <!-- ===================================================================== -->
-  <!-- 2. EXTERNAL SERVICES LAYER (TOP RIGHT) -->
-  <!-- ===================================================================== -->
-  <g filter="url(#shadow)">
-    <rect x="880" y="85" width="285" height="295" rx="10" fill="url(#extGrad)" stroke="#EC4899" stroke-width="1.5" />
-    <text x="900" y="110" fill="#F472B6" font-size="13" font-weight="700" letter-spacing="1">EXTERNAL AUTH SERVICES</text>
-
-    <!-- Firebase Client Auth -->
-    <rect x="900" y="125" width="245" height="105" rx="8" fill="#0F172A" stroke="#F472B6" stroke-width="1" />
-    <text x="915" y="147" fill="#F8FAFC" font-size="13" font-weight="600">Firebase Authentication</text>
-    <text x="915" y="166" fill="#94A3B8" font-size="11">• Google OAuth 2.0 Provider</text>
-    <text x="915" y="183" fill="#94A3B8" font-size="11">• Web Popup &amp; Mobile Redirect</text>
-    <text x="915" y="200" fill="#94A3B8" font-size="11">• Mock-Key Dev Mode Bypass</text>
-    <text x="915" y="218" fill="#F472B6" font-size="10" font-family="monospace">client/src/config/firebase.js</text>
-
-    <!-- Firebase Admin SDK -->
-    <rect x="900" y="255" width="245" height="105" rx="8" fill="#0F172A" stroke="#F472B6" stroke-width="1" />
-    <text x="915" y="277" fill="#F8FAFC" font-size="13" font-weight="600">Firebase Admin SDK</text>
-    <text x="915" y="296" fill="#94A3B8" font-size="11">• Service Account Cert Auth</text>
-    <text x="915" y="313" fill="#94A3B8" font-size="11">• admin.auth().verifyIdToken()</text>
-    <text x="915" y="330" fill="#94A3B8" font-size="11">• Token Exchange to Backend JWT</text>
-    <text x="915" y="348" fill="#F472B6" font-size="10" font-family="monospace">server/config/firebase.js</text>
-  </g>
-
-  <!-- ===================================================================== -->
-  <!-- 3. API GATEWAY & MIDDLEWARE LAYER (MIDDLE) -->
-  <!-- ===================================================================== -->
-  <g filter="url(#shadow)">
-    <rect x="35" y="275" width="820" height="145" rx="10" fill="url(#gatewayGrad)" stroke="#8B5CF6" stroke-width="1.5" />
-    <text x="55" y="300" fill="#C4B5FD" font-size="13" font-weight="700" letter-spacing="1">API GATEWAY &amp; MIDDLEWARE PIPELINE (EXPRESS.JS — PORT 3000 / 3001)</text>
-
-    <!-- Express & CORS -->
-    <rect x="55" y="312" width="185" height="92" rx="8" fill="#0F172A" stroke="#8B5CF6" stroke-width="1" />
-    <text x="68" y="334" fill="#F8FAFC" font-size="12" font-weight="600">Express Router &amp; CORS</text>
-    <text x="68" y="352" fill="#94A3B8" font-size="11">• LAN Preflight (204)</text>
-    <text x="68" y="368" fill="#94A3B8" font-size="11">• JSON Body Parser</text>
-    <text x="68" y="384" fill="#94A3B8" font-size="11">• SPA Fallback (/dist)</text>
-    <text x="68" y="397" fill="#C4B5FD" font-size="10" font-family="monospace">server/index.js</text>
-
-    <!-- JWT Verification -->
-    <rect x="255" y="312" width="185" height="92" rx="8" fill="#0F172A" stroke="#8B5CF6" stroke-width="1" />
-    <text x="268" y="334" fill="#F8FAFC" font-size="12" font-weight="600">JWT Auth Verifier</text>
-    <text x="268" y="352" fill="#94A3B8" font-size="11">• verifyToken Middleware</text>
-    <text x="268" y="368" fill="#94A3B8" font-size="11">• HMAC-SHA256 (7d TTL)</text>
-    <text x="268" y="384" fill="#94A3B8" font-size="11">• Attaches req.user</text>
-    <text x="268" y="397" fill="#C4B5FD" font-size="10" font-family="monospace">authMiddleware.js</text>
-
-    <!-- RBAC Role Guards -->
-    <rect x="455" y="312" width="185" height="92" rx="8" fill="#0F172A" stroke="#8B5CF6" stroke-width="1" />
-    <text x="468" y="334" fill="#F8FAFC" font-size="12" font-weight="600">RBAC Role Guards</text>
-    <text x="468" y="352" fill="#94A3B8" font-size="11">• requireDeveloper Guard</text>
-    <text x="468" y="368" fill="#94A3B8" font-size="11">• requireAdmin Guard</text>
-    <text x="468" y="384" fill="#94A3B8" font-size="11">• 401 / 403 Enforcement</text>
-    <text x="468" y="397" fill="#C4B5FD" font-size="10" font-family="monospace">authMiddleware.js</text>
-
-    <!-- Multer APK Engine -->
-    <rect x="655" y="312" width="180" height="92" rx="8" fill="#0F172A" stroke="#8B5CF6" stroke-width="1" />
-    <text x="668" y="334" fill="#F8FAFC" font-size="12" font-weight="600">Multer APK Intake</text>
-    <text x="668" y="352" fill="#94A3B8" font-size="11">• 200 MB Size Ceiling</text>
-    <text x="668" y="368" fill="#94A3B8" font-size="11">• MIME &amp; .apk Filter</text>
-    <text x="668" y="384" fill="#94A3B8" font-size="11">• Static /downloads</text>
-    <text x="668" y="397" fill="#C4B5FD" font-size="10" font-family="monospace">appController.js</text>
-  </g>
-
-  <!-- ===================================================================== -->
-  <!-- 4. BUSINESS LOGIC & CONTROLLERS LAYER -->
-  <!-- ===================================================================== -->
-  <g filter="url(#shadow)">
-    <rect x="35" y="455" width="820" height="145" rx="10" fill="url(#controllerGrad)" stroke="#10B981" stroke-width="1.5" />
-    <text x="55" y="480" fill="#6EE7B7" font-size="13" font-weight="700" letter-spacing="1">BUSINESS LOGIC &amp; ROUTE CONTROLLERS (server/controllers/* &amp; server/routes/*)</text>
-
-    <!-- authController -->
-    <rect x="55" y="492" width="185" height="92" rx="8" fill="#0F172A" stroke="#10B981" stroke-width="1" />
-    <text x="68" y="514" fill="#F8FAFC" font-size="12" font-weight="600">authController.js</text>
-    <text x="68" y="532" fill="#94A3B8" font-size="11">• POST /api/auth/firebase</text>
-    <text x="68" y="548" fill="#94A3B8" font-size="11">• POST /api/auth/credentials</text>
-    <text x="68" y="564" fill="#94A3B8" font-size="11">• GET /api/auth/me</text>
-    <text x="68" y="578" fill="#6EE7B7" font-size="10" font-family="monospace">routes/auth.js</text>
-
-    <!-- appController -->
-    <rect x="255" y="492" width="185" height="92" rx="8" fill="#0F172A" stroke="#10B981" stroke-width="1" />
-    <text x="268" y="514" fill="#F8FAFC" font-size="12" font-weight="600">appController.js</text>
-    <text x="268" y="532" fill="#94A3B8" font-size="11">• POST /api/apps/upload</text>
-    <text x="268" y="548" fill="#94A3B8" font-size="11">• GET /api/apps &amp; /search</text>
-    <text x="268" y="564" fill="#94A3B8" font-size="11">• GET /api/apps/:id</text>
-    <text x="268" y="578" fill="#6EE7B7" font-size="10" font-family="monospace">routes/app.js</text>
-
-    <!-- adminController -->
-    <rect x="455" y="492" width="185" height="92" rx="8" fill="#0F172A" stroke="#10B981" stroke-width="1" />
-    <text x="468" y="514" fill="#F8FAFC" font-size="12" font-weight="600">adminController.js</text>
-    <text x="468" y="532" fill="#94A3B8" font-size="11">• GET /api/admin/apps/pending</text>
-    <text x="468" y="548" fill="#94A3B8" font-size="11">• PUT approve / reject</text>
-    <text x="468" y="564" fill="#94A3B8" font-size="11">• GET &amp; PUT /users/promote</text>
-    <text x="468" y="578" fill="#6EE7B7" font-size="10" font-family="monospace">routes/admin.js</text>
-
-    <!-- reviewController -->
-    <rect x="655" y="492" width="180" height="92" rx="8" fill="#0F172A" stroke="#10B981" stroke-width="1" />
-    <text x="668" y="514" fill="#F8FAFC" font-size="12" font-weight="600">reviewController.js</text>
-    <text x="668" y="532" fill="#94A3B8" font-size="11">• POST /api/reviews</text>
-    <text x="668" y="548" fill="#94A3B8" font-size="11">• 1-5 Star Rating Validation</text>
-    <text x="668" y="564" fill="#94A3B8" font-size="11">• Recalculates avgRating</text>
-    <text x="668" y="578" fill="#6EE7B7" font-size="10" font-family="monospace">routes/review.js</text>
-  </g>
-
-  <!-- ===================================================================== -->
-  <!-- 5. DATA & PERSISTENCE LAYER (BOTTOM) -->
-  <!-- ===================================================================== -->
-  <g filter="url(#shadow)">
-    <rect x="35" y="635" width="820" height="155" rx="10" fill="url(#dataGrad)" stroke="#F59E0B" stroke-width="1.5" />
-    <text x="55" y="660" fill="#FCD34D" font-size="13" font-weight="700" letter-spacing="1">DATA &amp; PERSISTENCE LAYER (SQLITE / MYSQL ADAPTER + MONGOOSE SCHEMAS + APK STORAGE)</text>
-
-    <!-- Unified SQL Adapter -->
-    <rect x="55" y="672" width="250" height="102" rx="8" fill="#0F172A" stroke="#F59E0B" stroke-width="1" />
-    <text x="68" y="694" fill="#F8FAFC" font-size="12" font-weight="600">Unified SQL Adapter (db.js)</text>
-    <text x="68" y="712" fill="#94A3B8" font-size="11">• SQLite: better-sqlite3 (devmarket.sqlite)</text>
-    <text x="68" y="728" fill="#94A3B8" font-size="11">• MySQL: mysql2/promise Pool</text>
-    <text x="68" y="744" fill="#94A3B8" font-size="11">• Auto-Migration &amp; Demo Seeding</text>
-    <text x="68" y="762" fill="#FCD34D" font-size="10" font-family="monospace">server/config/initDb.js</text>
-
-    <!-- Relational & Document Schemas -->
-    <rect x="320" y="672" width="265" height="102" rx="8" fill="#0F172A" stroke="#F59E0B" stroke-width="1" />
-    <text x="333" y="694" fill="#F8FAFC" font-size="12" font-weight="600">Core Entities &amp; Models</text>
-    <text x="333" y="712" fill="#94A3B8" font-size="11">• users (uid PK, email, role, created_at)</text>
-    <text x="333" y="728" fill="#94A3B8" font-size="11">• apps (id PK, developer_uid FK, status)</text>
-    <text x="333" y="744" fill="#94A3B8" font-size="11">• reviews (appId, userId, rating 1..5)</text>
-    <text x="333" y="762" fill="#FCD34D" font-size="10" font-family="monospace">server/models/{User,App,Review}.js</text>
-
-    <!-- Local APK File System -->
-    <rect x="600" y="672" width="235" height="102" rx="8" fill="#0F172A" stroke="#34D399" stroke-width="1" />
-    <text x="613" y="694" fill="#F8FAFC" font-size="12" font-weight="600">Local APK File System</text>
-    <text x="613" y="712" fill="#94A3B8" font-size="11">• Directory: /uploads/apk/</text>
-    <text x="613" y="728" fill="#94A3B8" font-size="11">• Naming: {timestamp}-{orig}.apk</text>
-    <text x="613" y="744" fill="#94A3B8" font-size="11">• Served via GET /downloads/:file</text>
-    <text x="613" y="762" fill="#34D399" font-size="10" font-family="monospace">uploads/apk/*.apk</text>
-  </g>
-
-  <!-- ===================================================================== -->
-  <!-- 6. LEGEND BOX (BOTTOM RIGHT) -->
-  <!-- ===================================================================== -->
-  <g filter="url(#shadow)">
-    <rect x="880" y="415" width="285" height="375" rx="10" fill="#0F172A" stroke="#334155" stroke-width="1.5" />
-    <text x="900" y="442" fill="#F8FAFC" font-size="14" font-weight="700" letter-spacing="0.8">ARCHITECTURE LEGEND</text>
-    <line x1="900" y1="452" x2="1145" y2="452" stroke="#334155" stroke-width="1" />
-
-    <!-- Layer Color Key -->
-    <text x="900" y="475" fill="#94A3B8" font-size="11" font-weight="600">SYSTEM TIERS</text>
-
-    <rect x="900" y="487" width="16" height="16" rx="4" fill="#0284C7" fill-opacity="0.4" stroke="#38BDF8" stroke-width="1.5" />
-    <text x="926" y="499" fill="#E2E8F0" font-size="12">Client UI &amp; Capacitor Android</text>
-
-    <rect x="900" y="513" width="16" height="16" rx="4" fill="#7C3AED" fill-opacity="0.4" stroke="#8B5CF6" stroke-width="1.5" />
-    <text x="926" y="525" fill="#E2E8F0" font-size="12">API Gateway &amp; Security Guards</text>
-
-    <rect x="900" y="539" width="16" height="16" rx="4" fill="#10B981" fill-opacity="0.4" stroke="#10B981" stroke-width="1.5" />
-    <text x="926" y="551" fill="#E2E8F0" font-size="12">Business Logic &amp; Controllers</text>
-
-    <rect x="900" y="565" width="16" height="16" rx="4" fill="#F59E0B" fill-opacity="0.4" stroke="#F59E0B" stroke-width="1.5" />
-    <text x="926" y="577" fill="#E2E8F0" font-size="12">Database &amp; APK Persistence</text>
-
-    <rect x="900" y="591" width="16" height="16" rx="4" fill="#EC4899" fill-opacity="0.4" stroke="#F472B6" stroke-width="1.5" />
-    <text x="926" y="603" fill="#E2E8F0" font-size="12">External Firebase Identity</text>
-
-    <line x1="900" y1="620" x2="1145" y2="620" stroke="#334155" stroke-width="1" />
-
-    <!-- Connector Key -->
-    <text x="900" y="642" fill="#94A3B8" font-size="11" font-weight="600">DATA FLOW CONNECTORS</text>
-
-    <line x1="900" y1="660" x2="945" y2="660" stroke="#38BDF8" stroke-width="2.5" marker-end="url(#arrowHttp)" />
-    <text x="958" y="664" fill="#E2E8F0" font-size="12">Synchronous HTTP / REST</text>
-
-    <line x1="900" y1="690" x2="945" y2="690" stroke="#F472B6" stroke-width="2" stroke-dasharray="5,4" marker-end="url(#arrowAuth)" />
-    <text x="958" y="694" fill="#E2E8F0" font-size="12">OAuth / Token Verification</text>
-
-    <line x1="900" y1="720" x2="945" y2="720" stroke="#FBBF24" stroke-width="2.5" marker-end="url(#arrowDb)" />
-    <text x="958" y="724" fill="#E2E8F0" font-size="12">Parameterized SQL / DB I/O</text>
-
-    <line x1="900" y1="750" x2="945" y2="750" stroke="#34D399" stroke-width="2.5" stroke-dasharray="8,4" marker-end="url(#arrowFile)" />
-    <text x="958" y="754" fill="#E2E8F0" font-size="12">Multipart APK / File Stream</text>
-  </g>
-
-  <!-- ===================================================================== -->
-  <!-- 7. DIRECTIONAL ARROWS & CONNECTORS -->
-  <!-- ===================================================================== -->
-  <!-- React SPA <-> Unified API Client -->
-  <line x1="300" y1="174" x2="318" y2="174" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrowHttp)" />
-  <!-- React SPA <-> Capacitor Bridge -->
-  <line x1="565" y1="174" x2="583" y2="174" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrowHttp)" />
-
-  <!-- Client -> Firebase Auth (OAuth Popup/Redirect) -->
-  <path d="M 835 155 L 898 155" fill="none" stroke="#F472B6" stroke-width="2" stroke-dasharray="5,4" marker-end="url(#arrowAuth)" />
-
-  <!-- API Client -> Express Router -->
-  <path d="M 442 223 L 442 252 L 147 252 L 147 310" fill="none" stroke="#38BDF8" stroke-width="2.5" marker-end="url(#arrowHttp)" />
-
-  <!-- Express -> JWT -> RBAC -> Multer -->
-  <line x1="240" y1="358" x2="253" y2="358" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrowHttp)" />
-  <line x1="440" y1="358" x2="453" y2="358" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrowHttp)" />
-  <line x1="640" y1="358" x2="653" y2="358" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrowHttp)" />
-
-  <!-- Gateway -> Controllers -->
-  <line x1="147" y1="404" x2="147" y2="490" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrowHttp)" />
-  <line x1="347" y1="404" x2="347" y2="490" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrowHttp)" />
-  <line x1="547" y1="404" x2="547" y2="490" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrowHttp)" />
-  <line x1="745" y1="404" x2="745" y2="490" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrowHttp)" />
-
-  <!-- authController -> Firebase Admin SDK (verifyIdToken) -->
-  <path d="M 147 492 L 147 438 L 1022 438 L 1022 362" fill="none" stroke="#F472B6" stroke-width="2" stroke-dasharray="5,4" marker-end="url(#arrowAuth)" />
-
-  <!-- Controllers -> Database Adapter -->
-  <path d="M 147 584 L 147 670" fill="none" stroke="#FBBF24" stroke-width="2.5" marker-end="url(#arrowDb)" />
-  <path d="M 347 584 L 347 620 L 210 620 L 210 670" fill="none" stroke="#FBBF24" stroke-width="2.5" marker-end="url(#arrowDb)" />
-  <path d="M 547 584 L 547 620 L 260 620 L 260 670" fill="none" stroke="#FBBF24" stroke-width="2.5" marker-end="url(#arrowDb)" />
-  <path d="M 745 584 L 745 620 L 452 620 L 452 670" fill="none" stroke="#FBBF24" stroke-width="2.5" marker-end="url(#arrowDb)" />
-
-  <!-- Unified SQL Adapter -> Core Entities -->
-  <line x1="305" y1="723" x2="318" y2="723" stroke="#FBBF24" stroke-width="2.5" marker-end="url(#arrowDb)" />
-
-  <!-- Multer / appController -> Local APK File System -->
-  <path d="M 835 358 L 868 358 L 868 723 L 837 723" fill="none" stroke="#34D399" stroke-width="2.5" stroke-dasharray="8,4" marker-end="url(#arrowFile)" />
+    <!-- Tier: TIER 1 &#183; PRESENTATION &amp; CAPACITOR HYBRID CLIENT -->
+    <rect x="36" y="76" width="1208" height="154" rx="12" fill="url(#tierGradCyan)" stroke="#0284C7" stroke-opacity="0.35" stroke-width="1.2"/>
+    <rect x="52" y="86" width="335.59999999999997" height="18" rx="9" fill="#0F172A" stroke="#0284C7" stroke-width="1"/>
+    <text x="60" y="98.5" fill="#0284C7" font-size="10" font-weight="700" letter-spacing="0.8">TIER 1 &#183; PRESENTATION &amp; CAPACITOR HYBRID CLIENT</text>
+    <text x="1228" y="98.5" fill="#64748B" font-size="10" font-weight="600" text-anchor="end">PORT 5173 / ANDROID APK</text>
+    <!-- Tier: TIER 2 &#183; API GATEWAY &amp; RBAC SECURITY MIDDLEWARE -->
+    <rect x="36" y="250" width="1208" height="154" rx="12" fill="url(#tierGradIndigo)" stroke="#6366F1" stroke-opacity="0.35" stroke-width="1.2"/>
+    <rect x="52" y="260" width="335.59999999999997" height="18" rx="9" fill="#0F172A" stroke="#6366F1" stroke-width="1"/>
+    <text x="60" y="272.5" fill="#6366F1" font-size="10" font-weight="700" letter-spacing="0.8">TIER 2 &#183; API GATEWAY &amp; RBAC SECURITY MIDDLEWARE</text>
+    <text x="1228" y="272.5" fill="#64748B" font-size="10" font-weight="600" text-anchor="end">PORT 5000 / REST</text>
+    <!-- Tier: TIER 3 &#183; CONTROLLERS &amp; DOMAIN LOGIC SERVICES -->
+    <rect x="36" y="424" width="1208" height="154" rx="12" fill="url(#tierGradEmerald)" stroke="#10B981" stroke-opacity="0.35" stroke-width="1.2"/>
+    <rect x="52" y="434" width="315.2" height="18" rx="9" fill="#0F172A" stroke="#10B981" stroke-width="1"/>
+    <text x="60" y="446.5" fill="#10B981" font-size="10" font-weight="700" letter-spacing="0.8">TIER 3 &#183; CONTROLLERS &amp; DOMAIN LOGIC SERVICES</text>
+    <text x="1228" y="446.5" fill="#64748B" font-size="10" font-weight="600" text-anchor="end">ASYNC PROCESSING</text>
+    <!-- Tier: TIER 4 &#183; STORAGE, FILE ASSETS &amp; EXTERNAL AUTH -->
+    <rect x="36" y="598" width="1208" height="154" rx="12" fill="url(#tierGradAmber)" stroke="#F59E0B" stroke-opacity="0.35" stroke-width="1.2"/>
+    <rect x="52" y="608" width="322.0" height="18" rx="9" fill="#0F172A" stroke="#F59E0B" stroke-width="1"/>
+    <text x="60" y="620.5" fill="#F59E0B" font-size="10" font-weight="700" letter-spacing="0.8">TIER 4 &#183; STORAGE, FILE ASSETS &amp; EXTERNAL AUTH</text>
+    <text x="1228" y="620.5" fill="#64748B" font-size="10" font-weight="600" text-anchor="end">PERSISTENCE &amp; CLOUD</text>
+    <!-- Node Card: React 18 Single-Page App -->
+    <g filter="url(#dropShadow)">
+      <rect x="52" y="108" width="376" height="108" rx="10" fill="url(#cardGradDark)" stroke="#1E293B" stroke-width="1.2"/>
+      <!-- Top Accent Bar -->
+      <path d="M 54 108 L 426 108" stroke="#38BDF8" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- Icon Container -->
+      <rect x="64" y="120" width="28" height="28" rx="6" fill="#0B132B" stroke="#38BDF8" stroke-opacity="0.3" stroke-width="1"/>
+      <g transform="translate(68, 124)">
+        <g transform="translate(0, 0)">
+          <rect x="1" y="2" width="18" height="15" rx="3" fill="none" stroke="#38BDF8" stroke-width="1.6"/>
+          <line x1="1" y1="6" x2="19" y2="6" stroke="#38BDF8" stroke-width="1.4"/>
+          <circle cx="4" cy="4" r="0.9" fill="#38BDF8"/>
+          <circle cx="7" cy="4" r="0.9" fill="#38BDF8"/>
+        </g>
+      </g>
+      <!-- Title & Subtitle Badge -->
+      <text x="100" y="132" fill="#F8FAFC" font-size="12.5" font-weight="700">React 18 Single-Page App</text>
+      <rect x="100" y="137" width="158.8" height="14" rx="3" fill="#1E293B"/>
+      <text x="105" y="147.5" fill="#38BDF8" font-size="9" font-weight="600" letter-spacing="0.3">CLIENT &#183; VITE + TAILWIND</text>
+      
+      <circle cx="68" cy="159" r="2" fill="#38BDF8"/>
+      <text x="77" y="162" fill="#CBD5E1" font-size="10.5">Pages: Catalog, Search, AppDetails, Portals</text>
+      <circle cx="68" cy="177" r="2" fill="#38BDF8"/>
+      <text x="77" y="180" fill="#CBD5E1" font-size="10.5">Dev &amp; Admin role dashboards with live stats</text>
+      <circle cx="68" cy="195" r="2" fill="#38BDF8"/>
+      <text x="77" y="198" fill="#CBD5E1" font-size="10.5">AuthContext with automatic token refresh</text>
+    </g>
+    <!-- Node Card: Unified REST &amp; Stream Client -->
+    <g filter="url(#dropShadow)">
+      <rect x="452" y="108" width="376" height="108" rx="10" fill="url(#cardGradDark)" stroke="#1E293B" stroke-width="1.2"/>
+      <!-- Top Accent Bar -->
+      <path d="M 454 108 L 826 108" stroke="#38BDF8" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- Icon Container -->
+      <rect x="464" y="120" width="28" height="28" rx="6" fill="#0B132B" stroke="#38BDF8" stroke-opacity="0.3" stroke-width="1"/>
+      <g transform="translate(468, 124)">
+        <g transform="translate(0, 0)">
+          <rect x="2" y="3" width="16" height="5" rx="1.5" fill="none" stroke="#38BDF8" stroke-width="1.5"/>
+          <rect x="2" y="12" width="16" height="5" rx="1.5" fill="none" stroke="#38BDF8" stroke-width="1.5"/>
+          <circle cx="5" cy="5.5" r="1" fill="#38BDF8"/>
+          <circle cx="5" cy="14.5" r="1" fill="#38BDF8"/>
+          <line x1="13" y1="8" x2="13" y2="12" stroke="#38BDF8" stroke-width="1.4"/>
+        </g>
+      </g>
+      <!-- Title & Subtitle Badge -->
+      <text x="500" y="132" fill="#F8FAFC" font-size="12.5" font-weight="700">Unified REST &amp; Stream Client</text>
+      <rect x="500" y="137" width="146.4" height="14" rx="3" fill="#1E293B"/>
+      <text x="505" y="147.5" fill="#38BDF8" font-size="9" font-weight="600" letter-spacing="0.3">CLIENT &#183; HTTP / STREAM</text>
+      
+      <circle cx="468" cy="159" r="2" fill="#38BDF8"/>
+      <text x="477" y="162" fill="#CBD5E1" font-size="10.5">Standardized apiGet, apiPost &amp; apiUpload</text>
+      <circle cx="468" cy="177" r="2" fill="#38BDF8"/>
+      <text x="477" y="180" fill="#CBD5E1" font-size="10.5">Bearer JWT Authorization header injection</text>
+      <circle cx="468" cy="195" r="2" fill="#38BDF8"/>
+      <text x="477" y="198" fill="#CBD5E1" font-size="10.5">Byte-range streaming for APK file downloads</text>
+    </g>
+    <!-- Node Card: Capacitor 8 Android Bridge -->
+    <g filter="url(#dropShadow)">
+      <rect x="852" y="108" width="376" height="108" rx="10" fill="url(#cardGradDark)" stroke="#1E293B" stroke-width="1.2"/>
+      <!-- Top Accent Bar -->
+      <path d="M 854 108 L 1226 108" stroke="#38BDF8" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- Icon Container -->
+      <rect x="864" y="120" width="28" height="28" rx="6" fill="#0B132B" stroke="#38BDF8" stroke-opacity="0.3" stroke-width="1"/>
+      <g transform="translate(868, 124)">
+        <g transform="translate(0, 0)">
+          <rect x="4" y="1" width="12" height="18" rx="2.5" fill="none" stroke="#38BDF8" stroke-width="1.6"/>
+          <circle cx="10" cy="15.5" r="1" fill="#38BDF8"/>
+          <line x1="8" y1="3.5" x2="12" y2="3.5" stroke="#38BDF8" stroke-width="1.2" stroke-linecap="round"/>
+        </g>
+      </g>
+      <!-- Title & Subtitle Badge -->
+      <text x="900" y="132" fill="#F8FAFC" font-size="12.5" font-weight="700">Capacitor 8 Android Bridge</text>
+      <rect x="900" y="137" width="152.6" height="14" rx="3" fill="#1E293B"/>
+      <text x="905" y="147.5" fill="#38BDF8" font-size="9" font-weight="600" letter-spacing="0.3">HYBRID &#183; NATIVE RUNTIME</text>
+      
+      <circle cx="868" cy="159" r="2" fill="#38BDF8"/>
+      <text x="877" y="162" fill="#CBD5E1" font-size="10.5">Native status-bar, haptics &amp; hardware back</text>
+      <circle cx="868" cy="177" r="2" fill="#38BDF8"/>
+      <text x="877" y="180" fill="#CBD5E1" font-size="10.5">Google Sign-In native intent redirection</text>
+      <circle cx="868" cy="195" r="2" fill="#38BDF8"/>
+      <text x="877" y="198" fill="#CBD5E1" font-size="10.5">Direct package installer intent for APKs</text>
+    </g>
+    <!-- Node Card: Express 5 API Gateway -->
+    <g filter="url(#dropShadow)">
+      <rect x="52" y="282" width="376" height="108" rx="10" fill="url(#cardGradDark)" stroke="#1E293B" stroke-width="1.2"/>
+      <!-- Top Accent Bar -->
+      <path d="M 54 282 L 426 282" stroke="#818CF8" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- Icon Container -->
+      <rect x="64" y="294" width="28" height="28" rx="6" fill="#0B132B" stroke="#818CF8" stroke-opacity="0.3" stroke-width="1"/>
+      <g transform="translate(68, 298)">
+        <g transform="translate(0, 0)">
+          <rect x="2" y="3" width="16" height="5" rx="1.5" fill="none" stroke="#818CF8" stroke-width="1.5"/>
+          <rect x="2" y="12" width="16" height="5" rx="1.5" fill="none" stroke="#818CF8" stroke-width="1.5"/>
+          <circle cx="5" cy="5.5" r="1" fill="#818CF8"/>
+          <circle cx="5" cy="14.5" r="1" fill="#818CF8"/>
+          <line x1="13" y1="8" x2="13" y2="12" stroke="#818CF8" stroke-width="1.4"/>
+        </g>
+      </g>
+      <!-- Title & Subtitle Badge -->
+      <text x="100" y="306" fill="#F8FAFC" font-size="12.5" font-weight="700">Express 5 API Gateway</text>
+      <rect x="100" y="311" width="127.8" height="14" rx="3" fill="#1E293B"/>
+      <text x="105" y="321.5" fill="#818CF8" font-size="9" font-weight="600" letter-spacing="0.3">GATEWAY &#183; EXPRESS 5</text>
+      
+      <circle cx="68" cy="333" r="2" fill="#818CF8"/>
+      <text x="77" y="336" fill="#CBD5E1" font-size="10.5">Route dispatching &amp; CORS origin policy</text>
+      <circle cx="68" cy="351" r="2" fill="#818CF8"/>
+      <text x="77" y="354" fill="#CBD5E1" font-size="10.5">Body parsers for JSON and URL-encoded data</text>
+      <circle cx="68" cy="369" r="2" fill="#818CF8"/>
+      <text x="77" y="372" fill="#CBD5E1" font-size="10.5">Global error handler &amp; request telemetry</text>
+    </g>
+    <!-- Node Card: RBAC Security Middleware -->
+    <g filter="url(#dropShadow)">
+      <rect x="452" y="282" width="376" height="108" rx="10" fill="url(#cardGradDark)" stroke="#1E293B" stroke-width="1.2"/>
+      <!-- Top Accent Bar -->
+      <path d="M 454 282 L 826 282" stroke="#818CF8" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- Icon Container -->
+      <rect x="464" y="294" width="28" height="28" rx="6" fill="#0B132B" stroke="#818CF8" stroke-opacity="0.3" stroke-width="1"/>
+      <g transform="translate(468, 298)">
+        <g transform="translate(0, 0)">
+          <path d="M 10 2 L 17 5 C 17 12 10 17 10 17 C 10 17 3 12 3 5 Z" fill="none" stroke="#818CF8" stroke-width="1.6"/>
+          <polyline points="7,9.5 9,11.5 13,7.5" fill="none" stroke="#818CF8" stroke-width="1.5" stroke-linecap="round"/>
+        </g>
+      </g>
+      <!-- Title & Subtitle Badge -->
+      <text x="500" y="306" fill="#F8FAFC" font-size="12.5" font-weight="700">RBAC Security Middleware</text>
+      <rect x="500" y="311" width="146.4" height="14" rx="3" fill="#1E293B"/>
+      <text x="505" y="321.5" fill="#818CF8" font-size="9" font-weight="600" letter-spacing="0.3">SECURITY &#183; JWT &amp; ROLES</text>
+      
+      <circle cx="468" cy="333" r="2" fill="#818CF8"/>
+      <text x="477" y="336" fill="#CBD5E1" font-size="10.5">verifyToken extracts and decodes user JWT</text>
+      <circle cx="468" cy="351" r="2" fill="#818CF8"/>
+      <text x="477" y="354" fill="#CBD5E1" font-size="10.5">requireDeveloper guards app submission routes</text>
+      <circle cx="468" cy="369" r="2" fill="#818CF8"/>
+      <text x="477" y="372" fill="#CBD5E1" font-size="10.5">requireAdmin protects review &amp; catalog audits</text>
+    </g>
+    <!-- Node Card: Multer APK Ingestion Pipeline -->
+    <g filter="url(#dropShadow)">
+      <rect x="852" y="282" width="376" height="108" rx="10" fill="url(#cardGradDark)" stroke="#1E293B" stroke-width="1.2"/>
+      <!-- Top Accent Bar -->
+      <path d="M 854 282 L 1226 282" stroke="#818CF8" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- Icon Container -->
+      <rect x="864" y="294" width="28" height="28" rx="6" fill="#0B132B" stroke="#818CF8" stroke-opacity="0.3" stroke-width="1"/>
+      <g transform="translate(868, 298)">
+        <g transform="translate(0, 0)">
+          <ellipse cx="10" cy="4.5" rx="7" ry="2.5" fill="none" stroke="#818CF8" stroke-width="1.6"/>
+          <path d="M 3 4.5 L 3 14.5 C 3 16.5 17 16.5 17 14.5 L 17 4.5" fill="none" stroke="#818CF8" stroke-width="1.6"/>
+          <path d="M 3 9.5 C 3 11.5 17 11.5 17 9.5" fill="none" stroke="#818CF8" stroke-width="1.5"/>
+        </g>
+      </g>
+      <!-- Title & Subtitle Badge -->
+      <text x="900" y="306" fill="#F8FAFC" font-size="12.5" font-weight="700">Multer APK Ingestion Pipeline</text>
+      <rect x="900" y="311" width="152.6" height="14" rx="3" fill="#1E293B"/>
+      <text x="905" y="321.5" fill="#818CF8" font-size="9" font-weight="600" letter-spacing="0.3">INGESTION &#183; 200MB LIMIT</text>
+      
+      <circle cx="868" cy="333" r="2" fill="#818CF8"/>
+      <text x="877" y="336" fill="#CBD5E1" font-size="10.5">Streaming multipart/form-data handler</text>
+      <circle cx="868" cy="351" r="2" fill="#818CF8"/>
+      <text x="877" y="354" fill="#CBD5E1" font-size="10.5">MIME-type &amp; .apk file extension validation</text>
+      <circle cx="868" cy="369" r="2" fill="#818CF8"/>
+      <text x="877" y="372" fill="#CBD5E1" font-size="10.5">Disk storage buffering with SHA256 naming</text>
+    </g>
+    <!-- Node Card: Auth &amp; Identity Controller -->
+    <g filter="url(#dropShadow)">
+      <rect x="52" y="456" width="376" height="108" rx="10" fill="url(#cardGradDark)" stroke="#1E293B" stroke-width="1.2"/>
+      <!-- Top Accent Bar -->
+      <path d="M 54 456 L 426 456" stroke="#34D399" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- Icon Container -->
+      <rect x="64" y="468" width="28" height="28" rx="6" fill="#0B132B" stroke="#34D399" stroke-opacity="0.3" stroke-width="1"/>
+      <g transform="translate(68, 472)">
+        <g transform="translate(0, 0)">
+          <path d="M 10 2 L 17 5 C 17 12 10 17 10 17 C 10 17 3 12 3 5 Z" fill="none" stroke="#34D399" stroke-width="1.6"/>
+          <polyline points="7,9.5 9,11.5 13,7.5" fill="none" stroke="#34D399" stroke-width="1.5" stroke-linecap="round"/>
+        </g>
+      </g>
+      <!-- Title & Subtitle Badge -->
+      <text x="100" y="480" fill="#F8FAFC" font-size="12.5" font-weight="700">Auth &amp; Identity Controller</text>
+      <rect x="100" y="485" width="165.0" height="14" rx="3" fill="#1E293B"/>
+      <text x="105" y="495.5" fill="#34D399" font-size="9" font-weight="600" letter-spacing="0.3">SERVICE &#183; AUTH CONTROLLER</text>
+      
+      <circle cx="68" cy="507" r="2" fill="#34D399"/>
+      <text x="77" y="510" fill="#CBD5E1" font-size="10.5">Firebase token exchange to session JWT</text>
+      <circle cx="68" cy="525" r="2" fill="#34D399"/>
+      <text x="77" y="528" fill="#CBD5E1" font-size="10.5">Developer onboarding &amp; role promotion flow</text>
+      <circle cx="68" cy="543" r="2" fill="#34D399"/>
+      <text x="77" y="546" fill="#CBD5E1" font-size="10.5">Passwordless Google OAuth session manager</text>
+    </g>
+    <!-- Node Card: App Moderation &amp; Catalog -->
+    <g filter="url(#dropShadow)">
+      <rect x="452" y="456" width="376" height="108" rx="10" fill="url(#cardGradDark)" stroke="#1E293B" stroke-width="1.2"/>
+      <!-- Top Accent Bar -->
+      <path d="M 454 456 L 826 456" stroke="#34D399" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- Icon Container -->
+      <rect x="464" y="468" width="28" height="28" rx="6" fill="#0B132B" stroke="#34D399" stroke-opacity="0.3" stroke-width="1"/>
+      <g transform="translate(468, 472)">
+        <g transform="translate(0, 0)">
+          <rect x="2" y="3" width="16" height="5" rx="1.5" fill="none" stroke="#34D399" stroke-width="1.5"/>
+          <rect x="2" y="12" width="16" height="5" rx="1.5" fill="none" stroke="#34D399" stroke-width="1.5"/>
+          <circle cx="5" cy="5.5" r="1" fill="#34D399"/>
+          <circle cx="5" cy="14.5" r="1" fill="#34D399"/>
+          <line x1="13" y1="8" x2="13" y2="12" stroke="#34D399" stroke-width="1.4"/>
+        </g>
+      </g>
+      <!-- Title & Subtitle Badge -->
+      <text x="500" y="480" fill="#F8FAFC" font-size="12.5" font-weight="700">App Moderation &amp; Catalog</text>
+      <rect x="500" y="485" width="158.8" height="14" rx="3" fill="#1E293B"/>
+      <text x="505" y="495.5" fill="#34D399" font-size="9" font-weight="600" letter-spacing="0.3">SERVICE &#183; APP CONTROLLER</text>
+      
+      <circle cx="468" cy="507" r="2" fill="#34D399"/>
+      <text x="477" y="510" fill="#CBD5E1" font-size="10.5">App metadata indexing, search &amp; category filters</text>
+      <circle cx="468" cy="525" r="2" fill="#34D399"/>
+      <text x="477" y="528" fill="#CBD5E1" font-size="10.5">Admin approval workflow: PENDING to PUBLISHED</text>
+      <circle cx="468" cy="543" r="2" fill="#34D399"/>
+      <text x="477" y="546" fill="#CBD5E1" font-size="10.5">Changelog tracking &amp; version incrementation</text>
+    </g>
+    <!-- Node Card: Review &amp; Download Analytics -->
+    <g filter="url(#dropShadow)">
+      <rect x="852" y="456" width="376" height="108" rx="10" fill="url(#cardGradDark)" stroke="#1E293B" stroke-width="1.2"/>
+      <!-- Top Accent Bar -->
+      <path d="M 854 456 L 1226 456" stroke="#34D399" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- Icon Container -->
+      <rect x="864" y="468" width="28" height="28" rx="6" fill="#0B132B" stroke="#34D399" stroke-opacity="0.3" stroke-width="1"/>
+      <g transform="translate(868, 472)">
+        <g transform="translate(0, 0)">
+          <rect x="2" y="2" width="16" height="16" rx="2" fill="none" stroke="#34D399" stroke-width="1.4"/>
+          <line x1="6" y1="14" x2="6" y2="10" stroke="#34D399" stroke-width="2" stroke-linecap="round"/>
+          <line x1="10" y1="14" x2="10" y2="6" stroke="#34D399" stroke-width="2" stroke-linecap="round"/>
+          <line x1="14" y1="14" x2="14" y2="8" stroke="#34D399" stroke-width="2" stroke-linecap="round"/>
+        </g>
+      </g>
+      <!-- Title & Subtitle Badge -->
+      <text x="900" y="480" fill="#F8FAFC" font-size="12.5" font-weight="700">Review &amp; Download Analytics</text>
+      <rect x="900" y="485" width="177.4" height="14" rx="3" fill="#1E293B"/>
+      <text x="905" y="495.5" fill="#34D399" font-size="9" font-weight="600" letter-spacing="0.3">SERVICE &#183; REVIEW CONTROLLER</text>
+      
+      <circle cx="868" cy="507" r="2" fill="#34D399"/>
+      <text x="877" y="510" fill="#CBD5E1" font-size="10.5">1-to-5 star user ratings &amp; textual reviews</text>
+      <circle cx="868" cy="525" r="2" fill="#34D399"/>
+      <text x="877" y="528" fill="#CBD5E1" font-size="10.5">Verified download counters &amp; rate limiting</text>
+      <circle cx="868" cy="543" r="2" fill="#34D399"/>
+      <text x="877" y="546" fill="#CBD5E1" font-size="10.5">Aggregate star score caching on app records</text>
+    </g>
+    <!-- Node Card: Dual SQLite &amp; MySQL Engine -->
+    <g filter="url(#dropShadow)">
+      <rect x="52" y="630" width="376" height="108" rx="10" fill="url(#cardGradDark)" stroke="#1E293B" stroke-width="1.2"/>
+      <!-- Top Accent Bar -->
+      <path d="M 54 630 L 426 630" stroke="#FBBF24" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- Icon Container -->
+      <rect x="64" y="642" width="28" height="28" rx="6" fill="#0B132B" stroke="#FBBF24" stroke-opacity="0.3" stroke-width="1"/>
+      <g transform="translate(68, 646)">
+        <g transform="translate(0, 0)">
+          <ellipse cx="10" cy="4.5" rx="7" ry="2.5" fill="none" stroke="#FBBF24" stroke-width="1.6"/>
+          <path d="M 3 4.5 L 3 14.5 C 3 16.5 17 16.5 17 14.5 L 17 4.5" fill="none" stroke="#FBBF24" stroke-width="1.6"/>
+          <path d="M 3 9.5 C 3 11.5 17 11.5 17 9.5" fill="none" stroke="#FBBF24" stroke-width="1.5"/>
+        </g>
+      </g>
+      <!-- Title & Subtitle Badge -->
+      <text x="100" y="654" fill="#F8FAFC" font-size="12.5" font-weight="700">Dual SQLite &amp; MySQL Engine</text>
+      <rect x="100" y="659" width="165.0" height="14" rx="3" fill="#1E293B"/>
+      <text x="105" y="669.5" fill="#FBBF24" font-size="9" font-weight="600" letter-spacing="0.3">DATA &#183; RELATIONAL STORAGE</text>
+      
+      <circle cx="68" cy="681" r="2" fill="#FBBF24"/>
+      <text x="77" y="684" fill="#CBD5E1" font-size="10.5">devmarket.sqlite for zero-config local dev</text>
+      <circle cx="68" cy="699" r="2" fill="#FBBF24"/>
+      <text x="77" y="702" fill="#CBD5E1" font-size="10.5">MySQL 2 connection pooling for production</text>
+      <circle cx="68" cy="717" r="2" fill="#FBBF24"/>
+      <text x="77" y="720" fill="#CBD5E1" font-size="10.5">Mongoose schema compatibility adapter</text>
+    </g>
+    <!-- Node Card: Local APK Storage Volume -->
+    <g filter="url(#dropShadow)">
+      <rect x="452" y="630" width="376" height="108" rx="10" fill="url(#cardGradDark)" stroke="#1E293B" stroke-width="1.2"/>
+      <!-- Top Accent Bar -->
+      <path d="M 454 630 L 826 630" stroke="#FBBF24" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- Icon Container -->
+      <rect x="464" y="642" width="28" height="28" rx="6" fill="#0B132B" stroke="#FBBF24" stroke-opacity="0.3" stroke-width="1"/>
+      <g transform="translate(468, 646)">
+        <g transform="translate(0, 0)">
+          <ellipse cx="10" cy="4.5" rx="7" ry="2.5" fill="none" stroke="#FBBF24" stroke-width="1.6"/>
+          <path d="M 3 4.5 L 3 14.5 C 3 16.5 17 16.5 17 14.5 L 17 4.5" fill="none" stroke="#FBBF24" stroke-width="1.6"/>
+          <path d="M 3 9.5 C 3 11.5 17 11.5 17 9.5" fill="none" stroke="#FBBF24" stroke-width="1.5"/>
+        </g>
+      </g>
+      <!-- Title & Subtitle Badge -->
+      <text x="500" y="654" fill="#F8FAFC" font-size="12.5" font-weight="700">Local APK Storage Volume</text>
+      <rect x="500" y="659" width="146.4" height="14" rx="3" fill="#1E293B"/>
+      <text x="505" y="669.5" fill="#FBBF24" font-size="9" font-weight="600" letter-spacing="0.3">STORAGE &#183; /UPLOADS/APK</text>
+      
+      <circle cx="468" cy="681" r="2" fill="#FBBF24"/>
+      <text x="477" y="684" fill="#CBD5E1" font-size="10.5">Isolated local volume for binary package blobs</text>
+      <circle cx="468" cy="699" r="2" fill="#FBBF24"/>
+      <text x="477" y="702" fill="#CBD5E1" font-size="10.5">Range-request support for resumable installs</text>
+      <circle cx="468" cy="717" r="2" fill="#FBBF24"/>
+      <text x="477" y="720" fill="#CBD5E1" font-size="10.5">Secure direct streaming without memory leaks</text>
+    </g>
+    <!-- Node Card: Firebase Auth &amp; Admin SDK -->
+    <g filter="url(#dropShadow)">
+      <rect x="852" y="630" width="376" height="108" rx="10" fill="url(#cardGradDark)" stroke="#1E293B" stroke-width="1.2"/>
+      <!-- Top Accent Bar -->
+      <path d="M 854 630 L 1226 630" stroke="#FBBF24" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- Icon Container -->
+      <rect x="864" y="642" width="28" height="28" rx="6" fill="#0B132B" stroke="#FBBF24" stroke-opacity="0.3" stroke-width="1"/>
+      <g transform="translate(868, 646)">
+        <g transform="translate(0, 0)">
+          <path d="M 5.5 15 C 3.5 15 2 13.5 2 11.5 C 2 9.8 3.2 8.3 4.8 8.1 C 5.5 5.5 8 3.5 11 3.5 C 14.2 3.5 16.8 5.8 17.2 9 C 18.2 9.5 19 10.5 19 11.8 C 19 13.5 17.5 15 15.8 15 Z" fill="none" stroke="#FBBF24" stroke-width="1.5"/>
+        </g>
+      </g>
+      <!-- Title & Subtitle Badge -->
+      <text x="900" y="654" fill="#F8FAFC" font-size="12.5" font-weight="700">Firebase Auth &amp; Admin SDK</text>
+      <rect x="900" y="659" width="152.6" height="14" rx="3" fill="#1E293B"/>
+      <text x="905" y="669.5" fill="#FBBF24" font-size="9" font-weight="600" letter-spacing="0.3">CLOUD &#183; GOOGLE IDENTITY</text>
+      
+      <circle cx="868" cy="681" r="2" fill="#FBBF24"/>
+      <text x="877" y="684" fill="#CBD5E1" font-size="10.5">Google OAuth 2.0 Web &amp; Mobile identity</text>
+      <circle cx="868" cy="699" r="2" fill="#FBBF24"/>
+      <text x="877" y="702" fill="#CBD5E1" font-size="10.5">admin.auth().verifyIdToken() certificate check</text>
+      <circle cx="868" cy="717" r="2" fill="#FBBF24"/>
+      <text x="877" y="720" fill="#CBD5E1" font-size="10.5">Mock-key fallback mode for offline testing</text>
+    </g><path d="M 240 216 L 240 280" fill="none" stroke="#38BDF8" stroke-width="1.8" marker-end="url(#arrowCyan)"/>
+        <rect x="198.0" y="240.5" width="84.0" height="15" rx="4" fill="#090E1A" stroke="#38BDF8" stroke-width="0.9"/>
+        <text x="240" y="251.5" fill="#38BDF8" font-size="8.5" font-weight="600" text-anchor="middle">HTTPS / JSON</text><path d="M 640 216 L 640 280" fill="none" stroke="#38BDF8" stroke-width="1.8" marker-end="url(#arrowCyan)"/>
+        <rect x="607.0" y="240.5" width="66.0" height="15" rx="4" fill="#090E1A" stroke="#38BDF8" stroke-width="0.9"/>
+        <text x="640" y="251.5" fill="#38BDF8" font-size="8.5" font-weight="600" text-anchor="middle">API CALLS</text><path d="M 1040 216 L 1040 280" fill="none" stroke="#38BDF8" stroke-width="1.8" marker-end="url(#arrowCyan)"/>
+        <rect x="1004.0" y="240.5" width="72.0" height="15" rx="4" fill="#090E1A" stroke="#38BDF8" stroke-width="0.9"/>
+        <text x="1040" y="251.5" fill="#38BDF8" font-size="8.5" font-weight="600" text-anchor="middle">APK UPLOAD</text><path d="M 240 390 L 240 454" fill="none" stroke="#818CF8" stroke-width="1.8" marker-end="url(#arrowPurple)"/>
+        <rect x="210.0" y="414.5" width="60.0" height="15" rx="4" fill="#090E1A" stroke="#818CF8" stroke-width="0.9"/>
+        <text x="240" y="425.5" fill="#818CF8" font-size="8.5" font-weight="600" text-anchor="middle">AUTH REQ</text><path d="M 640 390 L 640 454" fill="none" stroke="#818CF8" stroke-width="1.8" marker-end="url(#arrowPurple)"/>
+        <rect x="610.0" y="414.5" width="60.0" height="15" rx="4" fill="#090E1A" stroke="#818CF8" stroke-width="0.9"/>
+        <text x="640" y="425.5" fill="#818CF8" font-size="8.5" font-weight="600" text-anchor="middle">DISPATCH</text><path d="M 1040 390 L 1040 454" fill="none" stroke="#818CF8" stroke-width="1.8" marker-end="url(#arrowPurple)"/>
+        <rect x="1004.0" y="414.5" width="72.0" height="15" rx="4" fill="#090E1A" stroke="#818CF8" stroke-width="0.9"/>
+        <text x="1040" y="425.5" fill="#818CF8" font-size="8.5" font-weight="600" text-anchor="middle">MODERATION</text><path d="M 240 564 L 240 628" fill="none" stroke="#34D399" stroke-width="1.8" marker-end="url(#arrowEmerald)"/>
+        <rect x="210.0" y="588.5" width="60.0" height="15" rx="4" fill="#090E1A" stroke="#34D399" stroke-width="0.9"/>
+        <text x="240" y="599.5" fill="#34D399" font-size="8.5" font-weight="600" text-anchor="middle">SQL CRUD</text><path d="M 640 564 L 640 628" fill="none" stroke="#34D399" stroke-width="1.8" marker-end="url(#arrowEmerald)"/>
+        <rect x="613.0" y="588.5" width="54.0" height="15" rx="4" fill="#090E1A" stroke="#34D399" stroke-width="0.9"/>
+        <text x="640" y="599.5" fill="#34D399" font-size="8.5" font-weight="600" text-anchor="middle">DISK IO</text><path d="M 1040 564 L 1040 628" fill="none" stroke="#34D399" stroke-width="1.8" marker-end="url(#arrowEmerald)"/>
+        <rect x="998.0" y="588.5" width="84.0" height="15" rx="4" fill="#090E1A" stroke="#34D399" stroke-width="0.9"/>
+        <text x="1040" y="599.5" fill="#34D399" font-size="8.5" font-weight="600" text-anchor="middle">VERIFY TOKEN</text>
+    <!-- System Architecture Legend -->
+    <rect x="36" y="766" width="1208" height="36" rx="8" fill="#0B132B" stroke="#1E293B" stroke-width="1"/>
+    <text x="52" y="787.5" fill="#F8FAFC" font-size="10" font-weight="700" letter-spacing="0.5">FLOW SIGNALS:</text>
+    
+      <circle cx="156" cy="784.0" r="3.5" fill="#38BDF8"/>
+      <text x="165" y="787.5" fill="#94A3B8" font-size="9.5" font-weight="500">Client HTTP / IPC</text>
+      <circle cx="298.5" cy="784.0" r="3.5" fill="#818CF8"/>
+      <text x="307.5" y="787.5" fill="#94A3B8" font-size="9.5" font-weight="500">Security &amp; Routing</text>
+      <circle cx="447.5" cy="784.0" r="3.5" fill="#34D399"/>
+      <text x="456.5" y="787.5" fill="#94A3B8" font-size="9.5" font-weight="500">Domain Controllers</text>
+      <circle cx="596.5" cy="784.0" r="3.5" fill="#FBBF24"/>
+      <text x="605.5" y="787.5" fill="#94A3B8" font-size="9.5" font-weight="500">Storage &amp; Cloud Auth</text>
 </svg>
