@@ -34,7 +34,7 @@ The format is based on [Keep a Changelog v1.1.0](https://keepachangelog.com/en/1
   - Added 8 backend Jest + Supertest + `fast-check` test suites (`smoke.test.js`, `auth.middleware.test.js`, `user.upsert.test.js`, `role.promote.test.js`, `upload.validation.test.js`, `app.approval.test.js`, `download.test.js`, `client.api.test.js`).
   - Added frontend Vitest + React Testing Library + `fast-check` property test suites (`client/src/test/`).
 - **Production Documentation Suite**:
-  - Added standalone vector architecture diagram (`docs/assets/system-overview.svg`), `ARCHITECTURE.md`, `API.md`, `DEVELOPMENT.md`, `CONTRIBUTING.md`, `SECURITY.md`, `SUPPORT.md`, `ROADMAP.md`, `VISION.md`, and `.github/` templates.
+  - Added native Mermaid architecture diagrams, `ARCHITECTURE.md`, `API.md`, `DEVELOPMENT.md`, `CONTRIBUTING.md`, `SECURITY.md`, `SUPPORT.md`, `ROADMAP.md`, `VISION.md`, and `.github/` templates.
 
 ### Changed
 

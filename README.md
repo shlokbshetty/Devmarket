@@ -81,8 +81,6 @@ flowchart TD
 
 ```
 
-> **Visual Asset**: A standalone vector version is also available at [`docs/assets/system-overview.svg`](docs/assets/system-overview.svg).
-
 DevMarket separates concerns across five cohesive architectural tiers:
 
 1. **Client Presentation & Capacitor Hybrid Runtime (`client/`)**: A React 18 Single-Page Application bundled via Vite 6 and styled with Tailwind CSS v4. When compiled for Android via `@capacitor/android`, it bridges into native device APIs (`@capacitor/haptics`, `@capacitor/status-bar`, `@capacitor/app`, and `@capawesome/capacitor-google-sign-in`).

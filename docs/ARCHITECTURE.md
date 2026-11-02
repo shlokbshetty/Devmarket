@@ -6,8 +6,6 @@ This document provides an exhaustive technical reference for the **DevMarket** p
 
 ## 1. High-Level Architecture Diagram
 
-![System Architecture Overview](assets/system-overview.svg)
-
 ### Architecture Legend & Connector Key
 
 ```mermaid
@@ -148,10 +146,7 @@ Devmarket/
 ├── docs/
 │   ├── ARCHITECTURE.md                 # Primary system architecture reference
 
-│   ├── API.md                          # Complete REST API specification
-
-│   └── assets/
-│       └── system-overview.svg         # Standalone vector system architecture diagram
+│   └── API.md                          # Complete REST API specification
 
 ├── client/                             # React 18 + Vite 6 + Capacitor 8 Frontend Workspace
 
