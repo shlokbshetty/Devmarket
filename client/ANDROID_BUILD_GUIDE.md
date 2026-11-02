@@ -4,7 +4,7 @@
 
 All Android build issues have been resolved:
 - ✅ Android Gradle Plugin updated to 8.9.1
-- ✅ Compile SDK updated to API level 36  
+- ✅ Compile SDK updated to API level 36
 - ✅ Capacitor plugins properly configured
 - ✅ OAuth intent filters configured
 - ✅ Production configuration ready
@@ -12,36 +12,49 @@ All Android build issues have been resolved:
 ## Quick Build Instructions
 
 ### For Production APK (Standalone)
+
 ```bash
+
 # 1. Build web assets
+
 cd client
 npm run build
 
 # 2. Copy to Android (uses production config)
+
 npx cap copy android
 
 # 3. Open in Android Studio
+
 npx cap open android
 
 # 4. Build APK in Android Studio
+
 # Build → Generate Signed Bundle/APK → APK
+
 ```
 
 ### For Development APK (Connected to Dev Server)
+
 ```bash
+
 # 1. Copy development config
+
 cd client
 cp capacitor.config.dev.json capacitor.config.json
 
 # 2. Build and sync
+
 npm run build
 npx cap sync android
 
 # 3. Start your development server
+
 cd ..
 npm run dev:server
 
 # 4. Build APK in Android Studio
+
 ```
 
 ## Configuration Details
@@ -61,11 +74,15 @@ npm run dev:server
 ### Switching Configurations
 
 ```bash
+
 # Switch to development
+
 cp capacitor.config.dev.json capacitor.config.json
 
-# Switch to production  
+# Switch to production
+
 git checkout capacitor.config.json
+
 ```
 
 ## Version Compatibility
@@ -81,7 +98,7 @@ git checkout capacitor.config.json
 
 All required plugins are installed and configured:
 - **@capacitor/app@8.1.0** - App lifecycle management
-- **@capacitor/browser@8.0.3** - OAuth redirect handling  
+- **@capacitor/browser@8.0.3** - OAuth redirect handling
 - **@capawesome/capacitor-google-sign-in@0.1.2** - Google authentication
 
 ## Android Manifest Features
@@ -95,18 +112,21 @@ The AndroidManifest.xml includes:
 ## Troubleshooting
 
 ### Build Errors
+
 If you encounter build errors:
 1. **Clean Project**: Build → Clean Project in Android Studio
 2. **Invalidate Caches**: File → Invalidate Caches and Restart
 3. **Gradle Sync**: File → Sync Project with Gradle Files
 
 ### APK Issues
+
 If the APK shows blank screen:
 1. Ensure you're using the production config (no server.url)
 2. Verify web assets are built: `npm run build`
 3. Copy assets to Android: `npx cap copy android`
 
 ### Authentication Issues
+
 For Google Sign-In in production:
 1. Add your `google-services.json` to `android/app/`
 2. Update `serverClientId` in capacitor.config.json
@@ -115,13 +135,15 @@ For Google Sign-In in production:
 ## Testing
 
 ### Test Accounts Available
+
 - **Admin**: admin@devmarket.lan
-- **Developer**: developer@devmarket.lan  
+- **Developer**: developer@devmarket.lan
 - **User**: user@devmarket.lan
 
 ### Features to Test
+
 - ✅ Login functionality
-- ✅ Button responsiveness  
+- ✅ Button responsiveness
 - ✅ APK upload (developer account)
 - ✅ App approval (admin account)
 - ✅ App download

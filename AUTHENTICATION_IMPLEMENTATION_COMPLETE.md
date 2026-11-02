@@ -7,17 +7,20 @@ The real Google Auth with role-based authentication system has been successfully
 ### 🔐 Authentication System
 
 #### **Google Authentication (Users Only)**
+
 - Real Firebase Google Auth enabled (not mock)
 - Users sign in with Google accounts
 - Firebase ID tokens exchanged for backend JWT tokens
 - Mobile-optimized authentication flow with redirect handling
 
 #### **Credential Authentication (Admin/Developer)**
+
 - Username/password authentication for Admin and Developer roles
 - Secure credential validation against environment variables
 - Separate authentication endpoint `/api/auth/credentials`
 
 #### **Role-Based Access Control**
+
 - **User**: Google Auth only, can browse and download apps
 - **Developer**: Username/password auth, can upload APK files
 - **Admin**: Username/password auth, can approve/reject apps and promote users
@@ -25,6 +28,7 @@ The real Google Auth with role-based authentication system has been successfully
 ### 🎯 Frontend Features
 
 #### **Login Interface**
+
 - Tab-based login selection (User/Developer/Admin)
 - Google Sign-in button for Users
 - Username/password forms for Admin/Developer
@@ -32,6 +36,7 @@ The real Google Auth with role-based authentication system has been successfully
 - Mobile-optimized touch interactions
 
 #### **Developer Dashboard**
+
 - APK file upload functionality
 - App metadata form (name, description, category, version)
 - Screenshot URL management (up to 5 screenshots)
@@ -39,6 +44,7 @@ The real Google Auth with role-based authentication system has been successfully
 - Role-based access protection
 
 #### **Admin Panel**
+
 - Two-tab interface: Apps and Users
 - **Apps Tab**: Review pending app submissions
   - Approve/reject functionality
@@ -53,17 +59,20 @@ The real Google Auth with role-based authentication system has been successfully
 ### 🔧 Backend Implementation
 
 #### **Authentication Routes**
+
 - `POST /api/auth/firebase` - Google Auth token exchange
 - `POST /api/auth/credentials` - Username/password authentication
 - `GET /api/auth/me` - Get current user profile
 
 #### **App Management Routes**
+
 - `POST /api/apps/upload` - Developer APK upload (with multer)
 - `GET /api/apps` - List approved apps
 - `GET /api/apps/search` - Search approved apps
 - `GET /api/apps/:id` - Get single app details
 
 #### **Admin Routes**
+
 - `GET /api/admin/apps/pending` - List pending apps
 - `PUT /api/admin/apps/:id/approve` - Approve app
 - `PUT /api/admin/apps/:id/reject` - Reject app
@@ -71,6 +80,7 @@ The real Google Auth with role-based authentication system has been successfully
 - `PUT /api/admin/users/:uid/promote` - Promote user to developer
 
 #### **Security & Middleware**
+
 - JWT token verification
 - Role-based access control middleware
 - File upload validation (APK files only, 200MB limit)
@@ -79,6 +89,7 @@ The real Google Auth with role-based authentication system has been successfully
 ### 📁 File Storage System
 
 #### **APK File Management**
+
 - Local file storage in `server/uploads/apk/`
 - Secure file serving with attachment headers
 - Download URLs: `http://[LAN_IP]:3001/downloads/[filename]`
@@ -87,11 +98,13 @@ The real Google Auth with role-based authentication system has been successfully
 ### 🔑 Demo Credentials
 
 #### **Admin Account**
+
 - Username: `admin`
 - Password: `admin123`
 - Email: `admin@devmarket.lan`
 
 #### **Developer Account**
+
 - Username: `developer`
 - Password: `dev123`
 - Email: `developer@devmarket.lan`
@@ -99,14 +112,17 @@ The real Google Auth with role-based authentication system has been successfully
 ### 🌐 Environment Configuration
 
 #### **Real Firebase Configuration**
+
 ```env
 VITE_FIREBASE_API_KEY=AIzaSyCNlGlVKLEOjB71P06mkYkJu_3mxFP5_yM
 VITE_FIREBASE_AUTH_DOMAIN=devmarket-de597.firebaseapp.com
 VITE_FIREBASE_PROJECT_ID=devmarket-de597
 VITE_FIREBASE_APP_ID=1:484259839788:web:4f2aa8f889770581d33689
+
 ```
 
 #### **Server Configuration**
+
 - Port: 3001
 - LAN IP: 192.168.0.103
 - Database: SQLite (devmarket.sqlite)
@@ -115,6 +131,7 @@ VITE_FIREBASE_APP_ID=1:484259839788:web:4f2aa8f889770581d33689
 ### 🚀 How to Use
 
 #### **For Users (Google Auth)**
+
 1. Open the app at `http://192.168.0.103:5174`
 2. Click "User" tab on login page
 3. Click "Sign in with Google"
@@ -122,6 +139,7 @@ VITE_FIREBASE_APP_ID=1:484259839788:web:4f2aa8f889770581d33689
 5. Browse and download approved apps
 
 #### **For Developers**
+
 1. Click "Developer" tab on login page
 2. Enter credentials: `developer` / `dev123`
 3. Access Developer Dashboard
@@ -129,6 +147,7 @@ VITE_FIREBASE_APP_ID=1:484259839788:web:4f2aa8f889770581d33689
 5. Track submission status
 
 #### **For Admins**
+
 1. Click "Admin" tab on login page
 2. Enter credentials: `admin` / `admin123`
 3. Access Admin Panel
@@ -166,6 +185,7 @@ The implementation is complete and ready for use. Users can now:
 ### 🔧 Technical Architecture
 
 ```
+
 Frontend (React + Vite)
 ├── AuthContext.jsx - Authentication state management
 ├── Login.jsx - Multi-role login interface
@@ -184,6 +204,7 @@ Database (SQLite)
 
 File System
 └── server/uploads/apk/ - APK file storage
+
 ```
 
 ## 🎉 Implementation Complete!

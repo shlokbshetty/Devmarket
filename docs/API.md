@@ -32,7 +32,9 @@ DevMarket uses a **two-step Token-Exchange / Credential Authentication** flow th
    ```
 
 ### JWT Payload Structure (`verifyToken` Middleware)
+
 When verified against `process.env.JWT_SECRET` in [`server/middleware/authMiddleware.js`](../server/middleware/authMiddleware.js), the decoded JWT populates `req.user`:
+
 ```json
 {
   "uid": "demo-admin",
@@ -41,6 +43,7 @@ When verified against `process.env.JWT_SECRET` in [`server/middleware/authMiddle
   "iat": 1730000000,
   "exp": 1730604800
 }
+
 ```
 
 ### Role Guard Matrix (`authMiddleware.js`)
@@ -68,6 +71,7 @@ All JSON API responses include a boolean `success` discriminator field:
     "data": { ... }
   }
   ```
+
 - **Error Envelope (`400`, `401`, `403`, `404`, `413`, `500`)**:
   ```json
   {
@@ -103,30 +107,37 @@ All JSON API responses include a boolean `success` discriminator field:
 ## 5. Authentication Endpoints (`server/routes/auth.js`)
 
 ### 5.1 Exchange Firebase ID Token for Backend JWT
+
 - **Endpoint**: `POST /api/auth/firebase`
 - **Authentication**: Public
 - **Description**: Verifies a Firebase Google OAuth `idToken` using `admin.auth().verifyIdToken(idToken)` (or parses `mock-token-<email>` in development mode), upserts the user into the `users` table with default role `'user'`, applies `DEMO_ADMIN_EMAIL` (`'administrator'`) and `developer@devmarket.lan` (`'developer'`) elevation rules, and returns a signed 7-day JWT.
 
 #### Request Headers
+
 | Header | Value | Required |
 | :--- | :--- | :---: |
 | `Content-Type` | `application/json` | Yes |
 
 #### Request Body
+
 ```json
 {
   "idToken": "mock-token-admin@devmarket.lan"
 }
+
 ```
 
 #### `curl` Example
+
 ```bash
 curl -X POST http://localhost:3000/api/auth/firebase \
   -H "Content-Type: application/json" \
   -d '{"idToken": "mock-token-admin@devmarket.lan"}'
+
 ```
 
 #### Success Response (`200 OK`)
+
 ```json
 {
   "success": true,
@@ -138,9 +149,11 @@ curl -X POST http://localhost:3000/api/auth/firebase \
     "name": "admin"
   }
 }
+
 ```
 
 #### Error Responses
+
 | Status Code | Response Body | Condition |
 | :---: | :--- | :--- |
 | `400 Bad Request` | `{ "success": false, "message": "idToken required" }` | `idToken` is missing or empty in request body |
@@ -150,20 +163,24 @@ curl -X POST http://localhost:3000/api/auth/firebase \
 ---
 
 ### 5.2 Authenticate with Role Credentials (`Admin` / `Developer`)
+
 - **Endpoint**: `POST /api/auth/credentials`
 - **Authentication**: Public
 - **Description**: Validates `username` and `password` against `ADMIN_USERNAME`/`ADMIN_PASSWORD` (when `role === "admin"`) or `DEVELOPER_USERNAME`/`DEVELOPER_PASSWORD` (when `role === "developer"`), upserts the corresponding user in the `users` table, and issues a 7-day Backend JWT.
 
 #### Request Body
+
 ```json
 {
   "username": "admin",
   "password": "admin123",
   "role": "admin"
 }
+
 ```
 
 #### `curl` Example
+
 ```bash
 curl -X POST http://localhost:3000/api/auth/credentials \
   -H "Content-Type: application/json" \
@@ -172,9 +189,11 @@ curl -X POST http://localhost:3000/api/auth/credentials \
     "password": "admin123",
     "role": "admin"
   }'
+
 ```
 
 #### Success Response (`200 OK`)
+
 ```json
 {
   "success": true,
@@ -186,9 +205,11 @@ curl -X POST http://localhost:3000/api/auth/credentials \
     "name": "admin"
   }
 }
+
 ```
 
 #### Error Responses
+
 | Status Code | Response Body | Condition |
 | :---: | :--- | :--- |
 | `400 Bad Request` | `{ "success": false, "message": "Username, password, and role required" }` | Missing `username`, `password`, or `role` |
@@ -199,22 +220,27 @@ curl -X POST http://localhost:3000/api/auth/credentials \
 ---
 
 ### 5.3 Get Current Authenticated User Profile
+
 - **Endpoint**: `GET /api/auth/me`
 - **Authentication**: Required (`verifyToken` — Any authenticated role)
 - **Description**: Queries the `users` table by `req.user.uid` and returns the canonical user record (`uid`, `email`, `role`).
 
 #### Request Headers
+
 | Header | Value | Required |
 | :--- | :--- | :---: |
 | `Authorization` | `Bearer <token>` | Yes |
 
 #### `curl` Example
+
 ```bash
 curl -X GET http://localhost:3000/api/auth/me \
   -H "Authorization: Bearer <token>"
+
 ```
 
 #### Success Response (`200 OK`)
+
 ```json
 {
   "success": true,
@@ -224,9 +250,11 @@ curl -X GET http://localhost:3000/api/auth/me \
     "role": "administrator"
   }
 }
+
 ```
 
 #### Error Responses
+
 | Status Code | Response Body | Condition |
 | :---: | :--- | :--- |
 | `401 Unauthorized` | `{ "success": false, "message": "Unauthorized" }` | Missing or invalid Bearer token |
@@ -238,12 +266,14 @@ curl -X GET http://localhost:3000/api/auth/me \
 ## 6. Application Marketplace Endpoints (`server/routes/app.js`)
 
 ### 6.1 Upload APK Package (Developer / Admin Only)
+
 - **Endpoint**: `POST /api/apps/upload`
 - **Authentication**: Required (`verifyToken` + `requireDeveloper`)
 - **Content-Type**: `multipart/form-data`
 - **Description**: Accepts a `.apk` binary upload via `multer` (`upload.single('apk')`), validates file size (`<= 200 MB`) and type (`application/vnd.android.package-archive` or `.apk` extension), stores the binary in `uploads/apk/<timestamp>-<originalname>`, and inserts a new row into `apps` with `status = 'pending'`.
 
 #### Multipart Form Fields
+
 | Field Name | Type | Required | Default | Description |
 | :--- | :--- | :---: | :--- | :--- |
 | `apk` | `File` (Binary) | **Yes** | — | Android package file (`.apk`, max `200 MB`) |
@@ -253,6 +283,7 @@ curl -X GET http://localhost:3000/api/auth/me \
 | `version` | `Text` | No | `"1.0"` | Application version string |
 
 #### `curl` Example
+
 ```bash
 curl -X POST http://localhost:3000/api/apps/upload \
   -H "Authorization: Bearer <developer_or_admin_token>" \
@@ -261,9 +292,11 @@ curl -X POST http://localhost:3000/api/apps/upload \
   -F "description=GPU-accelerated SSH and terminal emulator for Android." \
   -F "category=Productivity" \
   -F "version=2.1.0"
+
 ```
 
 #### Success Response (`201 Created`)
+
 ```json
 {
   "success": true,
@@ -275,9 +308,11 @@ curl -X POST http://localhost:3000/api/apps/upload \
     "status": "pending"
   }
 }
+
 ```
 
 #### Error Responses
+
 | Status Code | Response Body | Condition |
 | :---: | :--- | :--- |
 | `400 Bad Request` | `{ "success": false, "message": "No file uploaded" }` | Multipart `apk` field is missing |
@@ -290,16 +325,20 @@ curl -X POST http://localhost:3000/api/apps/upload \
 ---
 
 ### 6.2 List All Approved Applications
+
 - **Endpoint**: `GET /api/apps`
 - **Authentication**: Public
 - **Description**: Returns all applications in the `apps` table where `status = 'approved'`, enriched with parsed `screenshots` arrays, `_id`, `averageRating`, and a LAN-resolvable `downloadUrl`.
 
 #### `curl` Example
+
 ```bash
 curl -X GET http://localhost:3000/api/apps
+
 ```
 
 #### Success Response (`200 OK`)
+
 ```json
 {
   "success": true,
@@ -314,8 +353,8 @@ curl -X GET http://localhost:3000/api/apps
       "version": "1.0",
       "filename": "demo-app.apk",
       "screenshots": [
-        "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600"
+        "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe — q=80&w=800&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1550745165-9bc0b252726f — w=600"
       ],
       "average_rating": 4.9,
       "averageRating": 4.9,
@@ -325,27 +364,33 @@ curl -X GET http://localhost:3000/api/apps
     }
   ]
 }
+
 ```
 
 ---
 
 ### 6.3 Search & Filter Approved Applications
+
 - **Endpoint**: `GET /api/apps/search`
 - **Authentication**: Public
 - **Description**: Filters `approved` applications by partial name match (`name LIKE %q%`) and/or exact `category` match.
 
 #### Query Parameters
+
 | Parameter | Type | Required | Description |
 | :--- | :--- | :---: | :--- |
 | `q` | `string` | No | Substring search against application `name` |
 | `category` | `string` | No | Exact match against application `category` (e.g., `Games`, `Security`, `Productivity`) |
 
 #### `curl` Example
+
 ```bash
-curl -X GET "http://localhost:3000/api/apps/search?q=Synth&category=Productivity"
+curl -X GET "http://localhost:3000/api/apps/search — q=Synth&category=Productivity"
+
 ```
 
 #### Success Response (`200 OK`)
+
 ```json
 {
   "success": true,
@@ -360,7 +405,7 @@ curl -X GET "http://localhost:3000/api/apps/search?q=Synth&category=Productivity
       "version": "1.0",
       "filename": "demo-app.apk",
       "screenshots": [
-        "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop"
+        "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe — q=80&w=800&auto=format&fit=crop"
       ],
       "average_rating": 4.9,
       "averageRating": 4.9,
@@ -370,26 +415,32 @@ curl -X GET "http://localhost:3000/api/apps/search?q=Synth&category=Productivity
     }
   ]
 }
+
 ```
 
 ---
 
 ### 6.4 Get Single Approved Application Details
+
 - **Endpoint**: `GET /api/apps/:id`
 - **Authentication**: Public
 - **Description**: Fetches a single application by numeric `id` if and only if its `status` is `'approved'`. Pending or rejected apps return `404 Not Found`.
 
 #### Path Parameters
+
 | Parameter | Type | Description |
 | :--- | :--- | :--- |
 | `id` | `integer` | Unique application ID |
 
 #### `curl` Example
+
 ```bash
 curl -X GET http://localhost:3000/api/apps/1
+
 ```
 
 #### Success Response (`200 OK`)
+
 ```json
 {
   "success": true,
@@ -403,7 +454,7 @@ curl -X GET http://localhost:3000/api/apps/1
     "version": "1.0",
     "filename": "demo-app.apk",
     "screenshots": [
-      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe — q=80&w=800&auto=format&fit=crop"
     ],
     "average_rating": 4.9,
     "averageRating": 4.9,
@@ -412,9 +463,11 @@ curl -X GET http://localhost:3000/api/apps/1
     "downloadUrl": "http://192.168.1.100:3000/downloads/demo-app.apk"
   }
 }
+
 ```
 
 #### Error Responses
+
 | Status Code | Response Body | Condition |
 | :---: | :--- | :--- |
 | `404 Not Found` | `{ "success": false, "message": "App not found" }` | App ID does not exist or is not in `'approved'` status |
@@ -427,17 +480,21 @@ curl -X GET http://localhost:3000/api/apps/1
 All `/api/admin/*` endpoints require both `verifyToken` and `requireAdmin` (`req.user.role === 'administrator'`).
 
 ### 7.1 List Pending App Submissions
+
 - **Endpoint**: `GET /api/admin/apps/pending`
 - **Authentication**: Required (`verifyToken` + `requireAdmin`)
 - **Description**: Joins `apps` and `users` (`ON a.developer_uid = u.uid`) to return all submissions with `status = 'pending'`, formatted with `developerId.name`, `apkUrl`, and `createdAt`.
 
 #### `curl` Example
+
 ```bash
 curl -X GET http://localhost:3000/api/admin/apps/pending \
   -H "Authorization: Bearer <admin_token>"
+
 ```
 
 #### Success Response (`200 OK`)
+
 ```json
 {
   "success": true,
@@ -463,29 +520,36 @@ curl -X GET http://localhost:3000/api/admin/apps/pending \
     }
   ]
 }
+
 ```
 
 ---
 
 ### 7.2 Approve a Pending Application
+
 - **Endpoint**: `PUT /api/admin/apps/:id/approve`
 - **Authentication**: Required (`verifyToken` + `requireAdmin`)
 - **Description**: Updates the target application's `status` to `'approved'`, making it immediately discoverable via `/api/apps`.
 
 #### `curl` Example
+
 ```bash
 curl -X PUT http://localhost:3000/api/admin/apps/5/approve \
   -H "Authorization: Bearer <admin_token>"
+
 ```
 
 #### Success Response (`200 OK`)
+
 ```json
 {
   "success": true
 }
+
 ```
 
 #### Error Responses
+
 | Status Code | Response Body | Condition |
 | :---: | :--- | :--- |
 | `401 Unauthorized` | `{ "success": false, "message": "Unauthorized" }` | Missing or invalid JWT |
@@ -495,24 +559,30 @@ curl -X PUT http://localhost:3000/api/admin/apps/5/approve \
 ---
 
 ### 7.3 Reject a Pending Application
+
 - **Endpoint**: `PUT /api/admin/apps/:id/reject`
 - **Authentication**: Required (`verifyToken` + `requireAdmin`)
 - **Description**: Updates the target application's `status` to `'rejected'`.
 
 #### `curl` Example
+
 ```bash
 curl -X PUT http://localhost:3000/api/admin/apps/5/reject \
   -H "Authorization: Bearer <admin_token>"
+
 ```
 
 #### Success Response (`200 OK`)
+
 ```json
 {
   "success": true
 }
+
 ```
 
 #### Error Responses
+
 | Status Code | Response Body | Condition |
 | :---: | :--- | :--- |
 | `401 Unauthorized` | `{ "success": false, "message": "Unauthorized" }` | Missing or invalid JWT |
@@ -522,17 +592,21 @@ curl -X PUT http://localhost:3000/api/admin/apps/5/reject \
 ---
 
 ### 7.4 List All Users
+
 - **Endpoint**: `GET /api/admin/users`
 - **Authentication**: Required (`verifyToken` + `requireAdmin`)
 - **Description**: Returns all user accounts (`uid`, `email`, `role`, `created_at`) from the `users` table.
 
 #### `curl` Example
+
 ```bash
 curl -X GET http://localhost:3000/api/admin/users \
   -H "Authorization: Bearer <admin_token>"
+
 ```
 
 #### Success Response (`200 OK`)
+
 ```json
 {
   "success": true,
@@ -557,34 +631,42 @@ curl -X GET http://localhost:3000/api/admin/users \
     }
   ]
 }
+
 ```
 
 ---
 
 ### 7.5 Promote User to Developer
+
 - **Endpoint**: `PUT /api/admin/users/:uid/promote`
 - **Authentication**: Required (`verifyToken` + `requireAdmin`)
 - **Description**: Updates `role = 'developer'` for the specified `:uid` in the `users` table.
 
 #### Path Parameters
+
 | Parameter | Type | Description |
 | :--- | :--- | :--- |
 | `uid` | `string` | Target user's unique `uid` |
 
 #### `curl` Example
+
 ```bash
 curl -X PUT http://localhost:3000/api/admin/users/mock-uid-user/promote \
   -H "Authorization: Bearer <admin_token>"
+
 ```
 
 #### Success Response (`200 OK`)
+
 ```json
 {
   "success": true
 }
+
 ```
 
 #### Error Responses
+
 | Status Code | Response Body | Condition |
 | :---: | :--- | :--- |
 | `401 Unauthorized` | `{ "success": false, "message": "Unauthorized" }` | Missing or invalid JWT |
@@ -596,21 +678,25 @@ curl -X PUT http://localhost:3000/api/admin/users/mock-uid-user/promote \
 ## 8. Review Endpoints (`server/routes/review.js`)
 
 ### 8.1 Submit Application Review
+
 - **Endpoint**: `POST /api/reviews`
 - **Authentication**: Required (`verifyToken`)
 - **Handler**: [`server/controllers/reviewController.js`](../server/controllers/reviewController.js) (`submitReview`)
 - **Description**: Validates `appId`, `rating` (`1..5`), and `comment`, creates a `Review` document via Mongoose (`server/models/Review.js`), recalculates the mean `averageRating` across all reviews for that `appId`, and persists the updated `averageRating` on the `App` model (`server/models/App.js`).
 
 #### Request Body
+
 ```json
 {
   "appId": "64abcd1234efg56789012345",
   "rating": 5,
   "comment": "Fast terminal rendering and seamless hardware keyboard support!"
 }
+
 ```
 
 #### `curl` Example
+
 ```bash
 curl -X POST http://localhost:3000/api/reviews \
   -H "Authorization: Bearer <token>" \
@@ -620,9 +706,11 @@ curl -X POST http://localhost:3000/api/reviews \
     "rating": 5,
     "comment": "Fast terminal rendering and seamless hardware keyboard support!"
   }'
+
 ```
 
 #### Success Response (`201 Created`)
+
 ```json
 {
   "success": true,
@@ -635,9 +723,11 @@ curl -X POST http://localhost:3000/api/reviews \
     "createdAt": "2026-10-28T16:45:00.000Z"
   }
 }
+
 ```
 
 #### Error Responses
+
 | Status Code | Response Body | Condition |
 | :---: | :--- | :--- |
 | `400 Bad Request` | `{ "success": false, "message": "Please provide all fields" }` | Missing `appId`, `rating`, or `comment` |
@@ -650,21 +740,26 @@ curl -X POST http://localhost:3000/api/reviews \
 ## 9. Static Binary Streaming & Server Liveness Probes
 
 ### 9.1 Download APK Package Binary
+
 - **Endpoint**: `GET /downloads/:filename`
 - **Authentication**: Public
 - **Description**: Streams `.apk` binaries directly from `uploads/apk/:filename` with `Content-Disposition: attachment` and `fallthrough: false`.
 
 #### `curl` Example
+
 ```bash
 curl -fLO http://localhost:3000/downloads/demo-app.apk
+
 ```
 
 #### Response Headers (`200 OK`)
+
 ```http
 HTTP/1.1 200 OK
 Content-Disposition: attachment
 Content-Type: application/vnd.android.package-archive
 Accept-Ranges: bytes
+
 ```
 
 If `:filename` does not exist in `uploads/apk/`, `fallthrough: false` returns `404 Not Found` immediately instead of falling through to the React SPA route handler.
@@ -672,13 +767,18 @@ If `:filename` does not exist in `uploads/apk/`, `fallthrough: false` returns `4
 ---
 
 ### 9.2 Server Liveness & CORS Preflight Check (`OPTIONS /api/health` or `GET /api/apps`)
+
 - **CORS Preflight Probe**: `app.options('*', cors(corsOptions))` in `server/index.js` responds to any `OPTIONS` preflight (such as `OPTIONS /api/health` or `OPTIONS /api/apps`) with `204 No Content` and the configured `Access-Control-Allow-Origin` and `Access-Control-Allow-Headers` (`Authorization, Content-Type, X-Requested-With`).
 - **Database & API Readiness Probe**: Querying `GET /api/apps` verifies both HTTP responsiveness and SQLite/MySQL read connectivity (`200 OK` with `{ "success": true, "apps": [...] }`).
 
 ```bash
+
 # Verify CORS Preflight & Liveness (returns HTTP 204)
+
 curl -i -X OPTIONS http://localhost:3000/api/health
 
 # Verify API & Database Readiness (returns HTTP 200 JSON)
+
 curl -i -X GET http://localhost:3000/api/apps
+
 ```

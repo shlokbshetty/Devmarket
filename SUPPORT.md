@@ -36,6 +36,7 @@ When opening an issue on GitHub, apply the relevant labels to help maintainers r
 ## 3. Frequently Asked Questions (FAQ) & Troubleshooting
 
 ### Q1: Server exits immediately at startup with `Error: FIREBASE_SERVICE_ACCOUNT_PATH environment variable is not set` or `Could not load Firebase service account file`
+
 **Cause**: [`server/config/firebase.js`](server/config/firebase.js) requires `FIREBASE_SERVICE_ACCOUNT_PATH` to point to a valid Firebase Admin service account JSON file at startup.
 **Solution**:
 1. Verify `FIREBASE_SERVICE_ACCOUNT_PATH=./firebase-service-account.json` is set in your root `.env` file.
@@ -45,6 +46,7 @@ When opening an issue on GitHub, apply the relevant labels to help maintainers r
 ---
 
 ### Q2: How do I log in on a mobile device or browser without setting up Google Cloud OAuth?
+
 **Cause**: Google OAuth popups require authorized domains and valid Firebase API keys, and `window.prompt()` does not work reliably inside mobile WebViews.
 **Solution**:
 1. Set `VITE_FIREBASE_API_KEY=mock-key` in `client/.env` (and rebuild if testing on Android).
@@ -54,6 +56,7 @@ When opening an issue on GitHub, apply the relevant labels to help maintainers r
 ---
 
 ### Q3: APK Upload fails with `413 Payload Too Large` or `400 Only APK files are allowed`
+
 **Cause**: [`server/controllers/appController.js`](server/controllers/appController.js) enforces strict Multer constraints:
 - Maximum file size: **200 MB** (`200 * 1024 * 1024` bytes).
 - Allowed file types: `file.mimetype === 'application/vnd.android.package-archive'` OR filename ending in `.apk`.
@@ -65,6 +68,7 @@ When opening an issue on GitHub, apply the relevant labels to help maintainers r
 ---
 
 ### Q4: SQLite database errors (`SQLITE_BUSY: database is locked` or missing columns)
+
 **Cause**: Another process has an exclusive write lock on `./devmarket.sqlite`, or your `.sqlite` file was created by an older schema version.
 **Solution**:
 - **Schema Migration**: Restart the server (`npm run dev:server`). `initDb()` in [`server/config/initDb.js`](server/config/initDb.js) automatically runs `migrateAppsTable()` to add any missing columns (`description`, `category`, `version`, `screenshots`, `average_rating`).
@@ -76,6 +80,7 @@ When opening an issue on GitHub, apply the relevant labels to help maintainers r
 ---
 
 ### Q5: The Android app in Android Studio Emulator cannot reach the backend (`Network error` / `ERR_CONNECTION_REFUSED`)
+
 **Cause**: Inside an Android Emulator, `localhost` (`127.0.0.1`) refers to the emulated Android device itself, **not** your host computer running `node server/index.js`.
 **Solution**:
 - **Option A (Android Emulator Special Alias)**: Set `VITE_API_BASE_URL=http://10.0.2.2:3000/api` in `client/.env` and `LAN_IP=10.0.2.2` in root `.env`. The IP `10.0.2.2` is routed by the Android Emulator directly to your host machine's `127.0.0.1`.
@@ -97,6 +102,7 @@ When opening an issue on GitHub, apply the relevant labels to help maintainers r
 ---
 
 ### Q6: Uploaded apps return `201 Created` but do not appear on the Home Page or `/api/apps`
+
 **Cause**: By design, all newly uploaded apps start with `status = 'pending'` and are hidden from public catalog queries (`WHERE status = 'approved'`).
 **Solution**:
 1. Log in as an Administrator (`admin@devmarket.lan` or `admin` / `admin123`).

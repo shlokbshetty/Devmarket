@@ -12,6 +12,73 @@ This document provides an exhaustive technical reference for the **DevMarket** p
 
 ### Architecture Legend & Connector Key
 
+```mermaid
+flowchart TD
+    subgraph ClientTier ["1. Client & Hybrid Mobile Tier (:5173 / APK)"]
+        ReactApp["React 18 SPA<br/>(Vite 6 + Tailwind CSS v4)"]
+        ApiClient["Unified API Client<br/>(Bearer JWT + Multipart Stream)"]
+        CapacitorBridge["Capacitor 8 Android Bridge<br/>(Haptics, Status Bar, App Lifecycle)"]
+        NativeInstaller["Native Package Installer<br/>(Direct .apk Intent Handler)"]
+    end
+
+    subgraph GatewayTier ["2. API Gateway & Security Layer (:5000)"]
+        ExpressGateway["Express 5 REST Gateway<br/>(CORS Preflight + Body Parsers)"]
+        AuthMiddleware["Token Verifier Middleware<br/>(HMAC-SHA256 JWT verifyToken)"]
+        RoleGuard["RBAC Authorization Guards<br/>(requireDeveloper / requireAdmin)"]
+        MulterIngest["Multer Binary Upload Stream<br/>(200 MB Limit + MIME Validator)"]
+    end
+
+    subgraph ServiceTier ["3. Business Logic & Domain Controllers"]
+        AuthController["Auth & Profile Controller<br/>(Token Exchange & Role Promotion)"]
+        AppController["App Catalog Controller<br/>(Search, Categories, Versioning)"]
+        AdminController["Admin Moderation Controller<br/>(App Review Queue: PENDING to APPROVED)"]
+        ReviewController["Review & Rating Engine<br/>(1-5 Star Ratings + Analytics Cache)"]
+    end
+
+    subgraph StorageTier ["4. Persistence & File Storage Layer"]
+        DbAdapter["Dual-Dialect SQL Adapter<br/>(server/config/db.js)"]
+        SQLiteDB[("SQLite Database<br/>(devmarket.sqlite)")]
+        MySQLPool[("MySQL 2 Connection Pool<br/>(Production Relational Cluster)")]
+        MongooseModels["Mongoose Schema Models<br/>(User, App, Review Schemas)"]
+        FileStorage[("Local APK Storage Volume<br/>(/uploads/apk/ Stream Server)")]
+    end
+
+    subgraph ExternalTier ["5. External Authentication & Identity"]
+        FirebaseAuth["Firebase Client Auth<br/>(Google OAuth 2.0 Web/Mobile)"]
+        FirebaseAdmin["Firebase Admin SDK<br/>(admin.auth.verifyIdToken)"]
+    end
+
+    ReactApp -->|HTTP REST| ApiClient
+    ReactApp -->|Native Plugins| CapacitorBridge
+    CapacitorBridge -->|Trigger Install| NativeInstaller
+    ApiClient -->|HTTPS Requests| ExpressGateway
+
+    ExpressGateway --> AuthMiddleware
+    AuthMiddleware --> RoleGuard
+    RoleGuard --> MulterIngest
+    MulterIngest --> AppController
+
+    RoleGuard --> AuthController
+    RoleGuard --> AdminController
+    RoleGuard --> ReviewController
+
+    AuthController -->|Token Verification| FirebaseAdmin
+    FirebaseAuth -.->|ID Token| AuthController
+
+    AuthController --> DbAdapter
+    AppController --> DbAdapter
+    AdminController --> DbAdapter
+    ReviewController --> DbAdapter
+
+    DbAdapter --> SQLiteDB
+    DbAdapter --> MySQLPool
+    DbAdapter --> MongooseModels
+
+    AppController -->|Persist Binary| FileStorage
+    NativeInstaller -.->|Download Stream| FileStorage
+
+```
+
 | Visual Element | Color / Pattern | Architectural Meaning |
 | :--- | :--- | :--- |
 | **Client UI & Capacitor Android** | Sky Blue (`#0284C7` / `#38BDF8`) | React 18 SPA, Vite 6 bundler, Tailwind CSS v4, Unified API Client, and Capacitor 8 Native Android runtime |
@@ -29,23 +96,27 @@ This document provides an exhaustive technical reference for the **DevMarket** p
 ## 2. Core Architectural Design Patterns
 
 ### 2.1 Hybrid Web & Native Execution (Single Codebase, Dual Target)
+
 DevMarket compiles a single React 18 + Tailwind CSS v4 frontend (`client/src/`) into two distinct deployment targets:
 - **Desktop & Mobile Web Browser**: Served via Vite (`localhost:5173`) during development or statically from `client/dist/` by Express in production. On desktop viewports, the layout renders inside an interactive flagship smartphone simulator frame with live clock and status indicators.
 - **Native Android Application (`.apk`)**: Wrapped by **Capacitor 8** (`@capacitor/android`), executing inside a hardware-accelerated Chromium WebView with direct JavaScript-to-Java native bridge bindings for Haptics (`@capacitor/haptics`), Status Bar styling (`@capacitor/status-bar`), Hardware Back Button interception (`@capacitor/app`), and Native Google Sign-In (`@capawesome/capacitor-google-sign-in`).
 
 ### 2.2 Token-Exchange Authentication & Dual-Mode Identity
+
 Rather than coupling every API endpoint directly to Firebase network calls, DevMarket implements a **Token-Exchange Gateway Pattern**:
 1. **Federated User Login (`POST /api/auth/firebase`)**: End users authenticate via Firebase Google OAuth (or `mock-token-<email>` in offline development mode). The backend verifies the Firebase ID token once via `firebase-admin` (or parses the mock token), upserts the user record in the local database, applies deterministic role elevation rules (`DEMO_ADMIN_EMAIL` -> `administrator`, `developer@devmarket.lan` -> `developer`), and issues a self-contained, 7-day **HMAC-SHA256 Backend JWT**.
 2. **Direct Credential Login (`POST /api/auth/credentials`)**: Administrators and developers can authenticate directly using server-configured credentials (`ADMIN_USERNAME`/`ADMIN_PASSWORD` or `DEVELOPER_USERNAME`/`DEVELOPER_PASSWORD`), receiving the same standardized 7-day Backend JWT format (`{ uid, email, role }`).
 3. **Stateless Route Verification (`verifyToken`)**: All subsequent protected API calls require only local cryptographic signature verification (`jwt.verify(token, process.env.JWT_SECRET)`), eliminating external network latency on protected requests.
 
 ### 2.3 Unified Dual-Dialect Database Adapter (`server/config/db.js`)
+
 To support both zero-configuration local development/testing and multi-user relational deployments, `server/config/db.js` exports a single `query(sql, params)` promise interface:
 - When `DB_TYPE=sqlite`, synchronous `better-sqlite3` prepared statements (`stmt.all` for `SELECT`/`PRAGMA`, `stmt.run` for mutations) are wrapped in a standard `Promise` operating on `./devmarket.sqlite`.
 - When `DB_TYPE=mysql` (default if unspecified), queries delegate to a `mysql2/promise` connection pool (`connectionLimit: 10`) with startup connectivity verification.
 - Result normalization helpers (`selectRows`, `insertId`, `affectedRows`) in controllers transparently bridge structural differences between `better-sqlite3` (`lastInsertRowid`, `changes`, flat row arrays) and `mysql2` (`insertId`, `affectedRows`, `[rows, fields]` tuples).
 
 ### 2.4 Staged Binary Moderation Pipeline
+
 Uploaded `.apk` packages never appear immediately in the public catalog. Every binary uploaded via `POST /api/apps/upload` is written to `uploads/apk/<timestamp>-<originalname>` with a database status of `'pending'`. Public discovery routes (`GET /api/apps`, `GET /api/apps/search`, `GET /api/apps/:id`) strictly filter by `WHERE status = 'approved'`, isolating unverified binaries until an administrator explicitly transitions the record via `PUT /api/admin/apps/:id/approve` or `PUT /api/admin/apps/:id/reject`.
 
 ---
@@ -71,81 +142,141 @@ Uploaded `.apk` packages never appear immediately in the public catalog. Every b
 ```text
 Devmarket/
 ├── .env.example                        # Server & LAN environment variable template
+
 ├── package.json                        # Root scripts, backend dependencies, and Jest test runner
+
 ├── setup.js                            # Automated project bootstrapper (.env, uploads/apk, npm install)
+
 ├── docs/
 │   ├── ARCHITECTURE.md                 # Primary system architecture reference
+
 │   ├── API.md                          # Complete REST API specification
+
 │   └── assets/
 │       └── system-overview.svg         # Standalone vector system architecture diagram
+
 ├── client/                             # React 18 + Vite 6 + Capacitor 8 Frontend Workspace
+
 │   ├── .env.example                    # Frontend Vite & Firebase environment template
+
 │   ├── capacitor.config.json           # Production Capacitor Android configuration (bundled dist)
+
 │   ├── capacitor.config.dev.json       # Development Capacitor configuration (LAN live-reload)
+
 │   ├── vite.config.js                  # Vite bundler & /api -> localhost:3000 proxy config
+
 │   ├── vitest.config.js                # Vitest JSDOM test runner configuration
+
 │   ├── android/                        # Native Android Gradle project (AGP 8.9.1, SDK 36)
+
 │   │   └── app/src/main/               # AndroidManifest.xml, MainActivity, and public web assets
+
 │   └── src/
 │       ├── main.jsx                    # React DOM root mount
+
 │       ├── App.jsx                     # BrowserRouter route definitions & provider hierarchy
+
 │       ├── api/
 │       │   └── client.js               # Fetch wrapper (apiGet, apiPost, apiPut, apiDelete, apiUpload)
+
 │       ├── config/
 │       │   └── firebase.js             # Firebase client app & GoogleAuthProvider initialization
+
 │       ├── context/
 │       │   └── AuthContext.jsx         # Multi-mode session state, exponential backoff retry, OAuth handlers
+
 │       ├── components/
 │       │   ├── Layout.jsx              # Adaptive mobile shell / desktop simulator frame & navigation drawer
+
 │       │   ├── BottomNav.jsx           # Tactile glass bottom tab bar with haptic feedback
+
 │       │   └── DownloadManager.jsx     # Active APK transmission tracker
+
 │       ├── pages/
 │       │   ├── HomePage.jsx            # Featured & trending approved apps catalog
+
 │       │   ├── SearchPage.jsx          # Real-time keyword & category filtering
+
 │       │   ├── AppDetailsPage.jsx      # App metadata, screenshot carousel, rating, and APK download trigger
+
 │       │   ├── SharePage.jsx           # Deep-link & QR sharing view for individual apps
+
 │       │   ├── DownloadsPage.jsx       # Device storage meter & downloaded package manager
+
 │       │   ├── LibraryPage.jsx         # Installed applications & cloud library insights
+
 │       │   ├── DevDashboard.jsx        # Developer portal for multipart .apk upload & metadata submission
+
 │       │   ├── AdminPanel.jsx          # Administrator moderation queue & user role promotion console
+
 │       │   ├── Login.jsx               # Role-tabbed login (Google OAuth, Credentials, 1-Tap Mock Accounts)
+
 │       │   ├── Profile.jsx             # Authenticated user profile & role badge view
+
 │       │   ├── Settings.jsx            # Application preferences root
+
 │       │   ├── Security.jsx            # Security settings view
+
 │       │   ├── Notifications.jsx       # Notification preferences view
+
 │       │   └── Privacy.jsx             # Privacy controls view
+
 │       ├── utils/
 │       │   └── nativeBridge.js         # Capacitor StatusBar, Haptics, and Hardware Back Button bindings
+
 │       ├── styles/
 │       │   ├── index.css               # Tailwind CSS v4 imports & safe-area-inset utilities
+
 │       │   └── theme.css               # Dark/light editorial design tokens
+
 │       └── test/                       # Frontend Vitest & fast-check property test suites
+
 ├── server/                             # Express.js Backend Workspace
+
 │   ├── index.js                        # Server entrypoint, CORS, static /downloads, route mounting
+
 │   ├── jest.config.js                  # Backend Jest configuration
+
 │   ├── config/
 │   │   ├── db.js                       # Unified SQLite (better-sqlite3) / MySQL (mysql2) query adapter
+
 │   │   ├── firebase.js                 # Firebase Admin SDK service account initializer
+
 │   │   └── initDb.js                   # Schema DDL, automatic column migration, and demo data seeder
+
 │   ├── middleware/
 │   │   └── authMiddleware.js           # verifyToken, requireAdmin, and requireDeveloper guards
+
 │   ├── controllers/
 │   │   ├── authController.js           # firebaseAuth, credentialAuth, and getMe handlers
+
 │   │   ├── appController.js            # Multer uploadApp, getApps, getAppsSearch, and getApp handlers
+
 │   │   ├── adminController.js          # getPendingApps, approveApp, rejectApp, getUsers, promoteUser
+
 │   │   └── reviewController.js         # submitReview handler & averageRating recalculation
+
 │   ├── routes/
 │   │   ├── auth.js                     # /api/auth/* route definitions
+
 │   │   ├── app.js                      # /api/apps/* route definitions
+
 │   │   ├── admin.js                    # /api/admin/* route definitions
+
 │   │   └── review.js                   # /api/reviews/* route definitions
+
 │   ├── models/
 │   │   ├── User.js                     # Mongoose User schema definition
+
 │   │   ├── App.js                      # Mongoose App schema definition with text index
+
 │   │   └── Review.js                   # Mongoose Review schema definition (rating 1..5)
+
 │   └── __tests__/                      # 8 backend Jest + Supertest + fast-check test suites
+
 └── uploads/
     └── apk/                            # Local filesystem destination for uploaded and seeded .apk binaries
+
 ```
 
 ---
@@ -153,6 +284,7 @@ Devmarket/
 ## 5. Detailed Component Breakdown
 
 ### 5.1 Client Presentation Layer (`client/src/`)
+
 - **Router Hierarchy (`client/src/App.jsx`)**: Wraps the application in `<AuthProvider>` and `<ThemeProvider attribute="class" defaultTheme="dark">`. Defines `/login` as a standalone route and mounts all primary views (`HomePage`, `SearchPage`, `AppDetailsPage`, `SharePage`, `DownloadsPage`, `LibraryPage`, `DevDashboard`, `AdminPanel`, `Profile`, `Settings`, `Security`, `Notifications`, `Privacy`) as nested children under `<Layout />`.
 - **Authentication Context (`client/src/context/AuthContext.jsx`)**:
   - Persists `{ token, user }` in `localStorage` under the key `devmarket_auth`.
@@ -166,11 +298,13 @@ Devmarket/
   - Automatically injects `Authorization: Bearer <token>` from `localStorage.getItem('devmarket_auth')` on every JSON request (`apiGet`, `apiPost`, `apiPut`, `apiDelete`) and multipart upload (`apiUpload`).
 
 ### 5.2 Capacitor Native Bridge (`client/src/utils/nativeBridge.js`)
+
 - **`updateStatusBar(isDark)`**: Synchronizes the native Android system status bar with the active UI theme (`#0e0e0e` in dark mode, `#ffffff` in light mode) and disables webview overlay (`StatusBar.setOverlaysWebView({ overlay: false })`).
 - **`hapticLight()`, `hapticMedium()`, `hapticSuccess()`**: Triggers native `@capacitor/haptics` impact/notification patterns on physical devices and falls back to `navigator.vibrate()` on supported mobile browsers.
 - **`setupBackButtonListener(navigate, isSidebarOpen, closeSidebar)`**: Listens to the `@capacitor/app` `backButton` event—closing the navigation drawer if open, navigating backward in history (`navigate(-1)`) on sub-pages, or cleanly exiting the app (`App.exitApp()`) when on the root home screen (`/`).
 
 ### 5.3 Express Server & Middleware (`server/index.js`, `server/middleware/authMiddleware.js`)
+
 - **CORS & Preflight (`server/index.js`)**: Configures `cors` with `origin: process.env.CORS_ORIGIN || '*'`, `allowedHeaders: ['Authorization', 'Content-Type', 'X-Requested-With']`, and `optionsSuccessStatus: 204` across all routes and `OPTIONS *` preflights.
 - **Static APK Streaming (`/downloads`)**: Mounts `express.static('uploads/apk/')` at `/downloads` with `Content-Disposition: attachment` and `fallthrough: false`, ensuring missing files immediately return a `404` status rather than falling through to the SPA `index.html` handler.
 - **Authentication & Authorization Guards (`server/middleware/authMiddleware.js`)**:
@@ -206,6 +340,7 @@ Devmarket/
 | `uploaded_at` | `TIMESTAMP` | `TIMESTAMP` | `NOT NULL DEFAULT CURRENT_TIMESTAMP` | Submission timestamp |
 
 #### Mongoose Document Schemas (`server/models/`)
+
 In addition to the SQL tables, `server/models/` defines three Mongoose models used by the review subsystem (`server/controllers/reviewController.js`):
 - **`User` (`server/models/User.js`)**: `{ name: String, contact: String (unique), password: String, role: ['user', 'developer', 'administrator'], createdAt: Date }`
 - **`App` (`server/models/App.js`)**: `{ name: String, description: String, category: String, developerId: ObjectId(ref: 'User'), apkUrl: String, screenshots: [String], status: ['Pending', 'Live', 'Rejected'], averageRating: Number, createdAt: Date }` with a compound text index on `{ name: 'text', category: 'text' }`.
@@ -253,6 +388,7 @@ In addition to the SQL tables, `server/models/` defines three Mongoose models us
           |                            |                                |---------------------------->|
           | 11. 200 OK { success: true }                                |                             |
           |<------------------------------------------------------------|                             |
+
 ```
 
 **Step-by-Step Execution**:
@@ -301,6 +437,7 @@ In addition to the SQL tables, `server/models/` defines three Mongoose models us
           |                            |                                |---------------------------->|
           | 10. 200 OK { success: true }                                |                             |
           |<------------------------------------------------------------|                             |
+
 ```
 
 **Step-by-Step Execution**:
@@ -340,6 +477,7 @@ In addition to the SQL tables, `server/models/` defines three Mongoose models us
           | 6. Trigger hapticSuccess() & hand off .apk to Android OS    |                             |
           |------------------------------------------------------------------------------------------>|
           |                            |                                |   REQUEST_INSTALL_PACKAGES  |
+
 ```
 
 **Step-by-Step Execution**:

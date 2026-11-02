@@ -5,6 +5,7 @@
 Your DevMarket platform is now fully functional with all requested features implemented:
 
 ### ✅ Fixed Issues
+
 1. **Login Button Working** - Authentication system fully functional
 2. **Admin Mode Added** - Complete admin dashboard with approval system
 3. **Developer Mode Added** - APK upload and management functionality
@@ -18,14 +19,16 @@ Your DevMarket platform is now fully functional with all requested features impl
 ## 🔑 Test Accounts
 
 ### Admin Account
+
 - **Email**: `admin@devmarket.lan`
 - **Password**: Click "Sign in with Google" and enter this email
-- **Capabilities**: 
+- **Capabilities**:
   - Approve/reject app submissions
   - Manage users and promote to developer
   - Full admin dashboard access
 
-### Developer Account  
+### Developer Account
+
 - **Email**: `developer@devmarket.lan`
 - **Password**: Click "Sign in with Google" and enter this email
 - **Capabilities**:
@@ -34,6 +37,7 @@ Your DevMarket platform is now fully functional with all requested features impl
   - Submit apps for admin approval
 
 ### Regular User
+
 - **Email**: `user@devmarket.lan` (or any email)
 - **Password**: Click "Sign in with Google" and enter any email
 - **Capabilities**:
@@ -44,51 +48,76 @@ Your DevMarket platform is now fully functional with all requested features impl
 ## 🚀 How to Start
 
 ```bash
+
 # Start the application
+
 npm run dev
 
 # Open in browser
+
 # Frontend: http://localhost:5173
+
 # Backend: http://localhost:3000
+
 ```
 
 ## 📱 Mobile APK Build
 
 ```bash
+
 # For production APK (standalone)
+
 npm run android:prod
 npm run android:open
 
 # For development APK (connected to server)
+
 npm run android:dev
 npm run android:open
+
 ```
 
 ## 🗂️ Project Structure (Organized)
 
 ```
+
 DevMarket/
 ├── client/                 # React frontend
+
 │   ├── src/
 │   │   ├── components/     # UI components
+
 │   │   ├── pages/          # Login, AdminPanel, DevDashboard
+
 │   │   ├── context/        # Authentication context
+
 │   │   └── api/           # API client
+
 │   ├── android/           # Mobile build
+
 │   └── ANDROID_BUILD_GUIDE.md
-├── server/                # Node.js backend  
+├── server/                # Node.js backend
+
 │   ├── controllers/       # Business logic
+
 │   ├── routes/           # API endpoints
+
 │   ├── config/           # Database & auth config
+
 │   └── middleware/       # Authentication
+
 ├── uploads/              # APK file storage (on your laptop)
+
 ├── README.md             # Complete documentation
+
 └── setup.js              # Automated setup script
+
 ```
 
 ## 🔄 Complete Workflow
 
 ### For Developers:
+
 1. Login with `developer@devmarket.lan`
 2. Go to Developer Dashboard
 3. Upload APK file (gets stored on your laptop in `uploads/apk/`)
@@ -96,7 +125,8 @@ DevMarket/
 5. App goes to "pending" status
 
 ### For Admins:
-1. Login with `admin@devmarket.lan`  
+
+1. Login with `admin@devmarket.lan`
 2. Go to Admin Panel
 3. See pending apps in approval queue
 4. Review app details and APK file
@@ -104,6 +134,7 @@ DevMarket/
 6. Manage users and promote to developer
 
 ### For Users:
+
 1. Login with any email or `user@devmarket.lan`
 2. Browse approved apps on home page
 3. Search and filter by category
@@ -128,15 +159,25 @@ Removed unnecessary files:
 
 ```bash
 npm run setup          # Initial project setup
+
 npm run dev           # Start development (both client & server)
+
 npm run dev:server    # Start server only
+
 npm run dev:client    # Start client only
+
 npm run build         # Build for production
+
 npm run android:prod  # Build production Android APK
+
 npm run android:dev   # Build development Android APK
+
 npm run test          # Run tests
+
 npm run clean         # Clean all build files
+
 npm run reset         # Complete reset and setup
+
 ```
 
 ## 🎯 Next Steps

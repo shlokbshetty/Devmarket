@@ -3,6 +3,7 @@
 This document provides all updated API endpoints and integration steps required by frontend members.
 
 ## General Requirements
+
 - Base URL: Replit deployment URL (e.g., `https://your-repl-name.your-username.repl.co`) or `http://localhost:5000`
 - The server allows CORS broadly to support Vercel deployments.
 - All protected routes require a JWT token in the header:
@@ -13,6 +14,7 @@ This document provides all updated API endpoints and integration steps required 
 ## 1. Authentication Endpoints
 
 ### Register
+
 - **Endpoint**: `POST /api/auth/register`
 - **Request Body**:
   ```json
@@ -24,6 +26,7 @@ This document provides all updated API endpoints and integration steps required 
   ```
 
 ### Login
+
 - **Endpoint**: `POST /api/auth/login`
 - **Request Body**:
   ```json
@@ -36,6 +39,7 @@ This document provides all updated API endpoints and integration steps required 
 ## 2. App Endpoints
 
 ### Upload App (UPDATED FOR DEMO)
+
 - **Endpoint**: `POST /api/apps/upload`
 - **Headers**: `Authorization: Bearer <token>`
 - **Request Body** (JSON):
@@ -51,19 +55,23 @@ This document provides all updated API endpoints and integration steps required 
     ]
   }
   ```
+
 - **Description**: Stores app data using provided URLs instead of processing direct file uploads.
 
 ### Search Apps
-- **Endpoint**: `GET /api/apps/search?q=keyword`
+
+- **Endpoint**: `GET /api/apps/search — q=keyword`
 - **Description**: Returns all "Live" apps. If `q` is provided, filters by keyword in name/category.
 
 ### Get App Details
+
 - **Endpoint**: `GET /api/apps/:id`
 - **Description**: Returns full details for a single app including `apkUrl` and ratings.
 
 ## 3. Review Endpoints
 
 ### Submit Review
+
 - **Endpoint**: `POST /api/reviews`
 - **Headers**: `Authorization: Bearer <token>`
 - **Request Body**:
@@ -78,11 +86,13 @@ This document provides all updated API endpoints and integration steps required 
 ## 4. Admin Endpoints
 
 ### Approve App
+
 - **Endpoint**: `PUT /api/admin/approve/:id`
 - **Headers**: `Authorization: Bearer <admin_token>`
 - **Description**: Updates a pending app's status to "Live".
 
 ### Remove Malicious App
+
 - **Endpoint**: `DELETE /api/admin/remove/:id`
 - **Headers**: `Authorization: Bearer <admin_token>`
 - **Description**: Deletes an application entirely from the database.

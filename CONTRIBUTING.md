@@ -17,10 +17,12 @@ Participation in the DevMarket project is governed by our [Code of Conduct](.git
    git clone https://github.com/<your-username>/Devmarket.git
    cd Devmarket
    ```
+
 2. **Bootstrap the Workspace**:
    ```bash
    npm run setup
    ```
+
 3. **Verify Baseline Tests**:
    ```bash
    npm run test:all
@@ -56,9 +58,11 @@ DevMarket strictly follows the [Conventional Commits v1.0.0](https://www.convent
 [optional body explaining the "why" and architectural trade-offs]
 
 [optional footer(s): Closes #123, BREAKING CHANGE: ...]
+
 ```
 
 ### Allowed Commit Types & Scopes
+
 - **Types**: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`
 - **Common Scopes**:
   - `server`: Express bootstrap, CORS, static `/downloads`
@@ -71,11 +75,13 @@ DevMarket strictly follows the [Conventional Commits v1.0.0](https://www.convent
   - `android`: Capacitor Android project, `nativeBridge.js`, `capacitor.config.json`
 
 ### Examples
+
 ```text
 feat(apps): add version filter to GET /api/apps/search
 fix(android): ensure Capacitor production config is restored before build
 test(auth): add fast-check property test for expired JWT rejection
 docs(api): document multipart form fields for POST /api/apps/upload
+
 ```
 
 ---
@@ -83,12 +89,14 @@ docs(api): document multipart form fields for POST /api/apps/upload
 ## 5. Code Style & Architectural Standards
 
 ### 5.1 Backend (`server/`)
+
 - **Module System**: CommonJS (`require` / `module.exports`).
 - **Database Compatibility**: Every SQL query in `server/controllers/` and `server/config/initDb.js` **must** use `?` positional parameter placeholders via `query(sql, params)` from `server/config/db.js` and handle both `better-sqlite3` and `mysql2` return shapes using `selectRows()`, `insertId()`, or `affectedRows()`.
 - **Response Contract**: Always return `{ success: true, ... }` for `2xx` responses and `{ success: false, message: '...' }` for `4xx`/`5xx` responses.
 - **Security**: Never interpolate user input directly into SQL strings. Enforce `verifyToken` and appropriate role guards (`requireDeveloper`, `requireAdmin`) at the route declaration level in `server/routes/`.
 
 ### 5.2 Frontend & Mobile (`client/`)
+
 - **Module System**: ES Modules (`import` / `export`) with React 18 functional components and Hooks.
 - **API Communication**: Route all backend HTTP requests through [`client/src/api/client.js`](client/src/api/client.js) (`apiGet`, `apiPost`, `apiPut`, `apiDelete`, `apiUpload`) so Bearer tokens are injected consistently.
 - **Capacitor Safety**: Always guard native plugin invocations (`StatusBar`, `Haptics`, `App`, `GoogleSignIn`) using `Capacitor.isNativePlatform()` or the helpers in [`client/src/utils/nativeBridge.js`](client/src/utils/nativeBridge.js) so web browser builds never throw runtime errors.
@@ -101,14 +109,19 @@ docs(api): document multipart form fields for POST /api/apps/upload
 Before opening a Pull Request, run the full verification checklist locally:
 
 ```bash
+
 # 1. Run all backend Jest unit, integration, and fast-check property suites
+
 npm test
 
 # 2. Run all frontend Vitest + React Testing Library suites
+
 npm run test:client
 
 # 3. Verify production frontend bundle compiles cleanly without warnings/errors
+
 npm run build
+
 ```
 
 If your change modifies API routes, controllers, or database schemas, add or update the corresponding test suite in `server/__tests__/` and update [`docs/API.md`](docs/API.md) and [`API.md`](API.md).

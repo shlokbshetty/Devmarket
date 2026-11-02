@@ -24,7 +24,7 @@ assignees: []
 
 ## Actual Behavior
 
-<!-- What actually happened instead? Include HTTP status codes or UI error banners if applicable. -->
+<!-- What actually happened instead — Include HTTP status codes or UI error banners if applicable. -->
 
 ## Logs & Screenshots
 
@@ -32,6 +32,7 @@ assignees: []
 
 ```text
 Paste terminal / console / Logcat output here
+
 ```
 
 ## Execution Environment

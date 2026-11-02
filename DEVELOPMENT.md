@@ -22,6 +22,7 @@ Run the automated setup script from the repository root:
 
 ```bash
 npm run setup
+
 ```
 
 Executing [`setup.js`](setup.js) performs three idempotent steps:
@@ -35,16 +36,21 @@ To launch both the backend Express server (`nodemon`) and the frontend Vite dev 
 
 ```bash
 npm run dev
+
 ```
 
 Or run them in separate terminals for isolated log inspection:
 
 ```bash
+
 # Terminal 1 — Express API Server (http://0.0.0.0:3000)
+
 npm run dev:server
 
 # Terminal 2 — Vite React Frontend (http://localhost:5173)
+
 npm run dev:client
+
 ```
 
 In local web development, [`client/vite.config.js`](client/vite.config.js) proxies `/api` requests from `http://localhost:5173/api` directly to `http://localhost:3000/api`.
@@ -63,6 +69,7 @@ For rapid local development and automated testing without external Google Cloud 
    ```env
    VITE_FIREBASE_API_KEY=mock-key
    ```
+
 2. On the frontend login page ([`client/src/pages/Login.jsx`](client/src/pages/Login.jsx)), `AuthContext.jsx` detects `VITE_FIREBASE_API_KEY === 'mock-key'` and presents a **1-Tap Test Account Selector** instead of launching a Google OAuth popup.
 3. Selecting an account sends `idToken: "mock-token-<email>"` to `POST /api/auth/firebase`.
 4. In [`server/controllers/authController.js`](server/controllers/authController.js), `firebaseAuth` intercepts tokens prefixed with `mock-token-`, extracts the email and synthetic UID (`mock-uid-<prefix>`), upserts the user in SQLite/MySQL, applies role rules, and returns a real signed Backend JWT.
@@ -84,6 +91,7 @@ To enable real Google Sign-In across Web and Android:
    VITE_FIREBASE_APP_ID=1:123456789:web:abcdef
    VITE_API_BASE_URL=/api
    ```
+
 4. **Configure Direct Role Credentials** in root `.env` for the Admin and Developer login tabs (`POST /api/auth/credentials`):
    ```env
    ADMIN_USERNAME=admin
@@ -126,6 +134,7 @@ To wipe the local SQLite database and uploaded APKs and re-seed from scratch:
 
 ```bash
 npm run reset
+
 ```
 
 ---
@@ -140,12 +149,14 @@ Run all backend tests from the root directory:
 
 ```bash
 npm test
+
 ```
 
 Run a single backend test file:
 
 ```bash
 npx jest server/__tests__/upload.validation.test.js --setupFiles dotenv/config
+
 ```
 
 #### Breakdown of Backend Test Suites (`server/__tests__/`)
@@ -167,6 +178,7 @@ Run all frontend tests from the root directory:
 
 ```bash
 npm run test:client
+
 ```
 
 Or run interactive watch/UI modes from `client/`:
@@ -175,6 +187,7 @@ Or run interactive watch/UI modes from `client/`:
 cd client
 npm run test:watch
 npm run test:ui
+
 ```
 
 #### Breakdown of Frontend Test Suites (`client/src/test/`)
@@ -207,6 +220,7 @@ DevMarket maintains two Capacitor configuration files inside `client/`:
    npm run android:dev
    npm run android:open
    ```
+
 4. In Android Studio, select your connected physical Android device or emulator and click **Run ('app')**.
 
 ### 5.3 Restoring Production Standalone APK Config
@@ -215,6 +229,7 @@ Before committing changes or building a standalone distributable APK, restore th
 
 ```bash
 npm run android:prod
+
 ```
 
 This runs `git checkout capacitor.config.json`, compiles `npm run build`, and copies the static bundle into the Android project via `npx cap copy android`.
@@ -224,19 +239,23 @@ This runs `git checkout capacitor.config.json`, compiles `npm run build`, and co
 ## 6. Debugging Guide
 
 ### 6.1 Inspecting the Android WebView via Chrome DevTools
+
 When running an APK built with `npm run android:dev` (`webContentsDebuggingEnabled: true`):
 1. Connect your Android device via USB with **USB Debugging** enabled (or launch an Android Emulator).
 2. Open desktop Google Chrome and navigate to `chrome://inspect/#devices`.
 3. Locate **DevMarket (`com.devmarket.app`)** and click **inspect** to access full Console logs (`🔄 API Request`, `📡 Response status`), Network requests, and `localStorage` (`devmarket_auth`).
 
 ### 6.2 Debugging Android Emulator Loopback Networking
+
 If you are testing inside the **Android Studio Emulator** rather than a physical phone on Wi-Fi:
 - `localhost` or `127.0.0.1` inside the emulator refers to the emulated phone itself, **not** your host machine.
 - Use Android's special host loopback alias `10.0.2.2` (e.g., `VITE_API_BASE_URL=http://10.0.2.2:3000/api` and `LAN_IP=10.0.2.2`), or use your host's LAN IP (`192.168.x.x`).
 
 ### 6.3 Inspecting SQLite State Directly
+
 When `DB_TYPE=sqlite`, you can inspect or query `./devmarket.sqlite` using the Node REPL and `better-sqlite3`:
 
 ```bash
 node -e "const db = require('better-sqlite3')('./devmarket.sqlite'); console.table(db.prepare('SELECT uid, email, role FROM users').all()); console.table(db.prepare('SELECT id, name, status, filename FROM apps').all());"
+
 ```

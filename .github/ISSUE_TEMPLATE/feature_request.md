@@ -34,6 +34,7 @@ Select all architectural layers impacted by this proposal:
   "request": {},
   "response": { "success": true }
 }
+
 ```
 
 ## Alternatives Considered

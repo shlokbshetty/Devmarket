@@ -1,12 +1,12 @@
 # DevMarket — Hybrid Android & Web Developer App Marketplace
 
-[![Build & Test](https://img.shields.io/badge/Build_%26_Tests-57_Passing-10B981?style=for-the-badge&logo=githubactions&logoColor=white)](DEVELOPMENT.md)
-[![License: MIT](https://img.shields.io/badge/License-MIT-F59E0B?style=for-the-badge)](LICENSE)
-[![React 18.3](https://img.shields.io/badge/React-18.3.1-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
-[![Express 4.18](https://img.shields.io/badge/Express-4.18.2-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
-[![SQLite / MySQL](https://img.shields.io/badge/SQLite-Better--SQLite3_13.x-003B57?style=for-the-badge&logo=sqlite&logoColor=white)](https://sqlite.org/)
-[![Firebase Auth](https://img.shields.io/badge/Firebase-Auth_%26_Admin_12.x-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)](https://firebase.google.com/)
-[![Capacitor 8](https://img.shields.io/badge/Capacitor-Android_8.3-119EFF?style=for-the-badge&logo=capacitor&logoColor=white)](https://capacitorjs.com/)
+[![Build & Test](https://img.shields.io/badge/Build_%26_Tests-57_Passing-10B981 — style=for-the-badge&logo=githubactions&logoColor=white)](DEVELOPMENT.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-F59E0B — style=for-the-badge)](LICENSE)
+[![React 18.3](https://img.shields.io/badge/React-18.3.1-61DAFB — style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
+[![Express 4.18](https://img.shields.io/badge/Express-4.18.2-000000 — style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
+[![SQLite / MySQL](https://img.shields.io/badge/SQLite-Better--SQLite3_13.x-003B57 — style=for-the-badge&logo=sqlite&logoColor=white)](https://sqlite.org/)
+[![Firebase Auth](https://img.shields.io/badge/Firebase-Auth_%26_Admin_12.x-FFCA28 — style=for-the-badge&logo=firebase&logoColor=black)](https://firebase.google.com/)
+[![Capacitor 8](https://img.shields.io/badge/Capacitor-Android_8.3-119EFF — style=for-the-badge&logo=capacitor&logoColor=white)](https://capacitorjs.com/)
 
 **DevMarket** is a full-stack mobile application marketplace and Android package distribution platform engineered with React 18, Vite 6, Tailwind CSS v4, Capacitor 8, and an Express.js backend backed by a dual-dialect SQLite/MySQL persistence layer. Designed for both browser-based desktop simulation and native Android execution, DevMarket enables developers to upload `.apk` binaries (up to 200 MB), administrators to moderate submissions and manage user roles (`user`, `developer`, `administrator`), and end users to discover, search, review, and stream Android packages directly onto their devices with native haptic feedback, dynamic status bar theming, and hardware back-button integration.
 
@@ -14,7 +14,74 @@
 
 ## System Architecture Overview
 
-![System Architecture Overview](docs/assets/system-overview.svg)
+```mermaid
+flowchart TD
+    subgraph ClientTier ["1. Client & Hybrid Mobile Tier (:5173 / APK)"]
+        ReactApp["React 18 SPA<br/>(Vite 6 + Tailwind CSS v4)"]
+        ApiClient["Unified API Client<br/>(Bearer JWT + Multipart Stream)"]
+        CapacitorBridge["Capacitor 8 Android Bridge<br/>(Haptics, Status Bar, App Lifecycle)"]
+        NativeInstaller["Native Package Installer<br/>(Direct .apk Intent Handler)"]
+    end
+
+    subgraph GatewayTier ["2. API Gateway & Security Layer (:5000)"]
+        ExpressGateway["Express 5 REST Gateway<br/>(CORS Preflight + Body Parsers)"]
+        AuthMiddleware["Token Verifier Middleware<br/>(HMAC-SHA256 JWT verifyToken)"]
+        RoleGuard["RBAC Authorization Guards<br/>(requireDeveloper / requireAdmin)"]
+        MulterIngest["Multer Binary Upload Stream<br/>(200 MB Limit + MIME Validator)"]
+    end
+
+    subgraph ServiceTier ["3. Business Logic & Domain Controllers"]
+        AuthController["Auth & Profile Controller<br/>(Token Exchange & Role Promotion)"]
+        AppController["App Catalog Controller<br/>(Search, Categories, Versioning)"]
+        AdminController["Admin Moderation Controller<br/>(App Review Queue: PENDING to APPROVED)"]
+        ReviewController["Review & Rating Engine<br/>(1-5 Star Ratings + Analytics Cache)"]
+    end
+
+    subgraph StorageTier ["4. Persistence & File Storage Layer"]
+        DbAdapter["Dual-Dialect SQL Adapter<br/>(server/config/db.js)"]
+        SQLiteDB[("SQLite Database<br/>(devmarket.sqlite)")]
+        MySQLPool[("MySQL 2 Connection Pool<br/>(Production Relational Cluster)")]
+        MongooseModels["Mongoose Schema Models<br/>(User, App, Review Schemas)"]
+        FileStorage[("Local APK Storage Volume<br/>(/uploads/apk/ Stream Server)")]
+    end
+
+    subgraph ExternalTier ["5. External Authentication & Identity"]
+        FirebaseAuth["Firebase Client Auth<br/>(Google OAuth 2.0 Web/Mobile)"]
+        FirebaseAdmin["Firebase Admin SDK<br/>(admin.auth.verifyIdToken)"]
+    end
+
+    ReactApp -->|HTTP REST| ApiClient
+    ReactApp -->|Native Plugins| CapacitorBridge
+    CapacitorBridge -->|Trigger Install| NativeInstaller
+    ApiClient -->|HTTPS Requests| ExpressGateway
+
+    ExpressGateway --> AuthMiddleware
+    AuthMiddleware --> RoleGuard
+    RoleGuard --> MulterIngest
+    MulterIngest --> AppController
+
+    RoleGuard --> AuthController
+    RoleGuard --> AdminController
+    RoleGuard --> ReviewController
+
+    AuthController -->|Token Verification| FirebaseAdmin
+    FirebaseAuth -.->|ID Token| AuthController
+
+    AuthController --> DbAdapter
+    AppController --> DbAdapter
+    AdminController --> DbAdapter
+    ReviewController --> DbAdapter
+
+    DbAdapter --> SQLiteDB
+    DbAdapter --> MySQLPool
+    DbAdapter --> MongooseModels
+
+    AppController -->|Persist Binary| FileStorage
+    NativeInstaller -.->|Download Stream| FileStorage
+
+```
+
+> **Visual Asset**: A standalone vector version is also available at [`docs/assets/system-overview.svg`](docs/assets/system-overview.svg).
 
 DevMarket separates concerns across five cohesive architectural tiers:
 
@@ -60,6 +127,7 @@ The repository includes an interactive setup utility ([`setup.js`](setup.js)) th
 git clone <repository-url>
 cd Devmarket
 npm run setup
+
 ```
 
 ### 2. Manual Environment Configuration
@@ -69,6 +137,7 @@ If you prefer manual configuration or need to customize LAN IP addresses, Fireba
 ```bash
 cp .env.example .env
 cp client/.env.example client/.env
+
 ```
 
 Update `.env` and `client/.env` according to the configuration mapping tables below.
@@ -79,6 +148,7 @@ Run both the Express backend (with `nodemon` auto-reload) and the Vite React fro
 
 ```bash
 npm run dev
+
 ```
 
 - **Frontend Web UI**: `http://localhost:5173`
